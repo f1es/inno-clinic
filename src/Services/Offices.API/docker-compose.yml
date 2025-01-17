@@ -1,0 +1,17 @@
+
+services:
+  offices-service-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    user: "root"
+    environment:
+      - MSSQL_SA_PASSWORD=myStrongPassword123321
+      - ACCEPT_EULA=Y
+      - MSSQL_PID=Developer
+    volumes:
+      - offices-service-db:/var/lib/mssql/data
+    container_name: offices_service_db
+
+volumes:
+  offices-service-db:
