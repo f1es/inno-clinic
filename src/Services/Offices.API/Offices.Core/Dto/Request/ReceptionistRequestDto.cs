@@ -1,6 +1,6 @@
 ﻿namespace Offices.Core.Dto.Request;
 
-record class ReceptionistRequestDto(
+public record class ReceptionistRequestDto(
 	string FirstName,
 	string LastName,
 	string MiddleName,
