@@ -28,8 +28,7 @@ public class OfficesController : ControllerBase
         return Ok(offices);
     }
 
-    [HttpGet(Name = "GetOffice")]
-    [Route("{id:guid}")]
+    [HttpGet("{id:guid}", Name = "GetOffice")]
     public async Task<IActionResult> Get(Guid id)
     {
         var getOfficeQuery = new GetOfficeQuery(id);
