@@ -19,4 +19,10 @@
     <ProjectReference Include="..\Offices.Application\Offices.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Context\" />
+    <Folder Include="Configuration\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>
