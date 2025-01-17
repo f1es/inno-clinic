@@ -11,8 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="CQRS\Offices\Commands\UpdateOffice\" />
-    <Folder Include="CQRS\Offices\Queries\GetOffices\" />
     <Folder Include="CQRS\Receptionists\Commands\" />
     <Folder Include="CQRS\Receptionists\Queries\" />
   </ItemGroup>
