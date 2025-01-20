@@ -9,6 +9,9 @@ using Offices.Core.Dto.Request;
 
 namespace Offices.API.Controllers;
 
+/// <summary>
+/// Receptionists controller
+/// </summary>
 [ApiController]
 [Route("api/receptionists")]
 public class ReceptionistsController : ControllerBase
@@ -20,7 +23,14 @@ public class ReceptionistsController : ControllerBase
 		_mediator = mediator;
 	}
 
+	/// <summary>
+	/// Get all receptionists method
+	/// </summary>
+	/// <returns></returns>
 	[HttpGet]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetAll()
 	{
 		var getAllReceptionistsQuery = new GetReceptionistsQuery();
@@ -30,7 +40,16 @@ public class ReceptionistsController : ControllerBase
 		return Ok(receptionists);
 	}
 
+	/// <summary>
+	/// Get receptionist by id method
+	/// </summary>
+	/// <param name="id">Receptionist's unique identifier</param>
+	/// <returns></returns>
 	[HttpGet("{id:guid}", Name = "GetReceptionistById")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Get(Guid id)
 	{
 		var getReceptionistQuery = new GetReceptionistQuery(id);
@@ -40,7 +59,16 @@ public class ReceptionistsController : ControllerBase
 		return Ok(receptionist);
 	}
 
+	/// <summary>
+	/// Create receptionist method
+	/// </summary>
+	/// <param name="receptionistRequestDto">Request receptionist data transfer object</param>
+	/// <returns></returns>
 	[HttpPost]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status201Created)]
+	[ProducesResponseType(StatusCodes.Status409Conflict)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Create(ReceptionistRequestDto receptionistRequestDto)
 	{
 		var createReceptionistDto = new CreateReceptionistCommand(receptionistRequestDto);
@@ -52,7 +80,16 @@ public class ReceptionistsController : ControllerBase
 		return CreatedAtRoute(routeName , new { id = receptionist.Id }, receptionist);
 	}
 
+	/// <summary>
+	/// Delete receptionist method
+	/// </summary>
+	/// <param name="id">Recepcionist's unique identifier</param>
+	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Delete(Guid id)
 	{
 		var deleteReceptionistCommand = new DeleteReceptionistCommand(id);
@@ -62,7 +99,17 @@ public class ReceptionistsController : ControllerBase
 		return NoContent();
 	}
 
+	/// <summary>
+	/// Update receptionist method
+	/// </summary>
+	/// <param name="id">Receptionist's unique identifier</param>
+	/// <param name="receptionistRequestDto">Request receptionist data transfer object</param>
+	/// <returns></returns>
 	[HttpPut("{id:guid}")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Update(Guid id, ReceptionistRequestDto receptionistRequestDto)
 	{
 		var updateReceptionistCommand = new UpdateReceptionistCommand(id, receptionistRequestDto);

@@ -10,6 +10,9 @@ using Offices.Core.Dto.Request;
 
 namespace Offices.API.Controllers;
 
+/// <summary>
+/// Offices controller
+/// </summary>
 [ApiController]
 [Route("api/offices")]
 public class OfficesController : ControllerBase
@@ -21,7 +24,16 @@ public class OfficesController : ControllerBase
         _mediator = mediator;
     }
 
+	/// <summary>
+	/// Get receptionist by office id method, office have only one receptionist
+	/// </summary>
+	/// <param name="id">Office's unique identifier</param>
+	/// <returns></returns>
 	[HttpGet("{id:guid}/receptionist")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetReceptionist(Guid id)
 	{
 		var getReceptionistByOfficeIdQuery = new GetReceptionistByOfficeIdQuery(id);
@@ -31,8 +43,15 @@ public class OfficesController : ControllerBase
 		return Ok(receptionist);
 	}
 
+    /// <summary>
+    /// Get all offices method
+    /// </summary>
+    /// <returns></returns>
 	[HttpGet]
-    public async Task<IActionResult> GetAll()
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> GetAll()
     {
         var getOfficesQuery = new GetOfficesQuery();
 
@@ -41,8 +60,17 @@ public class OfficesController : ControllerBase
         return Ok(offices);
     }
 
-    [HttpGet("{id:guid}", Name = "GetOffice")]
-    public async Task<IActionResult> Get(Guid id)
+	/// <summary>
+	/// Get office by id method
+	/// </summary>
+	/// <param name="id">Office's unique identifier</param>
+	/// <returns></returns>
+	[HttpGet("{id:guid}", Name = "GetOffice")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Get(Guid id)
     {
         var getOfficeQuery = new GetOfficeQuery(id);
 
@@ -51,8 +79,16 @@ public class OfficesController : ControllerBase
         return Ok(office);
     }
 
+    /// <summary>
+    /// Create office method
+    /// </summary>
+    /// <param name="officeRequestDto">Request data transfer object of office</param>
+    /// <returns></returns>
     [HttpPost]
-    public async Task<IActionResult> Create(OfficeRequestDto officeRequestDto)
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status201Created)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Create(OfficeRequestDto officeRequestDto)
     {
         var createOfficeCommand = new CreateOfficeCommand(officeRequestDto);
 
@@ -63,8 +99,17 @@ public class OfficesController : ControllerBase
 		return CreatedAtRoute(routeName, new { id = office.Id }, office);  
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+	/// <summary>
+	/// Delete office method
+	/// </summary>
+	/// <param name="id">Office's unique identifier</param>
+	/// <returns></returns>
+	[HttpDelete("{id:guid}")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Delete(Guid id)
     {
         var deleteOfficeCommand = new DeleteOfficeCommand(id);
 
@@ -73,8 +118,18 @@ public class OfficesController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, OfficeRequestDto officeRequestDto)
+	/// <summary>
+	/// Update office method
+	/// </summary>
+	/// <param name="id">Office's unique identifier</param>
+	/// <param name="officeRequestDto">Request data transfer object of office</param>
+	/// <returns></returns>
+	[HttpPut("{id:guid}")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Update(Guid id, OfficeRequestDto officeRequestDto)
     {
         var updateOfficeCommand = new UpdateOfficeCommand(id, officeRequestDto);
 
