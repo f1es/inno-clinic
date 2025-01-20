@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offices.API", "Offices.API\Offices.API.csproj", "{3E6FFB20-2474-4B8C-BA4E-D1CAB19AEF40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Offices.API", "Offices.API\Offices.API.csproj", "{3E6FFB20-2474-4B8C-BA4E-D1CAB19AEF40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offices.Infrastructure", "Offices.Infrastructure\Offices.Infrastructure.csproj", "{D0FA5A0D-BB5C-4DAC-8C04-572340C6E8E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Offices.Infrastructure", "Offices.Infrastructure\Offices.Infrastructure.csproj", "{D0FA5A0D-BB5C-4DAC-8C04-572340C6E8E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offices.Core", "Offices.Core\Offices.Core.csproj", "{5F048DE0-C5CC-4BA5-AFF1-44F2FDC0D4D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Offices.Core", "Offices.Core\Offices.Core.csproj", "{5F048DE0-C5CC-4BA5-AFF1-44F2FDC0D4D7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Offices.Application", "Offices.Application\Offices.Application.csproj", "{85A3F038-81E8-4709-AADB-5AF3ADCBEB72}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Offices.Application", "Offices.Application\Offices.Application.csproj", "{85A3F038-81E8-4709-AADB-5AF3ADCBEB72}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "..\..\Shared\Shared\Shared.csproj", "{788A5E7D-24B8-4EC7-A08F-E6D590671C68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{85A3F038-81E8-4709-AADB-5AF3ADCBEB72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85A3F038-81E8-4709-AADB-5AF3ADCBEB72}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85A3F038-81E8-4709-AADB-5AF3ADCBEB72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{788A5E7D-24B8-4EC7-A08F-E6D590671C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{788A5E7D-24B8-4EC7-A08F-E6D590671C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{788A5E7D-24B8-4EC7-A08F-E6D590671C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{788A5E7D-24B8-4EC7-A08F-E6D590671C68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

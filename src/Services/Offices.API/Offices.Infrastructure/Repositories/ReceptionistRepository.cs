@@ -34,4 +34,21 @@ public class ReceptionistRepository : BaseRepository<Receptionist>, IRecepcionis
 				.FirstOrDefaultAsync(x => x.Id.Equals(id));
 		}
 	}
+
+	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId, bool trackChanges = false)
+	{
+		if (trackChanges)
+		{
+			return await _context
+				.Receptionists
+				.FirstOrDefaultAsync(x => x.OfficeId.Equals(officeId));
+		}
+		else
+		{
+			return await _context
+				.Receptionists
+				.AsNoTracking()
+				.FirstOrDefaultAsync(x => x.OfficeId.Equals(officeId));
+		}
+	}
 }

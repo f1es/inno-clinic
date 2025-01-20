@@ -5,6 +5,7 @@ using Offices.Application.CQRS.Offices.Commands.DeleteOffice;
 using Offices.Application.CQRS.Offices.Commands.UpdateOffice;
 using Offices.Application.CQRS.Offices.Queries.GetOffice;
 using Offices.Application.CQRS.Offices.Queries.GetOffices;
+using Offices.Application.CQRS.Receptionists.Queries.GetByOfficeId;
 using Offices.Core.Dto.Request;
 
 namespace Offices.API.Controllers;
@@ -20,7 +21,17 @@ public class OfficesController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
+	[HttpGet("{id:guid}/receptionist")]
+	public async Task<IActionResult> GetReceptionist(Guid id)
+	{
+		var getReceptionistByOfficeIdQuery = new GetReceptionistByOfficeIdQuery(id);
+
+        var receptionist = await _mediator.Send(getReceptionistByOfficeIdQuery);
+
+		return Ok(receptionist);
+	}
+
+	[HttpGet]
     public async Task<IActionResult> GetAll()
     {
         var getOfficesQuery = new GetOfficesQuery();
