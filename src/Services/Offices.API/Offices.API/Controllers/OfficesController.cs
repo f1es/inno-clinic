@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Offices.Application.CQRS.Offices.Commands.CreateOffice;
+using Offices.Application.CQRS.Offices.Commands.DeleteOffice;
+using Offices.Application.CQRS.Offices.Commands.UpdateOffice;
 using Offices.Application.CQRS.Offices.Queries.GetOffice;
 using Offices.Application.CQRS.Offices.Queries.GetOffices;
 using Offices.Core.Dto.Request;
@@ -49,4 +51,25 @@ public class OfficesController : ControllerBase
 
 		return CreatedAtRoute(routeName, new { id = office.Id }, office);  
     }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var deleteOfficeCommand = new DeleteOfficeCommand(id);
+
+        await _mediator.Send(deleteOfficeCommand);
+
+        return NoContent();
+    }
+
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, OfficeRequestDto officeRequestDto)
+    {
+        var updateOfficeCommand = new UpdateOfficeCommand(id, officeRequestDto);
+
+        await _mediator.Send(updateOfficeCommand);
+
+        return NoContent();
+    }
+
 }
