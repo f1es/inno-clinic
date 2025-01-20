@@ -2,6 +2,7 @@
 using MediatR;
 using Offices.Core.Dto.Response;
 using Offices.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Offices.Application.CQRS.Offices.Queries.GetOffice;
 
@@ -24,7 +25,7 @@ public class GetOfficeQueryHandler : IRequestHandler<GetOfficeQuery, OfficeRespo
 
 		if (office == null)
 		{
-			// 404 Exception
+			throw new NotFoundException(nameof(office), request.Id);
 		}
 
 		var officeResponse = _mapper.Map<OfficeResponseDto>(office);

@@ -1,6 +1,7 @@
 using Offices.API.Extensions;
 using Offices.Application.Extensions;
 using Offices.Infrastructure.Extensions;
+using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.ConfigureRepositories();
 builder.Services.ConfigureDbContext(builder);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

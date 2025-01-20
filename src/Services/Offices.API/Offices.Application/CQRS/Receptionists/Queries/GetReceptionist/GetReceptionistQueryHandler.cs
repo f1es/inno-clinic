@@ -2,6 +2,7 @@
 using MediatR;
 using Offices.Core.Dto.Response;
 using Offices.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Offices.Application.CQRS.Receptionists.Queries.GetReceptionist;
 
@@ -22,7 +23,7 @@ public class GetReceptionistQueryHandler : IRequestHandler<GetReceptionistQuery,
 
         if (receptionist == null)
         {
-            // 404 Exception
+            throw new NotFoundException(nameof(receptionist), request.Id);
         }
 
         var receptionistResponse = _mapper.Map<ReceptionistResponseDto>(receptionist);

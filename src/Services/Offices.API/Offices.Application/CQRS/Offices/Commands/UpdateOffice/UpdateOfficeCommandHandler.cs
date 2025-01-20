@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Offices.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Offices.Application.CQRS.Offices.Commands.UpdateOffice;
 
@@ -23,7 +24,7 @@ public class UpdateOfficeCommandHandler : IRequestHandler<UpdateOfficeCommand>
 
 		if (office == null)
 		{
-			// 404 Exception
+			throw new NotFoundException(nameof(office), request.Id);
 		}
 
 		office = _mapper.Map(request.OfficeRequestDto, office);

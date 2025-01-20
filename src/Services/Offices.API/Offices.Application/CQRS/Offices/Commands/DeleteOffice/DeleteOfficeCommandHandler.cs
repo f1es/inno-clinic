@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Offices.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Offices.Application.CQRS.Offices.Commands.DeleteOffice;
 
@@ -18,7 +19,7 @@ public class DeleteOfficeCommandHandler : IRequestHandler<DeleteOfficeCommand>
 
 		if (office == null)
 		{
-			// 404 Exception
+			throw new NotFoundException(nameof(office), request.Id);
 		}
 
 		_unitOfWork.OfficeRepository.Delete(office);

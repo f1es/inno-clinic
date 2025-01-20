@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Offices.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Offices.Application.CQRS.Receptionists.Commands.UpdateReceptionist;
 
@@ -23,7 +24,7 @@ public class UpdateReceptionistCommandHandler : IRequestHandler<UpdateReceptioni
 
 		if (receptionist == null)
 		{
-			// 404 Ex
+			throw new NotFoundException(nameof(receptionist), request.Id);
 		}
 
 		receptionist = _mapper.Map(request.ReceptionistRequestDto, receptionist);

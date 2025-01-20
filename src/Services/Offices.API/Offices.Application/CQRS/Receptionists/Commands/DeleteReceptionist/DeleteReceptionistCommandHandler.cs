@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Offices.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Offices.Application.CQRS.Receptionists.Commands.DeleteREceptionist;
 
@@ -21,7 +22,7 @@ public class DeleteReceptionistCommandHandler : IRequestHandler<DeleteReceptioni
 
 		if (receptionist == null)
 		{
-			// 404 Exception 
+			throw new NotFoundException(nameof(receptionist), request.Id);
 		}
 
 		_unitOfWork.RecepcionistRepository.Delete(receptionist);
