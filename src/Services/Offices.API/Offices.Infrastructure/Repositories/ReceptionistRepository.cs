@@ -15,40 +15,20 @@ public class ReceptionistRepository : BaseRepository<Receptionist>, IRecepcionis
 
 	public async Task<IEnumerable<Receptionist>> GetAllAsync()
 	{
-		return await _context.Receptionists.ToListAsync();
+		return await _context.Receptionists.AsNoTracking().ToListAsync();
 	}
 
 	public async Task<Receptionist> GetByIdAsync(Guid id, bool trackChanges = false)
 	{
-		if (trackChanges)
-		{
-			return await _context
-				.Receptionists
-				.FirstOrDefaultAsync(x => x.Id.Equals(id));
-		}
-		else
-		{
-			return await _context
-				.Receptionists
-				.AsNoTracking()
-				.FirstOrDefaultAsync(x => x.Id.Equals(id));
-		}
+		var table = _context.Receptionists;
+		var receptionist = trackChanges ?  table.FirstOrDefaultAsync(x => x.Id == id) : table.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+		return await receptionist;
 	}
 
 	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId, bool trackChanges = false)
 	{
-		if (trackChanges)
-		{
-			return await _context
-				.Receptionists
-				.FirstOrDefaultAsync(x => x.OfficeId.Equals(officeId));
-		}
-		else
-		{
-			return await _context
-				.Receptionists
-				.AsNoTracking()
-				.FirstOrDefaultAsync(x => x.OfficeId.Equals(officeId));
-		}
+		var table = _context.Receptionists;
+		var receptionist = trackChanges ? table.FirstOrDefaultAsync(x => x.OfficeId == officeId) : table.AsNoTracking().FirstOrDefaultAsync(x => x.OfficeId == officeId);
+		return await receptionist;
 	}
 }
