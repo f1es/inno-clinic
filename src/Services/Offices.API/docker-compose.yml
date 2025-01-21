@@ -1,16 +1,11 @@
 
 services:
   offices-service-db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mongo:6-jammy
     ports:
-      - 1433:1433
-    user: "root"
-    environment:
-      - MSSQL_SA_PASSWORD=myStrongPassword123321
-      - ACCEPT_EULA=Y
-      - MSSQL_PID=Developer
+      - 27017:27017
     volumes:
-      - offices-service-db:/var/lib/mssql/data
+      - offices-service-db:/var/lib/mongodb/data
     container_name: offices_service_db
 
 volumes:
