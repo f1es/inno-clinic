@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Offices.Core.Models;
 using Offices.Core.Repositories;
 using Shared.Exceptions;
 
@@ -27,6 +28,9 @@ public class UpdateReceptionistCommandHandler : IRequestHandler<UpdateReceptioni
 			throw new NotFoundException(nameof(receptionist), request.Id);
 		}
 
-		await _unitOfWork.RecepcionistRepository.UpdateAsync(receptionist);
+		var newReceptionist = _mapper.Map<Receptionist>(request.ReceptionistRequestDto);
+		newReceptionist.Id = request.Id;
+
+		await _unitOfWork.RecepcionistRepository.UpdateAsync(newReceptionist);
 	}
 }

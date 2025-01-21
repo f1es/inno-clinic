@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Offices.Core.Models;
 using Offices.Core.Repositories;
 using Shared.Exceptions;
 
@@ -27,6 +28,9 @@ public class UpdateOfficeCommandHandler : IRequestHandler<UpdateOfficeCommand>
 			throw new NotFoundException(nameof(office), request.Id);
 		}
 
-		await _unitOfWork.OfficeRepository.UpdateAsync(office);
+		var newOffice = _mapper.Map<Office>(request.OfficeRequestDto);
+		newOffice.Id = request.Id;
+
+		await _unitOfWork.OfficeRepository.UpdateAsync(newOffice);
 	}
 }
