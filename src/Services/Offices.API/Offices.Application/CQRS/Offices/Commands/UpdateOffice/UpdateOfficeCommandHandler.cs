@@ -20,15 +20,13 @@ public class UpdateOfficeCommandHandler : IRequestHandler<UpdateOfficeCommand>
 
 	public async Task Handle(UpdateOfficeCommand request, CancellationToken cancellationToken)
 	{
-		var office = await _unitOfWork.OfficeRepository.GetByIdAsync(request.Id, trackChanges: true);
+		var office = await _unitOfWork.OfficeRepository.GetByIdAsync(request.Id);
 
 		if (office == null)
 		{
 			throw new NotFoundException(nameof(office), request.Id);
 		}
 
-		office = _mapper.Map(request.OfficeRequestDto, office);
-
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.OfficeRepository.UpdateAsync(office);
 	}
 }

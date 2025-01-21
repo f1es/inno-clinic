@@ -20,15 +20,13 @@ public class UpdateReceptionistCommandHandler : IRequestHandler<UpdateReceptioni
 
 	public async Task Handle(UpdateReceptionistCommand request, CancellationToken cancellationToken)
 	{
-		var receptionist = await _unitOfWork.RecepcionistRepository.GetByIdAsync(request.Id, trackChanges: true);
+		var receptionist = await _unitOfWork.RecepcionistRepository.GetByIdAsync(request.Id);
 
 		if (receptionist == null)
 		{
 			throw new NotFoundException(nameof(receptionist), request.Id);
 		}
 
-		receptionist = _mapper.Map(request.ReceptionistRequestDto, receptionist);
-
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.RecepcionistRepository.UpdateAsync(receptionist);
 	}
 }
