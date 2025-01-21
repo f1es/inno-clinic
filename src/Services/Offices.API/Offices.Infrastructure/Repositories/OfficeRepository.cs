@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using Offices.Core.Models;
 using Offices.Core.Repositories;
 using Offices.Infrastructure.Context;
