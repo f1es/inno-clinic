@@ -37,13 +37,13 @@ public class ReceptionistRepository : IRecepcionistRepository
 		return await _context.Receptionists.Find(filter).ToListAsync();
 	}
 
-	public async Task<Receptionist> GetByIdAsync(Guid id, bool trackChanges = false)
+	public async Task<Receptionist> GetByIdAsync(Guid id)
 	{
 		var filter = Builders<Receptionist>.Filter.Eq(x => x.Id, id);
 		return await _context.Receptionists.Find(filter).FirstOrDefaultAsync();
 	}
 
-	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId, bool trackChanges = false)
+	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId)
 	{
 		var filter = Builders<Receptionist>.Filter.Eq(x => x.OfficeId, officeId);
 		return await _context.Receptionists.Find(filter).FirstOrDefaultAsync();

@@ -37,7 +37,7 @@ public class OfficeRepository : IOfficeRepository
 		return await _context.Offices.Find(filter).ToListAsync();
 	}
 
-	public async Task<Office> GetByIdAsync(Guid id, bool trackChanges = false)
+	public async Task<Office> GetByIdAsync(Guid id)
 	{
 		var filter = Builders<Office>.Filter.Eq(x => x.Id, id);
 		return await _context.Offices.Find(filter).FirstOrDefaultAsync();
