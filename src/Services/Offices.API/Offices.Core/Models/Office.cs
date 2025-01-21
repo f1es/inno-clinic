@@ -8,5 +8,4 @@ public class Office
 	public bool IsActive { get; set; }
 
 	public Guid PhotoId { get; set; }
-	public Receptionist Receptionist { get; set; }
 }

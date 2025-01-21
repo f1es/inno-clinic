@@ -9,5 +9,4 @@ public class Receptionist
 
 	public Guid AccountId { get; set; }
 	public Guid OfficeId { get; set; }
-	public Office Office { get; set; }
 }
