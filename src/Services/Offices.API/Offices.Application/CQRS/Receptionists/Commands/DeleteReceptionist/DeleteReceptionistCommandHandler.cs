@@ -25,8 +25,6 @@ public class DeleteReceptionistCommandHandler : IRequestHandler<DeleteReceptioni
 			throw new NotFoundException(nameof(receptionist), request.Id);
 		}
 
-		_unitOfWork.RecepcionistRepository.Delete(receptionist);
-
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.RecepcionistRepository.DeleteAsync(receptionist);
 	}
 }

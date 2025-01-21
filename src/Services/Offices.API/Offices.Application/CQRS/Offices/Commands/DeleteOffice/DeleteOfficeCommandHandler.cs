@@ -22,8 +22,6 @@ public class DeleteOfficeCommandHandler : IRequestHandler<DeleteOfficeCommand>
 			throw new NotFoundException(nameof(office), request.Id);
 		}
 
-		_unitOfWork.OfficeRepository.Delete(office);
-
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.OfficeRepository.DeleteAsync(office);
 	}
 }

@@ -20,11 +20,9 @@ public class CreateOfficeCommandHandler : IRequestHandler<CreateOfficeCommand, O
 	public async Task<OfficeResponseDto> Handle(CreateOfficeCommand request, CancellationToken cancellationToken)
 	{
 		var office = _mapper.Map<Office>(request.OfficeRequestDto);
-		office.Id = new Guid();
+		office.Id = Guid.NewGuid();
 
-		_unitOfWork.OfficeRepository.Create(office);
-
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.OfficeRepository.CreateAsync(office);
 
 		var officeResponse = _mapper.Map<OfficeResponseDto>(office);
 
