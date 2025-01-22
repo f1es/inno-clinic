@@ -21,13 +21,6 @@ public class UpdateOfficeCommandHandler : IRequestHandler<UpdateOfficeCommand>
 
 	public async Task Handle(UpdateOfficeCommand request, CancellationToken cancellationToken)
 	{
-		var office = await _unitOfWork.OfficeRepository.GetByIdAsync(request.Id);
-
-		if (office == null)
-		{
-			throw new NotFoundException(nameof(office), request.Id);
-		}
-
 		var newOffice = _mapper.Map<Office>(request.OfficeRequestDto);
 		newOffice.Id = request.Id;
 

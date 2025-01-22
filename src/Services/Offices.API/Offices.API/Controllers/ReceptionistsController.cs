@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Offices.Application.CQRS.Receptionists.Commands.CreateRecepcionist;
 using Offices.Application.CQRS.Receptionists.Commands.DeleteREceptionist;
 using Offices.Application.CQRS.Receptionists.Commands.UpdateReceptionist;
+using Offices.Application.CQRS.Receptionists.Queries.GetByOfficeId;
 using Offices.Application.CQRS.Receptionists.Queries.GetReceptionist;
 using Offices.Application.CQRS.Receptionists.Queries.GetReceptionists;
 using Offices.Core.Dto.Request;
@@ -55,6 +56,25 @@ public class ReceptionistsController : ControllerBase
 		var getReceptionistQuery = new GetReceptionistQuery(id);
 
 		var receptionist = await _mediator.Send(getReceptionistQuery);
+
+		return Ok(receptionist);
+	}
+
+	/// <summary>
+	/// Get receptionist by office id method, office have only one receptionist
+	/// </summary>
+	/// <param name="officeId">Office's unique identifier</param>
+	/// <returns></returns>
+	[HttpGet("/office/{officeId:guid}")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> GetByOfficeId(Guid officeId)
+	{
+		var getReceptionistByOfficeIdQuery = new GetReceptionistByOfficeIdQuery(officeId);
+
+		var receptionist = await _mediator.Send(getReceptionistByOfficeIdQuery);
 
 		return Ok(receptionist);
 	}

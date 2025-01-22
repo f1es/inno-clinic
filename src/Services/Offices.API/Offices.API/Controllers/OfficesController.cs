@@ -24,25 +24,6 @@ public class OfficesController : ControllerBase
         _mediator = mediator;
     }
 
-	/// <summary>
-	/// Get receptionist by office id method, office have only one receptionist
-	/// </summary>
-	/// <param name="id">Office's unique identifier</param>
-	/// <returns></returns>
-	[HttpGet("{id:guid}/receptionist")]
-	[Produces("application/json")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status404NotFound)]
-	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> GetReceptionist(Guid id)
-	{
-		var getReceptionistByOfficeIdQuery = new GetReceptionistByOfficeIdQuery(id);
-
-        var receptionist = await _mediator.Send(getReceptionistByOfficeIdQuery);
-
-		return Ok(receptionist);
-	}
-
     /// <summary>
     /// Get all offices method
     /// </summary>
