@@ -2,7 +2,7 @@
 
 namespace Services.Core.Repositories;
 
-public interface IServiceRepository
+public interface IServiceRepository : IBaseRepository<Service>
 {
 	public Task<Service> GetByIdAsync(Guid id, bool trackChanges = false);
 	public Task<IEnumerable<Service>> GetAllAsync();
