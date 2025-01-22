@@ -4,6 +4,6 @@ namespace Services.Core.Repositories;
 
 public interface IServiceCategoryRepository
 {
-	public Task<ServiceCategory> GetByIdAsync(Guid id);
+	public Task<ServiceCategory> GetByIdAsync(Guid id, bool trackChanges = false);
 	public Task<IEnumerable<ServiceCategory>> GetAllAsync();
 }
