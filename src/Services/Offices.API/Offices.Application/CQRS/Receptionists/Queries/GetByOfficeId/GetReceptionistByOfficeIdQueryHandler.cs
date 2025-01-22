@@ -28,8 +28,6 @@ public class GetReceptionistByOfficeIdQueryHandler : IRequestHandler<GetReceptio
 			throw new NotFoundException(nameof(receptionist), request.OfficeId);
 		}
 
-		var receptionistResponse = _mapper.Map<ReceptionistResponseDto>(receptionist);
-
-		return receptionistResponse;
+		return _mapper.Map<ReceptionistResponseDto>(receptionist);
 	}
 }

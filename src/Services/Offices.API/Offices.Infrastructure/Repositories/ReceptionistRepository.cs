@@ -13,38 +13,12 @@ public class ReceptionistRepository : IRecepcionistRepository
         _context = context;
     }
 
-	public async Task CreateAsync(Receptionist entity)
-	{
-		await _context.Receptionists.InsertOneAsync(entity);
-	}
-
-	public async Task DeleteAsync(Receptionist entity)
-	{
-		var filter = Builders<Receptionist>.Filter.Eq(x => x.Id, entity.Id);
-		await _context.Receptionists.DeleteOneAsync(filter);
-	}
-
-	public async Task UpdateAsync(Receptionist entity)
-	{
-		var filter = Builders<Receptionist>.Filter.Eq(x => x.Id, entity.Id);
-		await _context.Receptionists.ReplaceOneAsync(filter, entity);
-	}
-
-	public async Task<IEnumerable<Receptionist>> GetAllAsync()
-	{
-		var filter = Builders<Receptionist>.Filter.Empty;
-		return await _context.Receptionists.Find(filter).ToListAsync();
-	}
-
-	public async Task<Receptionist> GetByIdAsync(Guid id)
-	{
-		var filter = Builders<Receptionist>.Filter.Eq(x => x.Id, id);
-		return await _context.Receptionists.Find(filter).FirstOrDefaultAsync();
-	}
-
-	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId)
-	{
-		var filter = Builders<Receptionist>.Filter.Eq(x => x.OfficeId, officeId);
-		return await _context.Receptionists.Find(filter).FirstOrDefaultAsync();
-	}
+	public async Task CreateAsync(Receptionist entity) => await _context.Receptionists.InsertOneAsync(entity);
+	public async Task DeleteAsync(Receptionist entity) => await _context.Receptionists.DeleteOneAsync(Builders<Receptionist>.Filter.Eq(x => x.Id, entity.Id));
+	public async Task UpdateAsync(Receptionist entity) => await _context.Receptionists.ReplaceOneAsync(Builders<Receptionist>.Filter.Eq(x => x.Id, entity.Id), entity);
+	public async Task<IEnumerable<Receptionist>> GetAllAsync() => await (await _context.Receptionists.FindAsync(Builders<Receptionist>.Filter.Empty)).ToListAsync();
+	public async Task<Receptionist> GetByIdAsync(Guid id) => 
+		await _context.Receptionists.Find(Builders<Receptionist>.Filter.Eq(x => x.Id, id)).FirstOrDefaultAsync();
+	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId) => 
+		await _context.Receptionists.Find(Builders<Receptionist>.Filter.Eq(x => x.OfficeId, officeId)).FirstOrDefaultAsync();
 }

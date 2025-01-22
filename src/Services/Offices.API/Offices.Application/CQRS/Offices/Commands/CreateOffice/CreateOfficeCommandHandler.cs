@@ -20,12 +20,9 @@ public class CreateOfficeCommandHandler : IRequestHandler<CreateOfficeCommand, O
 	public async Task<OfficeResponseDto> Handle(CreateOfficeCommand request, CancellationToken cancellationToken)
 	{
 		var office = _mapper.Map<Office>(request.OfficeRequestDto);
-		office.Id = Guid.NewGuid();
 
 		await _unitOfWork.OfficeRepository.CreateAsync(office);
 
-		var officeResponse = _mapper.Map<OfficeResponseDto>(office);
-
-		return officeResponse;
+		return _mapper.Map<OfficeResponseDto>(office);
 	}
 }

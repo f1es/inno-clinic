@@ -26,8 +26,6 @@ public class GetReceptionistQueryHandler : IRequestHandler<GetReceptionistQuery,
             throw new NotFoundException(nameof(receptionist), request.Id);
         }
 
-        var receptionistResponse = _mapper.Map<ReceptionistResponseDto>(receptionist);
-
-        return receptionistResponse;
-    }
+        return _mapper.Map<ReceptionistResponseDto>(receptionist);
+	}
 }

@@ -20,8 +20,6 @@ public class GetReceptionistsQueryHandler : IRequestHandler<GetReceptionistsQuer
 	{
 		var receptionists = await _unitOfWork.RecepcionistRepository.GetAllAsync();
 
-		var receptionistsResponse = _mapper.Map<IEnumerable<ReceptionistResponseDto>>(receptionists);
-
-		return receptionistsResponse;
+		return _mapper.Map<IEnumerable<ReceptionistResponseDto>>(receptionists);
 	}
 }

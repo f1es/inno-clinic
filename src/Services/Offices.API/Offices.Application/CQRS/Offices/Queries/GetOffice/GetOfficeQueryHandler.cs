@@ -28,8 +28,6 @@ public class GetOfficeQueryHandler : IRequestHandler<GetOfficeQuery, OfficeRespo
 			throw new NotFoundException(nameof(office), request.Id);
 		}
 
-		var officeResponse = _mapper.Map<OfficeResponseDto>(office);
-
-		return officeResponse;
+		return _mapper.Map<OfficeResponseDto>(office);
 	}
 }

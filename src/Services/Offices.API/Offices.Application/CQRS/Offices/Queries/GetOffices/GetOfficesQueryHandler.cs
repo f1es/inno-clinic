@@ -20,8 +20,6 @@ public class GetOfficesQueryHandler : IRequestHandler<GetOfficesQuery, IEnumerab
 	{
 		var offices = await _unitOfWork.OfficeRepository.GetAllAsync();
 
-		var officesResponse = _mapper.Map<IEnumerable<OfficeResponseDto>>(offices);
-
-		return officesResponse;
+		return _mapper.Map<IEnumerable<OfficeResponseDto>>(offices);
 	}
 }

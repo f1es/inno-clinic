@@ -69,15 +69,11 @@ public class ReceptionistsController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status409Conflict)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Create(ReceptionistRequestDto receptionistRequestDto)
+	public async Task<IActionResult> Create(CreateReceptionistCommand createReceptionistDto)
 	{
-		var createReceptionistDto = new CreateReceptionistCommand(receptionistRequestDto);
-
 		var receptionist = await _mediator.Send(createReceptionistDto);
 
-		var routeName = "GetReceptionistById";
-
-		return CreatedAtRoute(routeName , new { id = receptionist.Id }, receptionist);
+		return CreatedAtRoute("GetReceptionistById", new { id = receptionist.Id }, receptionist);
 	}
 
 	/// <summary>

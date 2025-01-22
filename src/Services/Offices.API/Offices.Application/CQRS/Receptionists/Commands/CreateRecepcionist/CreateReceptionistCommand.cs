@@ -4,12 +4,5 @@ using Offices.Core.Dto.Response;
 
 namespace Offices.Application.CQRS.Receptionists.Commands.CreateRecepcionist;
 
-public class CreateReceptionistCommand : IRequest<ReceptionistResponseDto>
-{
-	public ReceptionistRequestDto ReceptionistRequestDto { get; set; }
-
-	public CreateReceptionistCommand(ReceptionistRequestDto receptionistRequestDto)
-	{
-		ReceptionistRequestDto = receptionistRequestDto;
-	}
-}
+public record CreateReceptionistCommand(ReceptionistRequestDto ReceptionistRequestDto) : IRequest<ReceptionistResponseDto>
+{ }

@@ -88,15 +88,11 @@ public class OfficesController : ControllerBase
 	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Create(OfficeRequestDto officeRequestDto)
+	public async Task<IActionResult> Create(CreateOfficeCommand createOfficeCommand)
     {
-        var createOfficeCommand = new CreateOfficeCommand(officeRequestDto);
-
         var office = await _mediator.Send(createOfficeCommand);
 
-        var routeName = "GetOffice";
-
-		return CreatedAtRoute(routeName, new { id = office.Id }, office);  
+		return CreatedAtRoute("GetOffice", new { id = office.Id }, office);  
     }
 
 	/// <summary>

@@ -35,12 +35,9 @@ public class CreateReceptionistCommandHandler : IRequestHandler<CreateReceptioni
 		} 
 
 		var receptionist = _mapper.Map<Receptionist>(request.ReceptionistRequestDto);
-		receptionist.Id = Guid.NewGuid();
 
 		await _unitOfWork.RecepcionistRepository.CreateAsync(receptionist);
 
-		var receptionistResponse = _mapper.Map<ReceptionistResponseDto>(receptionist);
-
-		return receptionistResponse;
+		return _mapper.Map<ReceptionistResponseDto>(receptionist);
 	}
 }
