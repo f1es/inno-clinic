@@ -15,4 +15,9 @@
     <ProjectReference Include="..\Services.Core\Services.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CQRS\ServicesCategories\Commands\" />
+    <Folder Include="CQRS\ServicesCategories\Queries\" />
+  </ItemGroup>
+
 </Project>

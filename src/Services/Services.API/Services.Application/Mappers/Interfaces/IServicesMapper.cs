@@ -8,4 +8,5 @@ public interface IServicesMapper
 {
 	public Service ToModel(ServiceRequestDto serviceRequestDto);
 	public ServiceResponseDto ToResponse(Service service);
+	public IEnumerable<ServiceResponseDto> ToResponse(IEnumerable<Service> services);
 }
