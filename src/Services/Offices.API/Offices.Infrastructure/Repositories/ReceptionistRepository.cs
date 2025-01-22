@@ -18,7 +18,7 @@ public class ReceptionistRepository : IRecepcionistRepository
 	public async Task UpdateAsync(Receptionist entity) => await _context.Receptionists.ReplaceOneAsync(Builders<Receptionist>.Filter.Eq(x => x.Id, entity.Id), entity);
 	public async Task<IEnumerable<Receptionist>> GetAllAsync() => await (await _context.Receptionists.FindAsync(Builders<Receptionist>.Filter.Empty)).ToListAsync();
 	public async Task<Receptionist> GetByIdAsync(Guid id) => 
-		await _context.Receptionists.Find(Builders<Receptionist>.Filter.Eq(x => x.Id, id)).FirstOrDefaultAsync();
+		(await _context.Receptionists.FindAsync(Builders<Receptionist>.Filter.Eq(x => x.Id, id))).FirstOrDefault();
 	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId) => 
-		await _context.Receptionists.Find(Builders<Receptionist>.Filter.Eq(x => x.OfficeId, officeId)).FirstOrDefaultAsync();
+		(await _context.Receptionists.FindAsync(Builders<Receptionist>.Filter.Eq(x => x.OfficeId, officeId))).FirstOrDefault();
 }
