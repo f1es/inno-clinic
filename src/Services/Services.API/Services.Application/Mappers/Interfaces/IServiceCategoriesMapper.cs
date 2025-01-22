@@ -8,4 +8,5 @@ public interface IServiceCategoriesMapper
 {
 	public ServiceCategory ToModel(ServiceCategoryRequestDto serviceCategoryRequestDto);
 	public ServiceCategoryResponseDto ToResponse(ServiceCategory serviceCategory);
+	public IEnumerable<ServiceCategoryResponseDto> ToResponse(IEnumerable<ServiceCategory> serviceCategories);
 }

@@ -12,4 +12,5 @@ public partial class ServiceCategoriesMapper : IServiceCategoriesMapper
 	[MapperIgnoreTarget(nameof(ServiceCategory.Id))]
 	public partial ServiceCategory ToModel(ServiceCategoryRequestDto serviceCategoryRequestDto);
 	public partial ServiceCategoryResponseDto ToResponse(ServiceCategory serviceCategory);
+	public partial IEnumerable<ServiceCategoryResponseDto> ToResponse(IEnumerable<ServiceCategory> serviceCategories);
 }

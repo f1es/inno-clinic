@@ -26,8 +26,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
 			// 404 ex
 		}
 
-		var newService = _servicesMapper.ToModel(request.ServiceRequestDto);
-		service = newService;
+		service = _servicesMapper.ToModel(request.ServiceRequestDto);
 
 		await _unitOfWork.SaveAsync();
 	}
