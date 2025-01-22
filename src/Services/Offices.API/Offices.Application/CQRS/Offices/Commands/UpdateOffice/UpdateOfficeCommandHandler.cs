@@ -2,7 +2,6 @@
 using MediatR;
 using Offices.Core.Models;
 using Offices.Core.Repositories;
-using Shared.Exceptions;
 
 namespace Offices.Application.CQRS.Offices.Commands.UpdateOffice;
 
