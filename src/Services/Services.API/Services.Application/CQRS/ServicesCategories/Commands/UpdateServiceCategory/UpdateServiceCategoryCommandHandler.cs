@@ -26,7 +26,8 @@ public class UpdateServiceCategoryCommandHandler : IRequestHandler<UpdateService
 			// ex 404
 		}
 
-		serviceCategory = _serviceCategoriesMapper.ToModel(request.ServiceCategoryRequestDto);
+		serviceCategory.TimeSlotSize = request.ServiceCategoryRequestDto.TimeSlotSize;
+		serviceCategory.CategoryName = request.ServiceCategoryRequestDto.CategoryName;
 
 		await _unitOfWork.SaveAsync();
 	}

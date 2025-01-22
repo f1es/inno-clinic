@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Services.Application.Mappers.Implementations;
 using Services.Application.Mappers.Interfaces;
+using System.Reflection;
 
 namespace Services.Application.Extensions;
 
@@ -10,5 +11,13 @@ public static class DependencyInjection
 	{
 		services.AddScoped<IServicesMapper, ServicesMapper>();
 		services.AddScoped<IServiceCategoriesMapper, ServiceCategoriesMapper>();
+	}
+
+	public static void ConfigureMediatr(this IServiceCollection services)
+	{
+		services.AddMediatR(config =>
+		{
+			config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+		});
 	}
 }

@@ -1,5 +1,6 @@
 using MediatR;
 using Services.Application.Mappers.Interfaces;
+using Services.Core.Models;
 using Services.Core.Repositories;
 
 namespace Services.Application.CQRS.Services.Commands.UpdateService;
@@ -26,7 +27,10 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
 			// 404 ex
 		}
 
-		service = _servicesMapper.ToModel(request.ServiceRequestDto);
+		service.ServiceName = request.ServiceRequestDto.ServiceName;
+		service.Price = request.ServiceRequestDto.Price;
+		service.IsActive = request.ServiceRequestDto.IsActive;
+		service.SpecializationId = request.ServiceRequestDto.SpecializationId;
 
 		await _unitOfWork.SaveAsync();
 	}
