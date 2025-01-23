@@ -10,7 +10,9 @@ namespace Services.Application.Mappers.Implementations;
 public partial class ServicesMapper : IServicesMapper
 {
 	[MapperIgnoreTarget(nameof(Service.Id))]
+	[MapperIgnoreTarget(nameof(Service.ServiceCategory))]
 	public partial Service ToModel(ServiceRequestDto serviceRequestDto);
+	[MapperIgnoreSource(nameof(Service.ServiceCategory))]
 	public partial ServiceResponseDto ToResponse(Service service);
 	public partial IEnumerable<ServiceResponseDto> ToResponse(IEnumerable<Service> services);
 }

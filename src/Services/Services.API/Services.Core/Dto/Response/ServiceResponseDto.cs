@@ -5,4 +5,5 @@ public record ServiceResponseDto(
 	string ServiceName,
 	decimal Price,
 	bool IsActive,
-	Guid SpecializationId);
+	Guid SpecializationId,
+	Guid ServiceCategoryId);

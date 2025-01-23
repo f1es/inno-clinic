@@ -12,5 +12,8 @@ public class ServiceCategoriesConfiguration : IEntityTypeConfiguration<ServiceCa
 
 		builder.Property(x => x.CategoryName)
 			.IsRequired();
+
+		builder.HasMany(x => x.Services)
+			.WithOne(x => x.ServiceCategory);
 	}
 }

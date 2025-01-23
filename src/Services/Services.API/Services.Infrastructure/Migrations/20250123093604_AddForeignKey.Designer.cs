@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Services.Infrastructure.Context;
 
@@ -11,9 +12,11 @@ using Services.Infrastructure.Context;
 namespace Services.Infrastructure.Migrations
 {
     [DbContext(typeof(ServicesDbContext))]
-    partial class ServicesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250123093604_AddForeignKey")]
+    partial class AddForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

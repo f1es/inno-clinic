@@ -8,4 +8,6 @@ public class Service
 	public bool IsActive { get; set; }
 
 	public Guid SpecializationId { get; set; }
+	public Guid ServiceCategoryId { get; set; }
+	public ServiceCategory ServiceCategory { get; set; }
 }

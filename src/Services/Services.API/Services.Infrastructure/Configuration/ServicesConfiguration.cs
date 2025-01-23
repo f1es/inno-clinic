@@ -18,5 +18,9 @@ public class ServicesConfiguration : IEntityTypeConfiguration<Service>
 
 		builder.Property(x => x.IsActive)
 			.IsRequired();
+
+		builder.HasOne(x => x.ServiceCategory)
+			.WithMany(x => x.Services)
+			.HasForeignKey(x => x.ServiceCategoryId);
 	}
 }
