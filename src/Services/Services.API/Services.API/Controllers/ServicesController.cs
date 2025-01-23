@@ -9,6 +9,9 @@ using Services.Core.Dto.Request;
 
 namespace Services.API.Controllers;
 
+/// <summary>
+/// Controller for working with services
+/// </summary>
 [ApiController]
 [Route("api/services")]
 public class ServicesController : ControllerBase
@@ -20,7 +23,16 @@ public class ServicesController : ControllerBase
 		_mediator = mediator;
 	}
 
+	/// <summary>
+	/// Get service by id method
+	/// </summary>
+	/// <param name="id">Service's unique identifier</param>
+	/// <returns></returns>
 	[HttpGet("{id:guid}", Name = "GetService")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Get(Guid id)
 	{
 		var getServiceByIdQuery = new GetServiceByIdQuery(id);
@@ -30,7 +42,14 @@ public class ServicesController : ControllerBase
 		return Ok(service);
 	}
 
+	/// <summary>
+	/// Get services method
+	/// </summary>
+	/// <returns></returns>
 	[HttpGet]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetAll()
 	{
 		var getServicesQuery = new GetServicesQuery();
@@ -40,15 +59,35 @@ public class ServicesController : ControllerBase
 		return Ok(services);
 	}
 
+	/// <summary>
+	/// Create service method
+	/// </summary>
+	/// <param name="serviceRequestDto">Request service data transfer object</param>
+	/// <returns></returns>
 	[HttpPost]
-	public async Task<IActionResult> Create(CreateServiceCommand createServiceCommand)
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status201Created)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Create(ServiceRequestDto serviceRequestDto)
 	{
+		var createServiceCommand = new CreateServiceCommand(serviceRequestDto);
+
 		var service = await _mediator.Send(createServiceCommand);
 
 		return CreatedAtRoute("GetService", new { id = service.Id }, service);
 	}
 
+	/// <summary>
+	/// Update service method
+	/// </summary>
+	/// <param name="id">Service's unique identifier</param>
+	/// <param name="serviceRequestDto">Request service data transfer object</param>
+	/// <returns></returns>
 	[HttpPut("{id:guid}")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Update(Guid id, ServiceRequestDto serviceRequestDto)
 	{
 		var updateServiceCommand = new UpdateServiceCommand(id, serviceRequestDto);
@@ -58,7 +97,16 @@ public class ServicesController : ControllerBase
 		return NoContent();
 	}
 
+	/// <summary>
+	/// Delete service method
+	/// </summary>
+	/// <param name="id">Service's unique identifier</param>
+	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Delete(Guid id)
 	{
 		var deleteServiceCommand = new DeleteServiceCommand(id);
