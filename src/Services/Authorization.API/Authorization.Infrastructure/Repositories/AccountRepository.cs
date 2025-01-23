@@ -23,5 +23,10 @@ public class AccountRepository : IAccountRepository
 		var query = trackChanges ? _context.Accounts : _context.Accounts.AsNoTracking();
 		return await query.FirstOrDefaultAsync(x => x.Id == id);
 	}
+	public async Task<Account> GetByEmailAsync(string email, bool trackChanges = false)
+	{
+		var query = trackChanges ? _context.Accounts : _context.Accounts.AsNoTracking();
+		return await query.FirstOrDefaultAsync(x => x.Email == email);
+	}
 	public async Task SaveAsync() => await _context.SaveChangesAsync();
 }
