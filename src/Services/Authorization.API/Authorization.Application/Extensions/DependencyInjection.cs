@@ -1,6 +1,8 @@
 using Authorization.Application.Services.Implementations;
 using Authorization.Application.Services.Interfaces;
+using Authorization.Application.Validators;
 using Authorization.Core.Models;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,5 +16,10 @@ public static class DependencyInjection
 		services.AddScoped<IPasswordService, PasswordService>();
 		services.AddScoped<IJwtProvider, JwtProvider>();
 		services.AddScoped<IAccountService, AccountService>();
+	}
+
+	public static void ConfigureValidators(this IServiceCollection services)
+	{
+		services.AddValidatorsFromAssemblyContaining(typeof(RegisterAccountRequestDtoValidator));
 	}
 }

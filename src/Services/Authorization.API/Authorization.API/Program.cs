@@ -13,6 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureRepository();
 builder.Services.ConfigureServices();
 builder.Services.ConfigureDbContext(builder);
+builder.Services.ConfigureValidators();
 
 var app = builder.Build();
 

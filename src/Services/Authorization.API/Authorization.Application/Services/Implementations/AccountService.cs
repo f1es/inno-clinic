@@ -1,9 +1,11 @@
 using Authorization.Application.Mappers;
 using Authorization.Application.Services.Interfaces;
+using Authorization.Application.Extensions;
 using Authorization.Core.Dto.Request;
 using Authorization.Core.Dto.Response;
 using Authorization.Core.Models;
 using Authorization.Core.Repositories;
+using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 
 namespace Authorization.Application.Services.Implementations;
@@ -13,15 +15,18 @@ public class AccountService : IAccountService
 	private readonly IAccountRepository _accountRepository;
 	private readonly IPasswordService _passwordHasher;
 	private readonly IJwtProvider _jwtProvider;
+	private readonly IValidator<RegisterAccountRequestDto> _validator;
 
 	public AccountService(
 		IAccountRepository accountRepository,
 		IPasswordService passwordHasher,
-		IJwtProvider jwtProvider)
+		IJwtProvider jwtProvider,
+		IValidator<RegisterAccountRequestDto> validator)
 	{
 		_accountRepository = accountRepository;
 		_passwordHasher = passwordHasher;
 		_jwtProvider = jwtProvider;
+		_validator = validator;
 	}
 
 	public async Task<string> LoginAsync(LoginAccountRequestDto loginAccountRequestDto)
@@ -53,6 +58,13 @@ public class AccountService : IAccountService
 	public async Task RegisterAsync(RegisterAccountRequestDto registerAccountRequestDto)
 	{
 		var passwordHash = _passwordHasher.Hash(registerAccountRequestDto.Password);
+
+		var validationResult = await _validator.ValidateAsync(registerAccountRequestDto);
+
+		if (!validationResult.IsValid)
+		{
+			throw new Exception($"{validationResult.GetErrors()}");
+		}
 
 		var account = new Account
 		{
