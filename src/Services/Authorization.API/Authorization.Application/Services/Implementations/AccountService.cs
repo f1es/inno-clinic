@@ -1,5 +1,7 @@
+using Authorization.Application.Mappers;
 using Authorization.Application.Services.Interfaces;
 using Authorization.Core.Dto.Request;
+using Authorization.Core.Dto.Response;
 using Authorization.Core.Models;
 using Authorization.Core.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -28,13 +30,20 @@ public class AccountService : IAccountService
 
 		if (account == null)
 		{
+			throw new Exception("404");
 			// ex 404
+		}
+
+		if (!account.IsEmailVerified)
+		{
+			throw new Exception("401");
 		}
 
 		var verificationResult = _passwordHasher.Verify(account.Password, loginAccountRequestDto.Password);
 
 		if (verificationResult == PasswordVerificationResult.Failed)
 		{
+			throw new Exception("401");
 			// ex 401
 		}
 
@@ -61,5 +70,53 @@ public class AccountService : IAccountService
 		await _accountRepository.SaveAsync();
 	}
 
+	public async Task<IEnumerable<AccountResponseDto>> GetAllAsync()
+	{
+		var accounts = await _accountRepository.GetAllAsync();
+		var accountsDto = new List<AccountResponseDto>();
+        foreach (var acc in accounts)
+        {
+			var accountDto = acc.ToResponseDto();
 
+			accountsDto.Add(accountDto);
+        }
+
+		return accountsDto;
+    }
+
+	public async Task<AccountResponseDto> GetByIdAsync(Guid id) 
+	{
+		var account = await _accountRepository.GetByIdAsync(id);
+
+		return account.ToResponseDto();
+	}
+
+	public async Task DeleteAsync(Guid id)
+	{
+		var account = await _accountRepository.GetByIdAsync(id);
+
+		if (account == null)
+		{
+			// 404 ex
+		}
+
+		_accountRepository.Delete(account);
+
+		await _accountRepository.SaveAsync();
+	}
+
+	public async Task UpdateAsync(Guid id, UpdateAccountRequestDto updateAccountRequestDto)
+	{
+		var account = await _accountRepository.GetByIdAsync(id, trackChanges: true);
+
+		if (account == null)
+		{
+			// 404 ex
+		}
+
+		account.PhoneNumber = updateAccountRequestDto.PhoneNumber;
+		account.PhotoId = updateAccountRequestDto.PhotoId;
+
+		await _accountRepository.SaveAsync();
+	}
 }
