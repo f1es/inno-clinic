@@ -7,6 +7,6 @@ public record AccountResponseDto(
 	bool IsEmailVerified,
 	string CreatedBy,
 	DateTime CreatedAt,
-	string UpdatedBy,
-	DateTime UpdatedAt,
+	string? UpdatedBy,
+	DateTime? UpdatedAt,
 	Guid PhotoId);
