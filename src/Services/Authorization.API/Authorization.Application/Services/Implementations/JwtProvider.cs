@@ -10,7 +10,7 @@ public class JwtProvider : IJwtProvider
 	public string GenerateToken()
 	{
 		var tokenHandler = new JwtSecurityTokenHandler();
-		var key = Encoding.ASCII.GetBytes("SomeSecretKey1111");
+		var key = Encoding.ASCII.GetBytes("SomeSecretKey1111SomeSecretKey1111SomeSecretKey1111SomeSecretKey1111");
 		var symmetricKey = new SymmetricSecurityKey(key);
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
