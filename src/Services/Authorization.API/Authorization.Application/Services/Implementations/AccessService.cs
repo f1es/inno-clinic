@@ -126,8 +126,8 @@ public class AccessService : IAccessService
 		}
         else
         {
-			// ex 401
-			throw new Exception("401");
+			// ex 400
+			throw new Exception("400");
         }
     }
 }

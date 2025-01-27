@@ -7,7 +7,6 @@ public class Account
 	public string Password { get; set; }
 	public string PhoneNumber { get; set; }
 	public bool IsEmailVerified { get; set; }
-	public string? EmailVerificationToken { get; set; }
 	public string CreatedBy { get; set; }
 	public DateTime CreatedAt { get; set; }
 	public string? UpdatedBy { get; set; }

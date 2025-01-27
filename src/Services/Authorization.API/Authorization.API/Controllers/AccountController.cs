@@ -9,10 +9,14 @@ namespace Authorization.API.Controllers;
 public class AccountController : ControllerBase
 {
 	private readonly IAccountService _accountService;
+	private readonly IAccessService _accessService;
 
-	public AccountController(IAccountService accountService)
+	public AccountController(
+		IAccountService accountService,
+		IAccessService accessService)
 	{
 		_accountService = accountService;
+		_accessService = accessService;
 	}
 
 	/// <summary>
@@ -26,7 +30,7 @@ public class AccountController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Register(RegisterAccountRequestDto registerAccountRequestDto)
 	{
-		await _accountService.RegisterAsync(registerAccountRequestDto);
+		await _accessService.RegisterAsync(registerAccountRequestDto);
 
 		return Ok();
 	}
@@ -43,7 +47,7 @@ public class AccountController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Login(LoginAccountRequestDto loginAccountRequestDto)
 	{
-		var token = await _accountService.LoginAsync(loginAccountRequestDto);
+		var token = await _accessService.LoginAsync(loginAccountRequestDto);
 
 		Response.Cookies.Append("sec", token);
 
@@ -113,4 +117,20 @@ public class AccountController : ControllerBase
 		return NoContent();
 	}
 
+	/// <summary>
+	/// Endpoint for email verification
+	/// </summary>
+	/// <param name="token">Email verification token, send to email when user register</param>
+	/// <returns></returns>
+	[HttpGet("email-verification/")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+	{
+		await _accessService.VerifyEmailAsync(token);
+
+		return Ok();
+	}
 }
