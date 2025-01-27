@@ -1,0 +1,12 @@
+
+services:
+  offices-service-db:
+    image: mongo:6-jammy
+    ports:
+      - 27017:27017
+    volumes:
+      - offices-service-db:/var/lib/mongodb/data
+    container_name: offices_service_db
+
+volumes:
+  offices-service-db:
