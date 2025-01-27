@@ -21,5 +21,6 @@ public class UnitOfWork : IUnitOfWork
     }
 
     public IRecepcionistRepository RecepcionistRepository => _recepcionistRepository.Value;
+
 	public IOfficeRepository OfficeRepository => _officeRepository.Value;
 }

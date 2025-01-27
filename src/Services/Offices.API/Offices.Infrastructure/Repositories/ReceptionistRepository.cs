@@ -14,11 +14,16 @@ public class ReceptionistRepository : IRecepcionistRepository
     }
 
 	public async Task CreateAsync(Receptionist entity) => await _context.Receptionists.InsertOneAsync(entity);
+
 	public async Task DeleteAsync(Receptionist entity) => await _context.Receptionists.DeleteOneAsync(Builders<Receptionist>.Filter.Eq(x => x.Id, entity.Id));
+
 	public async Task UpdateAsync(Receptionist entity) => await _context.Receptionists.ReplaceOneAsync(Builders<Receptionist>.Filter.Eq(x => x.Id, entity.Id), entity);
+
 	public async Task<IEnumerable<Receptionist>> GetAllAsync() => (await _context.Receptionists.FindAsync(Builders<Receptionist>.Filter.Empty)).ToList();
+
 	public async Task<Receptionist> GetByIdAsync(Guid id) => 
 		(await _context.Receptionists.FindAsync(Builders<Receptionist>.Filter.Eq(x => x.Id, id))).FirstOrDefault();
+
 	public async Task<Receptionist> GetByOfficeIdAsync(Guid officeId) => 
 		(await _context.Receptionists.FindAsync(Builders<Receptionist>.Filter.Eq(x => x.OfficeId, officeId))).FirstOrDefault();
 }
