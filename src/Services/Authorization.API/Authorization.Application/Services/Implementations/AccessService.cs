@@ -108,6 +108,11 @@ public class AccessService : IAccessService
 
 		var email = jwt.Claims.FirstOrDefault(x => x.Type == "email").Value;
 
+		if (email == null)
+		{
+			throw new BadRequestException($"Incorrect verification token");
+		}
+
 		var account = await _accountRepository.GetByEmailAsync(email, trackChanges: true);
 
 		if (account == null)
