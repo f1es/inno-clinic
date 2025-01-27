@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Fles.InnoClinic.Shared" Version="1.0.0" />
+  </ItemGroup>
+
 </Project>

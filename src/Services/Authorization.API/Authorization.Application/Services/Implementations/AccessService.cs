@@ -68,8 +68,7 @@ public class AccessService : IAccessService
 
 		if (!validationResult.IsValid)
 		{
-			// custom ex
-			throw new Exception($"{validationResult.GetErrors()}");
+			throw new BadRequestException($"{validationResult.GetErrors()}");
 		}
 
 		var passwordHash = _passwordHasher.Hash(registerAccountRequestDto.Password);
