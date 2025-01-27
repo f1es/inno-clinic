@@ -8,6 +8,7 @@ using Authorization.Core.Repositories;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using Shared.Exceptions;
 using System.Security.Claims;
 
 namespace Authorization.Application.Services.Implementations;
@@ -43,21 +44,19 @@ public class AccessService : IAccessService
 
 		if (account == null)
 		{
-			throw new Exception("404");
-			// ex 404
-		}
-
-		if (!account.IsEmailVerified)
-		{
-			throw new Exception("401");
+			throw new NotFoundException(nameof(account), loginAccountRequestDto.Email);
 		}
 
 		var verificationResult = _passwordHasher.Verify(account.Password, loginAccountRequestDto.Password);
 
 		if (verificationResult == PasswordVerificationResult.Failed)
 		{
-			throw new Exception("401");
-			// ex 401
+			throw new UnauthorizedException($"Incorrect creditionals");
+		}
+
+		if (!account.IsEmailVerified)
+		{
+			throw new UnauthorizedException($"Email {account.Email} is not verified");
 		}
 
 		return _jwtProvider.GenerateToken(_keys.Value.Access, 3, new ClaimsIdentity());
@@ -114,7 +113,7 @@ public class AccessService : IAccessService
 
 		if (account == null)
 		{
-			throw new Exception("404");
+			throw new NotFoundException(nameof(account), email);
 		}
 
 		var verificationResult = await _jwtProvider.VerifyEmailTokenAsync(token, _keys.Value.Email, email);
@@ -126,8 +125,7 @@ public class AccessService : IAccessService
 		}
         else
         {
-			// ex 400
-			throw new Exception("400");
+			throw new BadRequestException("Email cannot be verified");
         }
     }
 }

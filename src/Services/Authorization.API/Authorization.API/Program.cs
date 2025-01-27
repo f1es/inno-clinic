@@ -1,6 +1,7 @@
 using Authorization.Infrastructure.Extensions;
 using Authorization.Application.Extensions;
 using Authorization.API.Extensions;
+using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.ConfigureKeys(builder);
 builder.Services.ConfigureEmailOptions(builder);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

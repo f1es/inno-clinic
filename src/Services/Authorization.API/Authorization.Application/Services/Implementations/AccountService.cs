@@ -3,6 +3,7 @@ using Authorization.Application.Services.Interfaces;
 using Authorization.Core.Dto.Request;
 using Authorization.Core.Dto.Response;
 using Authorization.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Authorization.Application.Services.Implementations;
 
@@ -41,7 +42,7 @@ public class AccountService : IAccountService
 
 		if (account == null)
 		{
-			// 404 ex
+			throw new NotFoundException(nameof(account), id);
 		}
 
 		_accountRepository.Delete(account);
@@ -55,7 +56,7 @@ public class AccountService : IAccountService
 
 		if (account == null)
 		{
-			// 404 ex
+			throw new NotFoundException(nameof(account), id);
 		}
 
 		account.PhoneNumber = updateAccountRequestDto.PhoneNumber;
