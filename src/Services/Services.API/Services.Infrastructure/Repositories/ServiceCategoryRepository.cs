@@ -10,7 +10,9 @@ public class ServiceCategoryRepository : BaseRepository<ServiceCategory>, IServi
     public ServiceCategoryRepository(ServicesDbContext context)
 		: base(context)
     { }
+
 	public async Task<IEnumerable<ServiceCategory>> GetAllAsync() => await _context.ServiceCategories.ToListAsync();
+
 	public async Task<ServiceCategory> GetByIdAsync(Guid id, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.ServiceCategories : _context.ServiceCategories.AsNoTracking();

@@ -12,18 +12,9 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
 		_context = context;
 	}
 
-	public void Create(T entity)
-	{
-		_context.Set<T>().Add(entity);
-	}
+	public void Create(T entity) => _context.Set<T>().Add(entity);
 
-	public void Delete(T entity)
-	{
-		_context.Set<T>().Remove(entity);
-	}
+	public void Delete(T entity) => _context?.Set<T>().Remove(entity);
 
-	public void Update(T entity)
-	{
-		_context.Set<T>().Update(entity);
-	}
+	public void Update(T entity) => _context.Set<T>().Update(entity);
 }

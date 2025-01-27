@@ -18,7 +18,10 @@ public class UnitOfWork : IUnitOfWork
 		_serviceCategoryRepository = new Lazy<IServiceCategoryRepository>(() =>
 		new ServiceCategoryRepository(context));
     }
+
     public IServiceRepository ServiceRepository =>_serviceRepository.Value;
+
 	public IServiceCategoryRepository ServiceCategoryRepository => _serviceCategoryRepository.Value;
+
 	public async Task SaveAsync() => await _context.SaveChangesAsync();
 }
