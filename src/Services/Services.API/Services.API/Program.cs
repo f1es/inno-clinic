@@ -1,6 +1,7 @@
 using Services.Infrastructure.Extensions;
 using Services.Application.Extensions;
 using Services.API.Extensions;
+using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.ConfigureMediatr();
 builder.Services.ConfigureDbContext(builder);
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

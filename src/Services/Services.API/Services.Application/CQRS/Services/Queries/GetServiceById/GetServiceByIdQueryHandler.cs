@@ -2,6 +2,7 @@ using MediatR;
 using Services.Application.Mappers.Interfaces;
 using Services.Core.Dto.Response;
 using Services.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Services.Application.CQRS.Services.Queries.GetServiceById;
 
@@ -22,7 +23,7 @@ public class GetServiceByIdQueryHandler : IRequestHandler<GetServiceByIdQuery, S
 
 		if (service == null)
 		{
-			// 404 ex
+			throw new NotFoundException(nameof(service), request.Id);
 		}
 
 		return _servicesMapper.ToResponse(service);

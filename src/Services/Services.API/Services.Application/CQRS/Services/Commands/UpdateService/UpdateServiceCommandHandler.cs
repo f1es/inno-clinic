@@ -2,6 +2,7 @@ using MediatR;
 using Services.Application.Mappers.Interfaces;
 using Services.Core.Models;
 using Services.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Services.Application.CQRS.Services.Commands.UpdateService;
 
@@ -24,7 +25,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
 
 		if (service == null)
 		{
-			// 404 ex
+			throw new NotFoundException(nameof(service), request.Id);
 		}
 
 		service.ServiceName = request.ServiceRequestDto.ServiceName;

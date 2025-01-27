@@ -1,6 +1,7 @@
 using MediatR;
 using Services.Application.Mappers.Interfaces;
 using Services.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Services.Application.CQRS.Services.Commands.DeleteService;
 
@@ -23,7 +24,7 @@ public class DeleteServiceCommandHandler : IRequestHandler<DeleteServiceCommand>
 
 		if (service == null)
 		{
-			// 404 ex
+			throw new NotFoundException(nameof(service), request.Id);
 		}
 
 		_unitOfWork.ServiceRepository.Delete(service);

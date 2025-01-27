@@ -2,6 +2,7 @@ using MediatR;
 using Services.Application.Mappers.Interfaces;
 using Services.Core.Dto.Response;
 using Services.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Services.Application.CQRS.ServicesCategories.Queries.GetServiceCategoryById;
 
@@ -24,7 +25,7 @@ public class GetServiceCategoryByIdQueryHandler : IRequestHandler<GetServiceCate
 
 		if (serviceCategory == null)
 		{
-			// ex 404
+			throw new NotFoundException(nameof(serviceCategory), request.Id);
 		}
 
 		return _serviceCategoriesMapper.ToResponse(serviceCategory);

@@ -1,6 +1,7 @@
 using MediatR;
 using Services.Application.Mappers.Interfaces;
 using Services.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Services.Application.CQRS.ServicesCategories.Commands.UpdateServiceCategory;
 
@@ -23,7 +24,7 @@ public class UpdateServiceCategoryCommandHandler : IRequestHandler<UpdateService
 
 		if (serviceCategory == null)
 		{
-			// ex 404
+			throw new NotFoundException(nameof(serviceCategory), request.Id);
 		}
 
 		serviceCategory.TimeSlotSize = request.ServiceCategoryRequestDto.TimeSlotSize;

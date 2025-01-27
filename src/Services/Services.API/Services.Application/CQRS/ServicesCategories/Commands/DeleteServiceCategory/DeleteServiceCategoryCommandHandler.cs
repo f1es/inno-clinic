@@ -1,6 +1,7 @@
 using MediatR;
 using Services.Application.Mappers.Interfaces;
 using Services.Core.Repositories;
+using Shared.Exceptions;
 
 namespace Services.Application.CQRS.ServicesCategories.Commands.DeleteServiceCategory;
 
@@ -19,7 +20,7 @@ public class DeleteServiceCategoryCommandHandler : IRequestHandler<DeleteService
 
 		if (serviceCategory == null)
 		{
-			// 404 ex
+			throw new NotFoundException(nameof(serviceCategory), request.Id);
 		}
 
 		_unitOfWork.ServiceCategoryRepository.Delete(serviceCategory);
