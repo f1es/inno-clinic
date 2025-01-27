@@ -4,6 +4,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<PackageId>Fles.InnoClinic.Shared</PackageId>
+	<Version>1.0.0</Version>
+	<Authors>Fles</Authors>
+	<Product>InnoClinicSharedData</Product>
   </PropertyGroup>
 
   <ItemGroup>
