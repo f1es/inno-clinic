@@ -1,4 +1,5 @@
 ﻿using Authorization.Application.Services.Interfaces;
+using Authorization.Application.Utility;
 using Authorization.Core.Dto.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +26,7 @@ public class AccountController : ControllerBase
 	/// <param name="registerAccountRequestDto">Registration account request data transfer object</param>
 	/// <returns></returns>
 	[HttpPost("register")]
+	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -41,17 +43,19 @@ public class AccountController : ControllerBase
 	/// <param name="loginAccountRequestDto">Login account request data transfer object</param>
 	/// <returns></returns>
 	[HttpPost("login")]
+	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Login(LoginAccountRequestDto loginAccountRequestDto)
 	{
-		var token = await _accessService.LoginAsync(loginAccountRequestDto);
+		var tokens = await _accessService.LoginAsync(loginAccountRequestDto);
 
-		Response.Cookies.Append("sec", token);
+		Response.Cookies.Append("sec", tokens.AccessToken);
+		Response.Cookies.Append("ref", tokens.RefreshToken);
 
-		return Ok(token);
+		return Ok(tokens);
 	}
 
 	/// <summary>
@@ -59,6 +63,7 @@ public class AccountController : ControllerBase
 	/// </summary>
 	/// <returns></returns>
 	[HttpGet]
+	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetAll()
@@ -74,6 +79,7 @@ public class AccountController : ControllerBase
 	/// <param name="id">Account's unique identifier</param>
 	/// <returns></returns>
 	[HttpGet("{id:guid}")]
+	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -90,6 +96,7 @@ public class AccountController : ControllerBase
 	/// <param name="id">Account's unique identifier</param>
 	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
+	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -107,6 +114,7 @@ public class AccountController : ControllerBase
 	/// <param name="updateAccountRequestDto">Update account request data transfer object</param>
 	/// <returns></returns>
 	[HttpPut("{id:guid}")]
+	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -123,6 +131,7 @@ public class AccountController : ControllerBase
 	/// <param name="token">Email verification token, send to email when user register</param>
 	/// <returns></returns>
 	[HttpGet("email-verification/")]
+	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -132,5 +141,35 @@ public class AccountController : ControllerBase
 		await _accessService.VerifyEmailAsync(token);
 
 		return Ok();
+	}
+
+	/// <summary>
+	/// Refresh access and refresh tokens from cookies
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet("refresh")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Refresh()
+	{
+		var tokens = new Tokens();
+		tokens.RefreshToken = Request.Cookies["ref"];
+		tokens.AccessToken = Request.Cookies["sec"];
+
+		tokens = await _accessService.RefreshAsync(tokens);
+
+		var cookieOptions = new CookieOptions
+		{
+			HttpOnly = true,
+			Expires = DateTime.UtcNow.AddDays(31),
+		};
+
+		Response.Cookies.Append("ref", tokens.RefreshToken, cookieOptions);
+		Response.Cookies.Append("sec", tokens.AccessToken, cookieOptions);
+
+		return Ok(tokens);
 	}
 }
