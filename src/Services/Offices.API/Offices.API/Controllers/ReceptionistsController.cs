@@ -65,7 +65,7 @@ public class ReceptionistsController : ControllerBase
 	/// </summary>
 	/// <param name="officeId">Office's unique identifier</param>
 	/// <returns></returns>
-	[HttpGet("/office/{officeId:guid}")]
+	[HttpGet("office/{officeId:guid}")]
 	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
