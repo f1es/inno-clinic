@@ -18,9 +18,27 @@ public static class DependencyInjection
 	{
 		var key = builder.Configuration.GetSection("Keys").GetRequiredSection("Access");
 
-		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		services.AddAuthentication(options =>
+		{
+			options.DefaultAuthenticateScheme =	JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		})
 			.AddJwtBearer(options =>
 			{
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						if (context.Request.Cookies.ContainsKey("sec"))
+						{
+							context.Token = context.Request.Cookies["sec"];
+						}
+
+						return Task.CompletedTask;
+					}
+				};
+				options.RequireHttpsMetadata = false;
+				options.SaveToken = true;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidateIssuer = false,
@@ -30,5 +48,7 @@ public static class DependencyInjection
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key.Value))
 				};
 			});
+
+		services.AddAuthorization();
 	}
 }
