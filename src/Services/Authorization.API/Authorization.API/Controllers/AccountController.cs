@@ -155,7 +155,7 @@ public class AccountController : ControllerBase
 	/// Refresh access and refresh tokens from cookies
 	/// </summary>
 	/// <returns></returns>
-	[HttpGet("refresh")]
+	[HttpPost("refresh")]
 	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -179,5 +179,26 @@ public class AccountController : ControllerBase
 		Response.Cookies.Append("sec", tokens.AccessToken, cookieOptions);
 
 		return Ok(tokens);
+	}
+
+	/// <summary>
+	/// Remove refresh token from data base
+	/// </summary>
+	/// <returns></returns>
+	[HttpPost("revoke")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Revoke()
+	{
+		var tokens = new Tokens();
+		tokens.RefreshToken = Request.Cookies["ref"];
+		tokens.AccessToken = Request.Cookies["sec"];
+
+		await _accessService.RevokeAsync(tokens);
+
+		return NoContent();
 	}
 }
