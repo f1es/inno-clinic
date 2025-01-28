@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Offices.Application.CQRS.Receptionists.Commands.CreateRecepcionist;
 using Offices.Application.CQRS.Receptionists.Commands.DeleteREceptionist;
@@ -14,6 +15,7 @@ namespace Offices.API.Controllers;
 /// Receptionists controller
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("api/receptionists")]
 public class ReceptionistsController : ControllerBase
 {
