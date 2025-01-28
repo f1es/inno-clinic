@@ -1,7 +1,15 @@
 using Authorization.Application.Configuration;
 using Authorization.Application.Options;
-using Authorization.Application.Services.Implementations;
-using Authorization.Application.Services.Interfaces;
+using Authorization.Application.Services.Implementations.Accounts;
+using Authorization.Application.Services.Implementations.Authentication;
+using Authorization.Application.Services.Implementations.Email;
+using Authorization.Application.Services.Implementations.JWT;
+using Authorization.Application.Services.Implementations.TokenProviders;
+using Authorization.Application.Services.Interfaces.Accounts;
+using Authorization.Application.Services.Interfaces.Authentication;
+using Authorization.Application.Services.Interfaces.Email;
+using Authorization.Application.Services.Interfaces.JWT;
+using Authorization.Application.Services.Interfaces.TokenProviers;
 using Authorization.Application.Validators;
 using Authorization.Core.Models;
 using FluentValidation;
@@ -24,6 +32,7 @@ public static class DependencyInjection
 		services.AddScoped<IEmailSender, EmailSender>();
 		services.AddScoped<JwtSecurityTokenHandler>();
 		services.AddScoped<IRefreshProvider, RefreshProvider>();
+		services.AddScoped<IRegistrationService, RegistrationService>();
 	}
 
 	public static void ConfigureValidators(this IServiceCollection services) =>

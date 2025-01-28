@@ -1,4 +1,6 @@
-﻿using Authorization.Application.Services.Interfaces;
+﻿using Authorization.Application.Services.Interfaces.Accounts;
+using Authorization.Application.Services.Interfaces.Authentication;
+using Authorization.Application.Services.Interfaces.Email;
 using Authorization.Application.Utility;
 using Authorization.Core.Dto.Request;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +13,19 @@ public class AccountController : ControllerBase
 {
 	private readonly IAccountService _accountService;
 	private readonly IAccessService _accessService;
+	private readonly IRegistrationService _registrationService;
+	private readonly IEmailVerificationService _emailVerificationService;
 
 	public AccountController(
 		IAccountService accountService,
-		IAccessService accessService)
+		IAccessService accessService,
+		IRegistrationService registrationService,
+		IEmailVerificationService emailVerificationService)
 	{
 		_accountService = accountService;
 		_accessService = accessService;
+		_registrationService = registrationService;
+		_emailVerificationService = emailVerificationService;
 	}
 
 	/// <summary>
@@ -32,7 +40,7 @@ public class AccountController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Register(RegisterAccountRequestDto registerAccountRequestDto)
 	{
-		await _accessService.RegisterAsync(registerAccountRequestDto);
+		await _registrationService.RegisterAsync(registerAccountRequestDto);
 
 		return Ok();
 	}
@@ -138,7 +146,7 @@ public class AccountController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> VerifyEmail([FromQuery] string token)
 	{
-		await _accessService.VerifyEmailAsync(token);
+		await _emailVerificationService.VerifyEmailAsync(token);
 
 		return Ok();
 	}
