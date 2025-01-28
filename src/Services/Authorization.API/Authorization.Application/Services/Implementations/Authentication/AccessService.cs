@@ -76,12 +76,16 @@ public class AccessService : IAccessService
 
     public async Task<Tokens> RefreshAsync(Tokens tokens)
     {
-        var accessToken = tokens.AccessToken;
+		if (tokens.AccessToken == null || tokens.RefreshToken == null)
+		{
+			throw new BadRequestException("Invalid client request");
+		}
+
+		var accessToken = tokens.AccessToken;
         var refreshToken = tokens.RefreshToken;
 
         var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Value.Access);
-        var userIdClaim = principal.Claims.FirstOrDefault(x => x.Type == "id");
-        var userId = Guid.Parse(userIdClaim.Value);
+        var userId = GetAccountIdFromPrincipal(principal);
 
         var account = await _accountRepository.GetByIdAsync(userId, trackChanges: true);
 
@@ -95,7 +99,13 @@ public class AccessService : IAccessService
             throw new BadRequestException("Invalid client request");
         }
 
-        var claimsIdentity = new ClaimsIdentity([userIdClaim]);
+        if (account.RefreshTokenExpirationDate < DateTime.UtcNow)
+        {
+            throw new BadRequestException("Refresh token is expired");
+        }
+
+		var userIdClaim = principal.Claims.FirstOrDefault(x => x.Type == "id");
+		var claimsIdentity = new ClaimsIdentity([userIdClaim]);
 
         var newAccessToken = _jwtProvider.GenerateToken(_keys.Value.Access, 2, claimsIdentity);
         var newRefreshToken = _refreshProvider.GenerateToken();
@@ -110,4 +120,29 @@ public class AccessService : IAccessService
 
         return tokens;
     }
+
+    public async Task RevokeAsync(Tokens tokens)
+    {
+        if (tokens.AccessToken == null || tokens.RefreshToken == null)
+        {
+            throw new BadRequestException("Invalid client request");
+        }
+
+        var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Value.Access);
+        var accountId = GetAccountIdFromPrincipal(principal);
+
+        var account = await _accountRepository.GetByIdAsync(accountId, trackChanges: true);
+
+        if (account == null)
+        {
+            throw new NotFoundException(nameof(account), accountId);
+        }
+
+        account.RefreshToken = null;
+        account.RefreshTokenExpirationDate = null;
+
+        await _accountRepository.SaveAsync();
+    }
+
+    private Guid GetAccountIdFromPrincipal(ClaimsPrincipal principal) => Guid.Parse(principal.FindFirst(x => x.Type == "id").Value);
 }

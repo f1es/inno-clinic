@@ -33,6 +33,7 @@ public static class DependencyInjection
 		services.AddScoped<JwtSecurityTokenHandler>();
 		services.AddScoped<IRefreshProvider, RefreshProvider>();
 		services.AddScoped<IRegistrationService, RegistrationService>();
+		services.AddScoped<IEmailVerificationService, EmailVerificationService>();
 	}
 
 	public static void ConfigureValidators(this IServiceCollection services) =>

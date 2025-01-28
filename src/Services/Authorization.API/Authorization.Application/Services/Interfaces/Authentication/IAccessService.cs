@@ -7,4 +7,5 @@ public interface IAccessService
 {
     public Task<Tokens> LoginAsync(LoginAccountRequestDto loginAccountRequestDto);
     public Task<Tokens> RefreshAsync(Tokens tokens);
+    public Task RevokeAsync(Tokens tokens);
 }
