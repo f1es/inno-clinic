@@ -21,6 +21,7 @@ public class AccessService : IAccessService
 	private readonly IValidator<RegisterAccountRequestDto> _validator;
 	private readonly IOptions<SecretKeys> _keys;
 	private readonly IEmailSender _emailSender;
+	private readonly IRefreshProvider _refreshProvider;
 
 	public AccessService(
 		IAccountRepository accountRepository,
@@ -28,7 +29,8 @@ public class AccessService : IAccessService
 		IJwtProvider jwtProvider,
 		IValidator<RegisterAccountRequestDto> validator,
 		IOptions<SecretKeys> keys,
-		IEmailSender emailSender)
+		IEmailSender emailSender,
+		IRefreshProvider refreshProvider)
 	{
 		_accountRepository = accountRepository;
 		_passwordHasher = passwordHasher;
@@ -36,11 +38,12 @@ public class AccessService : IAccessService
 		_validator = validator;
 		_keys = keys;
 		_emailSender = emailSender;
+		_refreshProvider = refreshProvider;
 	}
 
-	public async Task<string> LoginAsync(LoginAccountRequestDto loginAccountRequestDto)
+	public async Task<Tokens> LoginAsync(LoginAccountRequestDto loginAccountRequestDto)
 	{
-		var account = await _accountRepository.GetByEmailAsync(loginAccountRequestDto.Email);
+		var account = await _accountRepository.GetByEmailAsync(loginAccountRequestDto.Email, trackChanges: true);
 
 		if (account == null)
 		{
@@ -59,7 +62,23 @@ public class AccessService : IAccessService
 			throw new UnauthorizedException($"Email {account.Email} is not verified");
 		}
 
-		return _jwtProvider.GenerateToken(_keys.Value.Access, 3, new ClaimsIdentity());
+		var claimsIdentity = new ClaimsIdentity( [new Claim("id", account.Id.ToString())] );
+
+		var accessToken = _jwtProvider.GenerateToken(_keys.Value.Access, 3, claimsIdentity);
+		var refreshToken = _refreshProvider.GenerateToken();
+
+		account.RefreshToken = refreshToken;
+		account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(31);
+
+		await _accountRepository.SaveAsync();
+
+		var tokens = new Tokens
+		{
+			AccessToken = accessToken,
+			RefreshToken = refreshToken
+		};
+
+		return tokens;
 	}
 
 	public async Task RegisterAsync(RegisterAccountRequestDto registerAccountRequestDto)
@@ -88,10 +107,8 @@ public class AccessService : IAccessService
 
 		await _accountRepository.SaveAsync();
 
-		var claimsIdentity = new ClaimsIdentity(new List<Claim>()
-		{
-			new Claim(ClaimTypes.Email, registerAccountRequestDto.Email)
-		});
+		var claimsIdentity = new ClaimsIdentity( [new Claim(ClaimTypes.Email, registerAccountRequestDto.Email)] );
+
 		var emailToken = _jwtProvider.GenerateToken(_keys.Value.Email, 1, claimsIdentity);
 
 		var endpoint = $"https://localhost:44366/api/accounts/email-verification/?token={emailToken}";
@@ -132,4 +149,41 @@ public class AccessService : IAccessService
 			throw new BadRequestException("Email cannot be verified");
         }
     }
+
+	public async Task<Tokens> RefreshAsync(Tokens tokens)
+	{
+		var accessToken = tokens.AccessToken;
+		var refreshToken = tokens.RefreshToken;
+
+		var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Value.Access);
+		var userIdClaim = principal.Claims.FirstOrDefault(x => x.Type == "id");
+		var userId = Guid.Parse(userIdClaim.Value);
+
+		var account = await _accountRepository.GetByIdAsync(userId, trackChanges: true);
+
+		if (account == null)
+		{
+			throw new NotFoundException(nameof(account), userId);
+		}
+
+		if (account.RefreshToken != refreshToken)
+		{
+			throw new BadRequestException("Invalid client request");
+		}
+
+		var claimsIdentity = new ClaimsIdentity([userIdClaim]);
+
+		var newAccessToken = _jwtProvider.GenerateToken(_keys.Value.Access, 2, claimsIdentity);
+		var newRefreshToken = _refreshProvider.GenerateToken();
+
+		account.RefreshToken = newRefreshToken;
+		account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(31);
+
+		await _accountRepository.SaveAsync();
+
+		tokens.AccessToken = newAccessToken;
+		tokens.RefreshToken = newRefreshToken;
+
+		return tokens;
+	}
 }

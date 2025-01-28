@@ -23,6 +23,7 @@ public static class DependencyInjection
 		services.AddScoped<IAccessService, AccessService>();
 		services.AddScoped<IEmailSender, EmailSender>();
 		services.AddScoped<JwtSecurityTokenHandler>();
+		services.AddScoped<IRefreshProvider, RefreshProvider>();
 	}
 
 	public static void ConfigureValidators(this IServiceCollection services) =>

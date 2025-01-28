@@ -42,6 +42,31 @@ public class JwtProvider : IJwtProvider
 
 	public JwtSecurityToken ReadToken(string token) => _tokenHandler.ReadJwtToken(token);
 
+	public ClaimsPrincipal GetPrincipalFromExpiredToken(string token, string key)
+	{
+		var tokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateAudience = false,
+			ValidateIssuer = false,
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+			ValidateLifetime = false
+		};
+
+		SecurityToken securityToken;
+
+		var principal = _tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
+
+		var jwtSecurityToken = securityToken as JwtSecurityToken;
+
+		if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+		{
+			throw new SecurityTokenException("Invalid token");
+		}
+
+		return principal;
+	}
+
 	private SymmetricSecurityKey ReadKey(string key) => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 
 	private async Task<bool> VerifyTokenAsync(string token, string key, bool validateLifetime = true)
