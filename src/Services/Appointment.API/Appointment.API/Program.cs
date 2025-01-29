@@ -1,6 +1,7 @@
 using Appointment.API.Extensions;
 using Appointment.Application.Extensions;
 using Appointment.Infrastructure.Extensions;
+using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,8 @@ builder.Services.ConfigureServices();
 builder.Services.ConfigureRepositories();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
