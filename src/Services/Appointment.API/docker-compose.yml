@@ -1,0 +1,16 @@
+
+services:
+  appointment-db:
+    image: postgres:17
+    environment:
+      - POSTGRES_PASSWORD=wonderfulpassword111
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=Appointments
+    ports:
+      - 5432:5432
+    volumes:
+      - appointment-db:/var/lib/npgsql/data
+    container_name: appointment_service_db
+volumes:
+  appointment-db:
+  

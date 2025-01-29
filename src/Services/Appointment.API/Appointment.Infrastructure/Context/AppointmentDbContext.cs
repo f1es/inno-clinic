@@ -10,6 +10,7 @@ public class AppointmentDbContext : DbContext
 	public DbSet<Result> Results { get; set; }
 
     public AppointmentDbContext(DbContextOptions<AppointmentDbContext> options)
+		: base(options)
     { }
 
     public AppointmentDbContext()
