@@ -2,7 +2,7 @@
 
 namespace Appointment.Core.Repositories;
 
-public interface IResultRepository
+public interface IResultRepository : IBaseRepository<Result>
 {
 	public Task<Result> GetByIdAsync(Guid id, bool trackChanges = false);
 	public Task<IEnumerable<Result>> GetAllAsync();

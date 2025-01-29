@@ -1,4 +1,3 @@
-using Appointment.Core.Models;
 using Appointment.Core.Repositories;
 using Appointment.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
