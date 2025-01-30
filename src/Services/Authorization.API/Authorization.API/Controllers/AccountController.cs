@@ -1,7 +1,7 @@
-﻿using Authorization.Application.Services.Interfaces.Accounts;
+﻿using Authorization.API.Extensions;
+using Authorization.Application.Services.Interfaces.Accounts;
 using Authorization.Application.Services.Interfaces.Authentication;
 using Authorization.Application.Services.Interfaces.Email;
-using Authorization.Application.Utility;
 using Authorization.Core.Dto.Request;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,8 +60,7 @@ public class AccountController : ControllerBase
 	{
 		var tokens = await _accessService.LoginAsync(loginAccountRequestDto);
 
-		Response.Cookies.Append("sec", tokens.AccessToken);
-		Response.Cookies.Append("ref", tokens.RefreshToken);
+		Response.AddAccessAndRefreshTokensToCookie(tokens);
 
 		return Ok(tokens);
 	}
@@ -163,20 +162,11 @@ public class AccountController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Refresh()
 	{
-		var tokens = new Tokens();
-		tokens.RefreshToken = Request.Cookies["ref"];
-		tokens.AccessToken = Request.Cookies["sec"];
+		var tokens = Request.GetAccessAndRefreshTokens();
 
 		tokens = await _accessService.RefreshAsync(tokens);
 
-		var cookieOptions = new CookieOptions
-		{
-			HttpOnly = true,
-			Expires = DateTime.UtcNow.AddDays(31),
-		};
-
-		Response.Cookies.Append("ref", tokens.RefreshToken, cookieOptions);
-		Response.Cookies.Append("sec", tokens.AccessToken, cookieOptions);
+		Response.AddAccessAndRefreshTokensToCookie(tokens);
 
 		return Ok(tokens);
 	}
@@ -193,9 +183,7 @@ public class AccountController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Revoke()
 	{
-		var tokens = new Tokens();
-		tokens.RefreshToken = Request.Cookies["ref"];
-		tokens.AccessToken = Request.Cookies["sec"];
+		var tokens = Request.GetAccessAndRefreshTokens();
 
 		await _accessService.RevokeAsync(tokens);
 
