@@ -64,7 +64,7 @@ public class ResultService : IResultService
 
 	public async Task UpdateAsync(Guid id, ResultRequestDto resultRequestDto)
 	{
-		var result = await GetByIdAsyncAndCheckIfExist(id);
+		var result = await GetByIdAsyncAndCheckIfExist(id, trackChanges: true);
 
 		result.AppointmentId = resultRequestDto.AppointmentId;
 		result.Conclusion = resultRequestDto.Conclusion;
@@ -74,9 +74,9 @@ public class ResultService : IResultService
 		await _unitOfWork.SaveAsync();
 	}
 
-	private async Task<Result> GetByIdAsyncAndCheckIfExist(Guid id)
+	private async Task<Result> GetByIdAsyncAndCheckIfExist(Guid id, bool trackChanges = false)
 	{
-		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id, trackChanges: true);
+		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id, trackChanges);
 
 		return result ?? throw new NotFoundException(nameof(result), id);
 	}

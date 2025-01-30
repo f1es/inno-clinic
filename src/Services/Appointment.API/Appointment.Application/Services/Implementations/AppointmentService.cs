@@ -35,12 +35,7 @@ public class AppointmentService : IAppointmentService
 
 	public async Task DeleteAsync(Guid id)
 	{
-		var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id);
-
-		if (appointment == null)
-		{
-			throw new NotFoundException(nameof(appointment), id);
-		}
+		var appointment = await GetByIdAndCheckIfExist(id);
 
 		_unitOfWork.AppointmentRepository.Delete(appointment);
 
@@ -56,24 +51,14 @@ public class AppointmentService : IAppointmentService
 
 	public async Task<AppointmentResponseDto> GetByIdAsync(Guid id)
 	{
-		var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id);
-
-		if (appointment == null)
-		{
-			throw new NotFoundException(nameof(appointment), id);
-		}
+		var appointment = await GetByIdAndCheckIfExist(id);
 
 		return _appointmentsMapper.ToResponse(appointment);
 	}
 
 	public async Task UpdateAsync(Guid id, AppointmentRequestDto appointmentRequestDto)
 	{
-		var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id, trackChanges: true);
-
-		if (appointment == null)
-		{
-			throw new NotFoundException(nameof(appointment), id);
-		}
+		var appointment = await GetByIdAndCheckIfExist(id, trackChanges: true);
 
 		appointment.ServiceId = appointmentRequestDto.ServiceId;
 		appointment.PatientId = appointmentRequestDto.PatientId;
@@ -83,5 +68,12 @@ public class AppointmentService : IAppointmentService
 		appointment.Time = appointmentRequestDto.Time;
 
 		await _unitOfWork.SaveAsync();
+	}
+
+	private async Task<Core.Models.Appointment> GetByIdAndCheckIfExist(Guid id, bool trackChanges = false)
+	{
+		var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id, trackChanges);
+
+		return appointment ?? throw new NotFoundException(nameof(appointment), id);
 	}
 }
