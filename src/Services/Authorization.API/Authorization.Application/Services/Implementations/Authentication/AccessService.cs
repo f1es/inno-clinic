@@ -19,23 +19,26 @@ public class AccessService : IAccessService
     private readonly IPasswordService _passwordService;
     private readonly IJwtProvider _jwtProvider;
     private readonly IOptions<SecretKeys> _keys;
+    private readonly IOptions<JwtTokenOptions> _jwtTokenOptions;
     private readonly IRefreshProvider _refreshProvider;
 
-    public AccessService(
-        IAccountRepository accountRepository,
-        IPasswordService passwordHasher,
-        IJwtProvider jwtProvider,
-        IOptions<SecretKeys> keys,
-        IRefreshProvider refreshProvider)
-    {
-        _accountRepository = accountRepository;
-        _passwordService = passwordHasher;
-        _jwtProvider = jwtProvider;
-        _keys = keys;
-        _refreshProvider = refreshProvider;
-    }
+	public AccessService(
+		IAccountRepository accountRepository,
+		IPasswordService passwordHasher,
+		IJwtProvider jwtProvider,
+		IOptions<SecretKeys> keys,
+		IRefreshProvider refreshProvider,
+		IOptions<JwtTokenOptions> jwtTokenOptions)
+	{
+		_accountRepository = accountRepository;
+		_passwordService = passwordHasher;
+		_jwtProvider = jwtProvider;
+		_keys = keys;
+		_refreshProvider = refreshProvider;
+		_jwtTokenOptions = jwtTokenOptions;
+	}
 
-    public async Task<Tokens> LoginAsync(LoginAccountRequestDto loginAccountRequestDto)
+	public async Task<Tokens> LoginAsync(LoginAccountRequestDto loginAccountRequestDto)
     {
         var account = await _accountRepository.GetByEmailAsync(loginAccountRequestDto.Email, trackChanges: true);
 
@@ -55,7 +58,7 @@ public class AccessService : IAccessService
 
         var claimsIdentity = new ClaimsIdentity([new Claim("id", account.Id.ToString())]);
 
-        var accessToken = _jwtProvider.GenerateToken(_keys.Value.Access, 3, claimsIdentity);
+        var accessToken = _jwtProvider.GenerateToken(_keys.Value.Access, _jwtTokenOptions.Value.AccessTokenLifetime, claimsIdentity);
         var refreshToken = _refreshProvider.GenerateToken();
 
         account.RefreshToken = refreshToken;
@@ -96,11 +99,11 @@ public class AccessService : IAccessService
 		var accountIdClaim = principal.Claims.FirstOrDefault(x => x.Type == "id");
 		var claimsIdentity = new ClaimsIdentity([accountIdClaim]);
 
-        tokens.AccessToken = _jwtProvider.GenerateToken(_keys.Value.Access, 2, claimsIdentity);
+        tokens.AccessToken = _jwtProvider.GenerateToken(_keys.Value.Access, _jwtTokenOptions.Value.AccessTokenLifetime, claimsIdentity);
         tokens.RefreshToken = _refreshProvider.GenerateToken();
 
         account.RefreshToken = tokens.RefreshToken;
-        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(31);
+        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtTokenOptions.Value.RefreshTokenLifetime);
 
         await _accountRepository.SaveAsync();
 
