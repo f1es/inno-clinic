@@ -9,5 +9,6 @@ namespace Appointment.Application.Mappers.Interfaces
         Result ToModel(ResultRequestDto resultRequestDto);
         IEnumerable<ResultResponseDto> ToResponse(IEnumerable<Result> results);
         ResultResponseDto ToResponse(Result result);
+        ResultForDownloadResponseDto ToResponseForDownload(Result result);
     }
 }

@@ -2,6 +2,7 @@ using Appointment.Application.Mappers.Interfaces;
 using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
+using Appointment.Core.Models;
 using Appointment.Core.Repositories;
 using Shared.Exceptions;
 
@@ -33,12 +34,7 @@ public class ResultService : IResultService
 
 	public async Task DeleteAsync(Guid id)
 	{
-		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id);
-
-		if (result == null)
-		{
-			throw new NotFoundException(nameof(result), id);
-		}
+		var result = await GetByIdAsyncAndCheckIfExist(id);
 
 		_unitOfWork.ResultRepository.Delete(result);
 
@@ -54,24 +50,21 @@ public class ResultService : IResultService
 
 	public async Task<ResultResponseDto> GetByIdAsync(Guid id)
 	{
-		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id);
-
-		if (result == null)
-		{
-			throw new NotFoundException(nameof(result), id);
-		}
+		var result = await GetByIdAsyncAndCheckIfExist(id);
 
 		return _resultsMapper.ToResponse(result);
 	}
 
+	public async Task<ResultForDownloadResponseDto> GetForDownloadAsync(Guid id)
+	{
+		var result = await GetByIdAsyncAndCheckIfExist(id);
+
+		return _resultsMapper.ToResponseForDownload(result);
+	}
+
 	public async Task UpdateAsync(Guid id, ResultRequestDto resultRequestDto)
 	{
-		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id, trackChanges: true);
-
-		if (result == null)
-		{
-			throw new NotFoundException(nameof(result), id);
-		}
+		var result = await GetByIdAsyncAndCheckIfExist(id);
 
 		result.AppointmentId = resultRequestDto.AppointmentId;
 		result.Conclusion = resultRequestDto.Conclusion;
@@ -79,5 +72,12 @@ public class ResultService : IResultService
 		result.Complaints = resultRequestDto.Complaints;
 
 		await _unitOfWork.SaveAsync();
+	}
+
+	private async Task<Result> GetByIdAsyncAndCheckIfExist(Guid id)
+	{
+		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id, trackChanges: true);
+
+		return result ?? throw new NotFoundException(nameof(result), id);
 	}
 }

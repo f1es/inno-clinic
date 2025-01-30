@@ -1,6 +1,8 @@
 ﻿using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using System.Text.Json;
 
 namespace Appointment.API.Controllers;
 
@@ -98,5 +100,22 @@ public class ResultController : ControllerBase
 		await _resultService.UpdateAsync(id, resultRequestDto);
 
 		return NoContent();
+	}
+
+	/// <summary>
+	/// Download result method
+	/// </summary>
+	/// <param name="id">Result's unique ientifier</param>
+	/// <returns></returns>
+	[HttpGet("{id:guid}/download")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> Download(Guid id)
+	{
+		var result = await _resultService.GetForDownloadAsync(id);
+
+		return File(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(result)), "text/plain", fileDownloadName: "result.txt");
 	}
 }

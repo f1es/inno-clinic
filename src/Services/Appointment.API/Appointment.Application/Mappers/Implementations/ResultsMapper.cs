@@ -16,4 +16,8 @@ public partial class ResultsMapper : IResultsMapper
 	public partial ResultResponseDto ToResponse(Result result);
 	[MapperIgnoreSource(nameof(Result.Appointment))]
 	public partial IEnumerable<ResultResponseDto> ToResponse(IEnumerable<Result> results);
+	[MapperIgnoreSource(nameof(Result.Appointment))]
+	[MapperIgnoreSource(nameof(Result.AppointmentId))]
+	[MapperIgnoreSource(nameof(Result.Id))]
+	public partial ResultForDownloadResponseDto ToResponseForDownload(Result result);
 }
