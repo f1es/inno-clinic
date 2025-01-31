@@ -1,0 +1,15 @@
+services:
+  profiles-mssql-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=1rr23r2MyStrongPassword1234321
+      - MSSQL_PID=Developer
+    volumes:
+      - profiles-service-db:/var/lib/mssql/data
+    container_name: profiles_service_db
+    
+volumes:
+  profiles-service-db:
