@@ -6,4 +6,7 @@ public record DoctorRequestDto(
 	string MiddleName,
 	DateOnly DateOfBirth,
 	int CareerStartYear,
-	string Status);
+	string Status,
+	Guid AccountId,
+	Guid SpecializationId,
+	Guid OfficeId);
