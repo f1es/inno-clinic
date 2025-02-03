@@ -18,6 +18,7 @@ public class SpecializationRepository : BaseRepository<Specialization>, ISpecial
 	public async Task<IEnumerable<Specialization>> GetAllAsync(RequestParameters requestParameters) => 
 		await _context.Specializations
 		.AsNoTracking()
+		.Order(requestParameters.OrderQuery, x => x.SpecializationName)
 		.Search(requestParameters.SearchTerm)
 		.ToListAsync();
 

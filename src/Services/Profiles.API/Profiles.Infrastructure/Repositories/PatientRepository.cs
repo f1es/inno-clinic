@@ -18,6 +18,7 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
 	public async Task<IEnumerable<Patient>> GetAllAsync(RequestParameters requestParameters) => 
 		await _context.Patients
 		.AsNoTracking()
+		.Order(requestParameters.OrderQuery, x => x.FirstName)
 		.Search(requestParameters.SearchTerm)
 		.ToListAsync();
 

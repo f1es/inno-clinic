@@ -18,6 +18,7 @@ public class ReceptionistRepository : BaseRepository<Receptionist>, IReceptionis
 	public async Task<IEnumerable<Receptionist>> GetAllAsync(RequestParameters requestParameters) => 
 		await _context.Receptionists
 		.AsNoTracking()
+		.Order(requestParameters.OrderQuery, x => x.FirstName)
 		.Search(requestParameters.SearchTerm)
 		.ToListAsync();
 	
