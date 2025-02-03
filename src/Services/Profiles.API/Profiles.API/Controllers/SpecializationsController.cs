@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Profiles.Application.Services.Interfaces;
 using Profiles.Core.Dtos.Request;
+using Profiles.Core.Parameters;
 
 namespace Profiles.API.Controllers;
 
@@ -16,9 +17,9 @@ public class SpecializationsController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetAll()
+	public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
 	{
-		var specializations = await _specializationService.GetAllAsync();
+		var specializations = await _specializationService.GetAllAsync(requestParameters);
 
 		return Ok(specializations);
 	}

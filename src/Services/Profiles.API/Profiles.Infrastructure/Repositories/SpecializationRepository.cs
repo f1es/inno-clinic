@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Profiles.Core.Models;
+using Profiles.Core.Parameters;
 using Profiles.Core.Repositories;
 using Profiles.Infrastructure.Context;
+using Profiles.Infrastructure.Extensions;
 
 namespace Profiles.Infrastructure.Repositories;
 
@@ -13,7 +15,11 @@ public class SpecializationRepository : BaseRepository<Specialization>, ISpecial
         
     }
 
-	public async Task<IEnumerable<Specialization>> GetAllAsync() => await _context.Specializations.AsNoTracking().ToListAsync();
+	public async Task<IEnumerable<Specialization>> GetAllAsync(RequestParameters requestParameters) => 
+		await _context.Specializations
+		.AsNoTracking()
+		.Search(requestParameters.SearchTerm)
+		.ToListAsync();
 
 	public async Task<Specialization> GetByIdAsync(Guid id, bool trackChanges = false)
 	{

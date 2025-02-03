@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Profiles.Application.Services.Interfaces;
 using Profiles.Core.Dtos.Request;
+using Profiles.Core.Parameters;
 
 namespace Profiles.API.Controllers;
 
@@ -16,9 +17,9 @@ public class PatientsController : ControllerBase
 	}
 
 	[HttpGet]
-	public async Task<IActionResult> GetAll()
+	public async Task<IActionResult> GetAll([FromQuery] RequestParameters requestParameters)
 	{
-		var patients = await _patientService.GetAllAsync();
+		var patients = await _patientService.GetAllAsync(requestParameters);
 
 		return Ok(patients);
 	}

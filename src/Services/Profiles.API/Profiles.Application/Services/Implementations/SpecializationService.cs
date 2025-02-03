@@ -1,8 +1,11 @@
 using Mapster;
+using Profiles.Application.Extensions;
 using Profiles.Application.Services.Interfaces;
+using Profiles.Application.Utility;
 using Profiles.Core.Dtos.Request;
 using Profiles.Core.Dtos.Response;
 using Profiles.Core.Models;
+using Profiles.Core.Parameters;
 using Profiles.Core.Repositories;
 using Shared.Exceptions;
 
@@ -39,11 +42,12 @@ public class SpecializationService : ISpecializationService
 		await _unitOfWork.SaveAsync();
 	}
 
-	public async Task<IEnumerable<SpecializationResponseDto>> GetAllAsync()
+	public async Task<PagedList<SpecializationResponseDto>> GetAllAsync(RequestParameters requestParameters)
 	{
-		var specializations = await _unitOfWork.SpecializationRepository.GetAllAsync();
+		var specializations = await _unitOfWork.SpecializationRepository.GetAllAsync(requestParameters);
 
-		return specializations.Adapt<IEnumerable<SpecializationResponseDto>>();
+		return specializations.Adapt<IEnumerable<SpecializationResponseDto>>()
+			.Paginate(requestParameters.Page, requestParameters.PageSize);
 	}
 
 	public async Task<SpecializationResponseDto> GetByIdAsync(Guid id)

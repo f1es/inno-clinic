@@ -1,8 +1,11 @@
 using Mapster;
+using Profiles.Application.Extensions;
 using Profiles.Application.Services.Interfaces;
+using Profiles.Application.Utility;
 using Profiles.Core.Dtos.Request;
 using Profiles.Core.Dtos.Response;
 using Profiles.Core.Models;
+using Profiles.Core.Parameters;
 using Profiles.Core.Repositories;
 using Shared.Exceptions;
 
@@ -39,11 +42,12 @@ public class ReceptionistService : IReceptionistService
 		await _unitOfWork.SaveAsync();
 	}
 
-	public async Task<IEnumerable<ReceptionistResponseDto>> GetAllAsync()
+	public async Task<PagedList<ReceptionistResponseDto>> GetAllAsync(RequestParameters requestParameters)
 	{
-		var receptionists = await _unitOfWork.ReceptionistRepository.GetAllAsync();
+		var receptionists = await _unitOfWork.ReceptionistRepository.GetAllAsync(requestParameters);
 
-		return receptionists.Adapt<IEnumerable<ReceptionistResponseDto>>();
+		return receptionists.Adapt<IEnumerable<ReceptionistResponseDto>>()
+			.Paginate(requestParameters.Page, requestParameters.PageSize);
 	}
 
 	public async Task<ReceptionistResponseDto> GetByIdAsync(Guid id)

@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Profiles.Core.Models;
+using Profiles.Core.Parameters;
 using Profiles.Core.Repositories;
 using Profiles.Infrastructure.Context;
+using Profiles.Infrastructure.Extensions;
 
 namespace Profiles.Infrastructure.Repositories;
 
@@ -13,7 +15,11 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         
     }
 
-	public async Task<IEnumerable<Patient>> GetAllAsync() => await _context.Patients.AsNoTracking().ToListAsync();
+	public async Task<IEnumerable<Patient>> GetAllAsync(RequestParameters requestParameters) => 
+		await _context.Patients
+		.AsNoTracking()
+		.Search(requestParameters.SearchTerm)
+		.ToListAsync();
 
 	public async Task<Patient> GetByIdAsync(Guid id, bool trackChanges = false)
 	{
