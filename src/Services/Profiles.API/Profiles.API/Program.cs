@@ -1,6 +1,7 @@
 using Profiles.API.Extensions;
 using Profiles.Application.Extensions;
 using Profiles.Infrastructure.Extensions;
+using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.ConfigureRepositories();
 builder.Services.ConfigureServices();
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
