@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Profiles.Core.Models;
 using Profiles.Core.Parameters;
 using Profiles.Core.Repositories;
+using Profiles.Core.Utility;
 using Profiles.Infrastructure.Context;
 using Profiles.Infrastructure.Extensions;
 
@@ -15,12 +16,12 @@ public class PatientRepository : BaseRepository<Patient>, IPatientRepository
         
     }
 
-	public async Task<IEnumerable<Patient>> GetAllAsync(RequestParameters requestParameters) => 
+	public async Task<PagedList<Patient>> GetAllAsync(RequestParameters requestParameters) => 
 		await _context.Patients
 		.AsNoTracking()
 		.Order(requestParameters.OrderQuery, x => x.FirstName)
 		.Search(requestParameters.SearchTerm)
-		.ToListAsync();
+		.PaginateAsync(requestParameters.Page, requestParameters.PageSize);
 
 	public async Task<Patient> GetByIdAsync(Guid id, bool trackChanges = false)
 	{

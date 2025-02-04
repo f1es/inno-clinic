@@ -1,7 +1,7 @@
-﻿using Profiles.Application.Utility;
-using Profiles.Core.Dtos.Request;
+﻿using Profiles.Core.Dtos.Request;
 using Profiles.Core.Dtos.Response;
 using Profiles.Core.Parameters;
+using Profiles.Core.Utility;
 
 namespace Profiles.Application.Services.Interfaces;
 
