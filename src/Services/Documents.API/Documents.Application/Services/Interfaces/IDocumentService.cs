@@ -1,13 +1,13 @@
-﻿using Documents.Core.Dtos.Request;
-using Documents.Core.Dtos.Response;
+﻿using Documents.Core.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Documents.Application.Services.Interfaces;
 
 public interface IDocumentService
 {
-	public Task<FileResponseDto> CreateAsync(DocumentRequestDto documentRequestDto);
+	public Task<Document> CreateAsync(IFormFile documentFile);
 	public Task DeleteAsync(Guid id);
-	public Task UpdateAsync(Guid id, DocumentRequestDto documentRequestDto);
-	public Task<FileResponseDto> GetByIdAsync(Guid id);
-	public Task<IEnumerable<FileResponseDto>> GetAllAsync();
+	public Task UpdateAsync(Guid id, IFormFile documentFile);
+	public Task<Document> GetByIdAsync(Guid id);
+	public Task<IEnumerable<Document>> GetAllAsync();
 }
