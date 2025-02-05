@@ -58,7 +58,7 @@ public class DocumentService : IDocumentService
 		var fileName = document.GetFilename();
 
 		await containerClient.DeleteBlobIfExistsAsync(fileName);
-		await _unitOfWork.DocumentRepository.DeleteAsync(document);
+		await _unitOfWork.DocumentRepository.DeleteAsync(id);
 	}
 
 	public async Task<Document> GetByIdAsync(Guid id)

@@ -16,7 +16,7 @@ public class PhotoRepository : IPhotoRepository
 
     public async Task CreateAsync(Photo photo) => await _context.Photos.InsertOneAsync(photo);
 
-	public async Task DeleteAsync(Photo photo) => await _context.Photos.DeleteOneAsync(Builders<Photo>.Filter.Eq(x => x.Id, photo.Id));
+	public async Task DeleteAsync(Guid id) => await _context.Photos.DeleteOneAsync(Builders<Photo>.Filter.Eq(x => x.Id, id));
 
 	public async Task<IEnumerable<Photo>> GetAllAsync() => (await _context.Photos.FindAsync(Builders<Photo>.Filter.Empty)).ToList();
 

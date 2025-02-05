@@ -16,7 +16,7 @@ public class DocumentRepository : IDocumentRepository
 
 	public async Task CreateAsync(Document document) => await _context.Documents.InsertOneAsync(document);
 
-	public async Task DeleteAsync(Document document) => await _context.Documents.DeleteOneAsync(Builders<Document>.Filter.Eq(x => x.Id, document.Id));
+	public async Task DeleteAsync(Guid id) => await _context.Documents.DeleteOneAsync(Builders<Document>.Filter.Eq(x => x.Id, id));
 
 	public async Task<IEnumerable<Document>> GetAllAsync() => (await _context.Documents.FindAsync(Builders<Document>.Filter.Empty)).ToList();
 

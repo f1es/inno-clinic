@@ -58,7 +58,7 @@ public class PhotoService : IPhotoService
 		var fileName = photo.GetFilename();
 
 		await containerClient.DeleteBlobIfExistsAsync(fileName);
-		await _unitOfWork.PhotoRepository.DeleteAsync(photo);
+		await _unitOfWork.PhotoRepository.DeleteAsync(id);
 	}
 
 	public async Task<Photo> GetByIdAsync(Guid id)
