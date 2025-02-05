@@ -15,15 +15,15 @@ public class PhotosController : ControllerBase
 	}
 
 	[HttpPost]
-	public async Task<IActionResult> Upload(IFormFile photoFile)
+	public async Task<IActionResult> Create(IFormFile photoFile)
 	{
 		var photo = await _photoService.CreateAsync(photoFile);
 
-		return Ok(photo);
+		return CreatedAtRoute("GetPhoto", new { id = photo.Id }, photo);
 	}
 
-	[HttpGet("{id:guid}")]
-	public async Task<IActionResult> Download(Guid id)
+	[HttpGet("{id:guid}", Name = "GetPhoto")]
+	public async Task<IActionResult> Get(Guid id)
 	{
 		var photo = await _photoService.GetByIdAsync(id);
 
