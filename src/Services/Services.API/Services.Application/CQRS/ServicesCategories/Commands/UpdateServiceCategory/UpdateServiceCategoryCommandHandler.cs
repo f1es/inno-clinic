@@ -27,8 +27,7 @@ public class UpdateServiceCategoryCommandHandler : IRequestHandler<UpdateService
 			throw new NotFoundException(nameof(serviceCategory), request.Id);
 		}
 
-		serviceCategory.TimeSlotSize = request.ServiceCategoryRequestDto.TimeSlotSize;
-		serviceCategory.CategoryName = request.ServiceCategoryRequestDto.CategoryName;
+		_serviceCategoriesMapper.UpdateModel(request.ServiceCategoryRequestDto, serviceCategory);
 
 		await _unitOfWork.SaveAsync();
 	}

@@ -28,10 +28,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
 			throw new NotFoundException(nameof(service), request.Id);
 		}
 
-		service.ServiceName = request.ServiceRequestDto.ServiceName;
-		service.Price = request.ServiceRequestDto.Price;
-		service.IsActive = request.ServiceRequestDto.IsActive;
-		service.SpecializationId = request.ServiceRequestDto.SpecializationId;
+		_servicesMapper.UpdateModel(request.ServiceRequestDto, service);
 
 		await _unitOfWork.SaveAsync();
 	}
