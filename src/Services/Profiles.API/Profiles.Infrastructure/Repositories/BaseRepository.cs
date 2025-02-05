@@ -3,7 +3,7 @@ using Profiles.Infrastructure.Context;
 
 namespace Profiles.Infrastructure.Repositories;
 
-public abstract class BaseRepository<T> : IBaseReposirtory<T> where T : class
+public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
 {
 	protected readonly ProfilesDbContext _context;
 

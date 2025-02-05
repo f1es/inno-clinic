@@ -4,7 +4,7 @@ using Profiles.Core.Utility;
 
 namespace Profiles.Core.Repositories;
 
-public interface IReceptionistRepository : IBaseReposirtory<Receptionist>
+public interface IReceptionistRepository : IBaseRepository<Receptionist>
 {
 	public Task<Receptionist> GetByIdAsync(Guid id, bool trackChanges = false);
 	public Task<PagedList<Receptionist>> GetAllAsync(RequestParameters requestParameters);
