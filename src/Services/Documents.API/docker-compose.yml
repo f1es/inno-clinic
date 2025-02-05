@@ -7,5 +7,17 @@ services:
       - documents-service-db:/var/lib/mongodb/data
     container_name: documents_service_db
 
+  documets-service-azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    restart: unless-stopped
+    volumes: 
+      - azurite-data:/var/azurite/data
+    container_name: documents_service_azurite
+
 volumes:
   documents-service-db:
+  azurite-data:
