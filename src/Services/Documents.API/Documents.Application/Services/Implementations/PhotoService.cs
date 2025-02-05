@@ -70,6 +70,11 @@ public class PhotoService : IPhotoService
 
 	public async Task UpdateAsync(Guid id, IFormFile photoFile)
 	{
+		if (!ValidatePhoto(photoFile))
+		{
+			throw new BadRequestException("Invalid photo format");
+		}
+
 		var containerClient = _blobServiceClient.GetBlobContainerClient(PhotosContainerName);
 
 		var oldPhoto = await _unitOfWork.PhotoRepository.GetByIdAsync(id);

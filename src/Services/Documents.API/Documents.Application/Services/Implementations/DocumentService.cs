@@ -70,6 +70,11 @@ public class DocumentService : IDocumentService
 
 	public async Task UpdateAsync(Guid id, Guid resultId, IFormFile documentFile)
 	{
+		if (!ValidateDocument(documentFile))
+		{
+			throw new BadRequestException("Invalid document format");
+		}
+
 		var containerClient = _blobServiceClient.GetBlobContainerClient(DocumentsContainerName);
 
 		var oldDocument = await _unitOfWork.DocumentRepository.GetByIdAsync(id);
