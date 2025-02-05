@@ -26,7 +26,6 @@ public class ResultService : IResultService
 		var result = _resultsMapper.ToModel(resultRequestDto);
 
 		_unitOfWork.ResultRepository.Create(result);
-
 		await _unitOfWork.SaveAsync();
 
 		return _resultsMapper.ToResponse(result);
@@ -37,7 +36,6 @@ public class ResultService : IResultService
 		var result = await GetByIdAsyncAndCheckIfExist(id);
 
 		_unitOfWork.ResultRepository.Delete(result);
-
 		await _unitOfWork.SaveAsync();
 	}
 

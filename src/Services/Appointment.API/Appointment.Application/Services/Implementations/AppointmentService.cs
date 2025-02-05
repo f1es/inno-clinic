@@ -25,7 +25,6 @@ public class AppointmentService : IAppointmentService
 		var appointment = _appointmentsMapper.ToModel(appointmentRequestDto);
 
 		_unitOfWork.AppointmentRepository.Create(appointment);
-
 		await _unitOfWork.SaveAsync();
 
 		var appointmentResponse = _appointmentsMapper.ToResponse(appointment);
@@ -38,7 +37,6 @@ public class AppointmentService : IAppointmentService
 		var appointment = await GetByIdAndCheckIfExist(id);
 
 		_unitOfWork.AppointmentRepository.Delete(appointment);
-
 		await _unitOfWork.SaveAsync();
 	}
 
