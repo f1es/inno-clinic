@@ -1,11 +1,11 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Offices.Application.CQRS.Offices.Commands.CreateOffice;
 using Offices.Application.CQRS.Offices.Commands.DeleteOffice;
 using Offices.Application.CQRS.Offices.Commands.UpdateOffice;
 using Offices.Application.CQRS.Offices.Queries.GetOffice;
 using Offices.Application.CQRS.Offices.Queries.GetOffices;
-using Offices.Application.CQRS.Receptionists.Queries.GetByOfficeId;
 using Offices.Core.Dto.Request;
 
 namespace Offices.API.Controllers;
@@ -14,6 +14,7 @@ namespace Offices.API.Controllers;
 /// Offices controller
 /// </summary>
 [ApiController]
+[Authorize]
 [Route("api/offices")]
 public class OfficesController : ControllerBase
 {

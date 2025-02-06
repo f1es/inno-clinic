@@ -16,5 +16,4 @@ public class OfficesContext
     }
 
     public IMongoCollection<Office> Offices => _database.GetCollection<Office>("Offices");
-    public IMongoCollection<Receptionist> Receptionists => _database.GetCollection<Receptionist>("Receptionists");
 }
