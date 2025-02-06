@@ -10,9 +10,32 @@
         }
       ],
       "UpstreamPathTemplate": "/gateway/services",
-      "UpstreamHttpMethod": [ "GET" ],
-      "SwaggerKey": "services"
+      "UpstreamHttpMethod": [ "GET", "POST" ],
+      "SwaggerKey": "services",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+
+    {
+      "DownstreamPathTemplate": "/api/services/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5000
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/services/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE", "PUT" ],
+      "SwaggerKey": "services",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
     }
+
   ],
   "SwaggerEndPoints": [
     {
@@ -21,11 +44,9 @@
         {
           "Name": "Services API v1",
           "Version": "v1",
-          "Url": "https://localhost:5000/swagger/swagger.json"
+          "Url": "http://localhost:5000/swagger/v1/swagger.json"
         }
       ]
     }
-
-
   ]
 }
