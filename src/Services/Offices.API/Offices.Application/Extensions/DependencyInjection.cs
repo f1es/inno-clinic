@@ -11,7 +11,6 @@ public static class DependencyInjection
 		services.AddAutoMapper(config =>
 		{
 			config.AddProfile<OfficeMapperProfile>();
-			config.AddProfile<ReceptionistMapperProfile>();
 		});
 	}
 
