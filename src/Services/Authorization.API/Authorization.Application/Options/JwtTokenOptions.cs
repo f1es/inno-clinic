@@ -4,4 +4,5 @@ public class JwtTokenOptions
 {
 	public int AccessTokenLifetime { get; set; }
 	public int RefreshTokenLifetime { get; set; }
+	public string Issuer { get; set; }
 }

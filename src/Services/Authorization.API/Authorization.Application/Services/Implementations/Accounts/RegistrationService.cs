@@ -70,7 +70,7 @@ public class RegistrationService : IRegistrationService
 
         var emailToken = _jwtProvider.GenerateToken(_keys.Value.Email, 1, claimsIdentity);
 
-        var endpoint = $"https://localhost:44366/api/accounts/email-verification/?token={emailToken}";
+        var endpoint = $"https://localhost:5006/api/accounts/email-verification/?token={emailToken}";
         var subject = "Verify your email in inno clinic";
 
         var message = new Message([registerAccountRequestDto.Email], subject, endpoint);

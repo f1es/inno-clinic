@@ -21,7 +21,8 @@ public class JwtProvider : IJwtProvider
         {
             Subject = claims,
             Expires = DateTime.UtcNow.AddHours(lifeTimeHours),
-            SigningCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256Signature)
+            SigningCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256Signature),
+            Issuer = "http://localhost:5006"
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
