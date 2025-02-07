@@ -5,7 +5,7 @@ VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization.API", "Authorization.API\Authorization.API.csproj", "{1FF314E5-F31F-4F3E-90CD-300ED7249322}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization.Core", "Athorization.Core\Authorization.Core.csproj", "{A3B58B8B-E9AB-45F0-A565-3496670DCAEC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization.Core", "Authorization.Core\Authorization.Core.csproj", "{A3B58B8B-E9AB-45F0-A565-3496670DCAEC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authorization.Application", "Authorization.Application\Authorization.Application.csproj", "{2AFD044E-45A3-4250-9B96-DC6AD9679DB5}"
 EndProject
