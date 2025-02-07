@@ -1,3 +1,4 @@
+using Gateway.Extensions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 
@@ -13,7 +14,7 @@ builder.Services.AddOcelot();
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
 //builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//builder.Services.ConfigureAuthentication(builder);
+builder.Services.ConfigureAuthentication(builder);
 
 var app = builder.Build();
 
