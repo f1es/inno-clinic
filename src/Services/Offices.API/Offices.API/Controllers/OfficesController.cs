@@ -14,7 +14,6 @@ namespace Offices.API.Controllers;
 /// Offices controller
 /// </summary>
 [ApiController]
-[Authorize]
 [Route("api/offices")]
 public class OfficesController : ControllerBase
 {
