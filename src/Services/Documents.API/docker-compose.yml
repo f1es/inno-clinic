@@ -2,10 +2,12 @@ services:
   documents-service-db:
     image: mongo:6-jammy
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - documents-service-db:/var/lib/mongodb/data
     container_name: documents_service_db
+    networks:
+      - documents-network
 
   documets-service-azurite:
     image: mcr.microsoft.com/azure-storage/azurite
@@ -17,7 +19,29 @@ services:
     volumes: 
       - azurite-data:/var/azurite/data
     container_name: documents_service_azurite
+    networks:
+      - documents-network
+
+  documents-app:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    ports:
+      - 5004:8080
+      - 5014:8081
+    container_name: documents_service_app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    depends_on:
+      - documents-service-db
+      - documets-service-azurite
+    networks:
+      - documents-network
 
 volumes:
   documents-service-db:
   azurite-data:
+
+networks:
+  documents-network:
+    driver: bridge
