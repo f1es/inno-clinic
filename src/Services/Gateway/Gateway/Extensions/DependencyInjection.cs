@@ -38,6 +38,7 @@ public static class DependencyInjection
 					ValidateAudience = false,
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true,
+					ValidateIssuer = false,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
 				};
 			});
