@@ -15,6 +15,7 @@ builder.Services.ConfigureRepositories();
 builder.Services.ConfigureMappers();
 builder.Services.ConfigureMediatr();
 builder.Services.ConfigureDbContext(builder);
+builder.Services.ConfigureValidators();
 
 var app = builder.Build();
 
