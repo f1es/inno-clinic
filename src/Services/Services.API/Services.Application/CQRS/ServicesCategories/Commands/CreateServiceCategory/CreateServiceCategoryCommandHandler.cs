@@ -24,7 +24,7 @@ public class CreateServiceCategoryCommandHandler : IRequestHandler<CreateService
 
 		_unitOfWork.ServiceCategoryRepository.Create(serviceCategory);
 
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 
 		return _serviceCategoriesMapper.ToResponse(serviceCategory);
 	}

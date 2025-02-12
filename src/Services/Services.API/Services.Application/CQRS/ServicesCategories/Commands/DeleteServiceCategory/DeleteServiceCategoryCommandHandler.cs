@@ -16,7 +16,7 @@ public class DeleteServiceCategoryCommandHandler : IRequestHandler<DeleteService
 
 	public async Task Handle(DeleteServiceCategoryCommand request, CancellationToken cancellationToken)
 	{
-		var serviceCategory = await _unitOfWork.ServiceCategoryRepository.GetByIdAsync(request.Id);
+		var serviceCategory = await _unitOfWork.ServiceCategoryRepository.GetByIdAsync(request.Id, cancellationToken);
 
 		if (serviceCategory == null)
 		{
@@ -25,6 +25,6 @@ public class DeleteServiceCategoryCommandHandler : IRequestHandler<DeleteService
 
 		_unitOfWork.ServiceCategoryRepository.Delete(serviceCategory);
 
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 	}
 }

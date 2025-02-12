@@ -20,7 +20,7 @@ public class UpdateServiceCategoryCommandHandler : IRequestHandler<UpdateService
 
 	public async Task Handle(UpdateServiceCategoryCommand request, CancellationToken cancellationToken)
 	{
-		var serviceCategory = await _unitOfWork.ServiceCategoryRepository.GetByIdAsync(request.Id, trackChanges: true);
+		var serviceCategory = await _unitOfWork.ServiceCategoryRepository.GetByIdAsync(request.Id, cancellationToken, trackChanges: true);
 
 		if (serviceCategory == null)
 		{
@@ -29,6 +29,6 @@ public class UpdateServiceCategoryCommandHandler : IRequestHandler<UpdateService
 
 		_serviceCategoriesMapper.UpdateModel(request.ServiceCategoryRequestDto, serviceCategory);
 
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 	}
 }

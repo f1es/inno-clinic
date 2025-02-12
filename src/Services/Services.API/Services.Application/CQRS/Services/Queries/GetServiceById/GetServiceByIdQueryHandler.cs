@@ -19,7 +19,7 @@ public class GetServiceByIdQueryHandler : IRequestHandler<GetServiceByIdQuery, S
 
 	public async Task<ServiceResponseDto> Handle(GetServiceByIdQuery request, CancellationToken cancellationToken)
 	{
-		var service = await _unitOfWork.ServiceRepository.GetByIdAsync(request.Id);
+		var service = await _unitOfWork.ServiceRepository.GetByIdAsync(request.Id, cancellationToken);
 
 		if (service == null)
 		{

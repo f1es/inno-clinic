@@ -21,7 +21,7 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
 
 	public async Task Handle(UpdateServiceCommand request, CancellationToken cancellationToken)
 	{
-		var service = await _unitOfWork.ServiceRepository.GetByIdAsync(request.Id, trackChanges: true);
+		var service = await _unitOfWork.ServiceRepository.GetByIdAsync(request.Id, cancellationToken, trackChanges: true);
 
 		if (service == null)
 		{
@@ -30,6 +30,6 @@ public class UpdateServiceCommandHandler : IRequestHandler<UpdateServiceCommand>
 
 		_servicesMapper.UpdateModel(request.ServiceRequestDto, service);
 
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 	}
 }

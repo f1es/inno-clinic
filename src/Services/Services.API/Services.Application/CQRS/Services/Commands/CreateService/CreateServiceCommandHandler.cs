@@ -24,7 +24,7 @@ public class CreateServiceCommandHandler : IRequestHandler<CreateServiceCommand,
 
 		_unitOfWork.ServiceRepository.Create(service);
 
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 
 		return _servicesMapper.ToResponse(service);
 	}

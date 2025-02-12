@@ -21,7 +21,7 @@ public class GetServiceCategoryByIdQueryHandler : IRequestHandler<GetServiceCate
 
 	public async Task<ServiceCategoryResponseDto> Handle(GetServiceCategoryByIdQuery request, CancellationToken cancellationToken)
 	{
-		var serviceCategory = await _unitOfWork.ServiceCategoryRepository.GetByIdAsync(request.Id);
+		var serviceCategory = await _unitOfWork.ServiceCategoryRepository.GetByIdAsync(request.Id, cancellationToken);
 
 		if (serviceCategory == null)
 		{

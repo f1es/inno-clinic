@@ -1,7 +1,6 @@
 using MediatR;
 using Services.Application.Mappers.Interfaces;
 using Services.Core.Dto.Response;
-using Services.Core.Models;
 using Services.Core.Repositories;
 
 namespace Services.Application.CQRS.ServicesCategories.Queries.GetServiceCategories;
@@ -21,7 +20,7 @@ public class GetServiceCategoriesQueryHandler : IRequestHandler<GetServiceCatego
 
 	public async Task<IEnumerable<ServiceCategoryResponseDto>> Handle(GetServiceCategoriesQuery request, CancellationToken cancellationToken)
 	{
-		var serviceCategories = await _unitOfWork.ServiceCategoryRepository.GetAllAsync();
+		var serviceCategories = await _unitOfWork.ServiceCategoryRepository.GetAllAsync(cancellationToken);
 
 		return _serviceCategoriesMapper.ToResponse(serviceCategories);
 	}

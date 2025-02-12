@@ -11,9 +11,9 @@ public class ServiceRepository : BaseRepository<Service>, IServiceRepository
 		: base(context)
     { }
 
-    public async Task<IEnumerable<Service>> GetAllAsync() => await _context.Services.ToListAsync();
+    public async Task<IEnumerable<Service>> GetAllAsync(CancellationToken cancellationToken) => await _context.Services.ToListAsync();
 
-	public async Task<Service> GetByIdAsync(Guid id, bool trackChanges = false)
+	public async Task<Service> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.Services : _context.Services.AsNoTracking();
 		return await query.FirstOrDefaultAsync(x => x.Id == id);

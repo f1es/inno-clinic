@@ -18,7 +18,7 @@ public class GetServicesQueryHandler : IRequestHandler<GetServicesQuery, IEnumer
 
 	public async Task<IEnumerable<ServiceResponseDto>> Handle(GetServicesQuery request, CancellationToken cancellationToken)
 	{
-		var services = await _unitOfWork.ServiceRepository.GetAllAsync();
+		var services = await _unitOfWork.ServiceRepository.GetAllAsync(cancellationToken);
 
 		return _servicesMapper.ToResponse(services);
 	}

@@ -20,7 +20,7 @@ public class DeleteServiceCommandHandler : IRequestHandler<DeleteServiceCommand>
 
 	public async Task Handle(DeleteServiceCommand request, CancellationToken cancellationToken)
 	{
-		var service = await _unitOfWork.ServiceRepository.GetByIdAsync(request.Id);
+		var service = await _unitOfWork.ServiceRepository.GetByIdAsync(request.Id, cancellationToken);
 
 		if (service == null)
 		{
@@ -29,6 +29,6 @@ public class DeleteServiceCommandHandler : IRequestHandler<DeleteServiceCommand>
 
 		_unitOfWork.ServiceRepository.Delete(service);
 
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 	}
 }

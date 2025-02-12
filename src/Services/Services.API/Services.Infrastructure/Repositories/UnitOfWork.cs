@@ -23,5 +23,5 @@ public class UnitOfWork : IUnitOfWork
 
 	public IServiceCategoryRepository ServiceCategoryRepository => _serviceCategoryRepository.Value;
 
-	public async Task SaveAsync() => await _context.SaveChangesAsync();
+	public async Task SaveAsync(CancellationToken cancellationToken) => await _context.SaveChangesAsync(cancellationToken);
 }
