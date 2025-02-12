@@ -1,21 +1,15 @@
-using Services.Infrastructure.Extensions;
-using Services.Application.Extensions;
 using Services.API.Extensions;
+using Services.Application.Extensions;
+using Services.Infrastructure.Extensions;
 using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.ConfigureRepositories();
-builder.Services.ConfigureMappers();
-builder.Services.ConfigureMediatr();
-builder.Services.ConfigureDbContext(builder);
-builder.Services.ConfigureValidators();
+builder.Services.ConfigureApi(builder.Configuration);
+builder.Services.ConfigureInfrastructure();
+builder.Services.ConfigureApplication();
 
 var app = builder.Build();
 

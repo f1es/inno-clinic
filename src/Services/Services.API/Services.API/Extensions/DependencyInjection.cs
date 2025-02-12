@@ -1,13 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Services.Infrastructure.Context;
+﻿using Services.Infrastructure.Options;
 
 namespace Services.API.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureDbContext(this IServiceCollection services, WebApplicationBuilder builder) =>
-		services.AddDbContext<ServicesDbContext>(options =>
-		{
-			options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-		});
+	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.Configure<ConnectionStrings>(configuration.GetSection("ConnectionStrings"));
+	}
+
+	public static void ConfigureApi(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddControllers();
+		services.AddEndpointsApiExplorer();
+		services.AddSwaggerGen();
+		services.ConfigureOptions(configuration);
+	}
 }
