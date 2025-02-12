@@ -1,0 +1,13 @@
+﻿using Services.Application.Dto.Request;
+using Services.Application.Dto.Response;
+using Services.Core.Models;
+
+namespace Services.Application.Mappers.Interfaces;
+
+public interface IServicesMapper
+{
+	public Service ToModel(ServiceRequestDto serviceRequestDto);
+	public void UpdateModel(ServiceRequestDto serviceRequestDto, Service service);
+	public ServiceResponseDto ToResponse(Service service);
+	public IEnumerable<ServiceResponseDto> ToResponse(IEnumerable<Service> services);
+}

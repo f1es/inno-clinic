@@ -1,0 +1,36 @@
+services:
+  services-mssql-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=MyStrongPassword1234321
+      - MSSQL_PID=Developer
+    volumes:
+      - services-service-db:/var/lib/mssql/data
+    container_name: services_service_db
+    networks:
+      - services-network
+    
+  services-app:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    ports:
+      - 5001:8080
+      - 5011:8081
+    container_name: services_service_app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    depends_on:
+      - services-mssql-db
+    networks:
+      - services-network
+
+volumes:
+  services-service-db:
+
+networks:
+  services-network:
+    driver: bridge
