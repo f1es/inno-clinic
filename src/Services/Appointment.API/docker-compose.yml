@@ -1,4 +1,3 @@
-
 services:
   appointment-db:
     image: postgres:17
@@ -11,6 +10,28 @@ services:
     volumes:
       - appointment-db:/var/lib/npgsql/data
     container_name: appointment_service_db
+    networks:
+      - appointment-network
+
+  appointment-app:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    ports:
+      - 5005:8080
+      - 5015:8081
+    container_name: appointment_service_app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    depends_on:
+      - appointment-db
+    networks:
+      - appointment-network
+
 volumes:
   appointment-db:
+
+networks:
+  appointment-network:
+    driver: bridge
   
