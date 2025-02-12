@@ -1,4 +1,4 @@
-namespace Services.Core.Dto.Request;
+namespace Services.Application.Dto.Request;
 
 public record ServiceRequestDto(
 	string ServiceName, 

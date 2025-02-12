@@ -1,6 +1,6 @@
 using MediatR;
-using Services.Core.Dto.Request;
-using Services.Core.Dto.Response;
+using Services.Application.Dto.Request;
+using Services.Application.Dto.Response;
 
 namespace Services.Application.CQRS.Services.Commands.CreateService;
 

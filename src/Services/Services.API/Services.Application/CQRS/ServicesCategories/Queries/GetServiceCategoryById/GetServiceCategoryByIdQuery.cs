@@ -1,6 +1,5 @@
 using MediatR;
-using Services.Core.Dto.Response;
-using Services.Core.Models;
+using Services.Application.Dto.Response;
 
 namespace Services.Application.CQRS.ServicesCategories.Queries.GetServiceCategoryById;
 

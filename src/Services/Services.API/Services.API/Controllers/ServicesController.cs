@@ -5,7 +5,7 @@ using Services.Application.CQRS.Services.Commands.DeleteService;
 using Services.Application.CQRS.Services.Commands.UpdateService;
 using Services.Application.CQRS.Services.Queries.GetServiceById;
 using Services.Application.CQRS.Services.Queries.GetServices;
-using Services.Core.Dto.Request;
+using Services.Application.Dto.Request;
 
 namespace Services.API.Controllers;
 

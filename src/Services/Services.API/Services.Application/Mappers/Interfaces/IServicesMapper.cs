@@ -1,5 +1,5 @@
-﻿using Services.Core.Dto.Request;
-using Services.Core.Dto.Response;
+﻿using Services.Application.Dto.Request;
+using Services.Application.Dto.Response;
 using Services.Core.Models;
 
 namespace Services.Application.Mappers.Interfaces;

@@ -1,5 +1,5 @@
 using MediatR;
-using Services.Core.Dto.Request;
+using Services.Application.Dto.Request;
 
 namespace Services.Application.CQRS.ServicesCategories.Commands.UpdateServiceCategory;
 

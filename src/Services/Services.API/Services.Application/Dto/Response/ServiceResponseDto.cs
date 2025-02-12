@@ -1,4 +1,4 @@
-namespace Services.Core.Dto.Response;
+namespace Services.Application.Dto.Response;
 
 public record ServiceResponseDto(
 	Guid Id,

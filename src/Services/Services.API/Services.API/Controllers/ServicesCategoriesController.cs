@@ -5,7 +5,7 @@ using Services.Application.CQRS.ServicesCategories.Commands.DeleteServiceCategor
 using Services.Application.CQRS.ServicesCategories.Commands.UpdateServiceCategory;
 using Services.Application.CQRS.ServicesCategories.Queries.GetServiceCategories;
 using Services.Application.CQRS.ServicesCategories.Queries.GetServiceCategoryById;
-using Services.Core.Dto.Request;
+using Services.Application.Dto.Request;
 
 namespace Services.API.Controllers;
 

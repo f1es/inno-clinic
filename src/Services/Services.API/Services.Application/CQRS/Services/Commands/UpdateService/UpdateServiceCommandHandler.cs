@@ -1,6 +1,5 @@
 using MediatR;
 using Services.Application.Mappers.Interfaces;
-using Services.Core.Models;
 using Services.Core.Repositories;
 using Shared.Exceptions;
 

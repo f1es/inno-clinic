@@ -1,6 +1,6 @@
 using MediatR;
+using Services.Application.Dto.Response;
 using Services.Application.Mappers.Interfaces;
-using Services.Core.Dto.Response;
 using Services.Core.Repositories;
 using Shared.Exceptions;
 
