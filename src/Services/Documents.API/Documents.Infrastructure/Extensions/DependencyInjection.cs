@@ -1,4 +1,7 @@
+using Documents.Core.BlobRepositories;
 using Documents.Core.Repositories;
+using Documents.Infrastructure.BlobContainers;
+using Documents.Infrastructure.BlobRepositories;
 using Documents.Infrastructure.Context;
 using Documents.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,5 +14,7 @@ public static class DependencyInjection
 	{
 		services.AddSingleton<DocumentsDbContext>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddScoped<IPhotosContainer, PhotosContainer>();
+		services.AddScoped<IDocumentsContainer, DocumentsContainer>();
 	}
 }
