@@ -17,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureAzureServices(builder);
-builder.Services.ConfigureMongoOptions(builder);
+builder.Services.ConfigureOptions(builder);
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureServices();
 

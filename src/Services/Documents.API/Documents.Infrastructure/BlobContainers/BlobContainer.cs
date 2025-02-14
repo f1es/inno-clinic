@@ -10,9 +10,11 @@ public abstract class BlobContainer : IBlobContainer
 	protected readonly string _domain;
     protected BlobContainer(
 		string containerName,
+		string domain,
 		BlobServiceClient blobServiceClient)
     {
 		_blobContainerClient = blobServiceClient.GetBlobContainerClient(containerName);
+		_domain = domain;
 		_blobContainerClient.CreateIfNotExists(publicAccessType: Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 	}
 	public async Task DeleteAsync(string fileName)
@@ -27,7 +29,9 @@ public abstract class BlobContainer : IBlobContainer
 		var blobClient = _blobContainerClient.GetBlobClient(newFileName);
 		await UploadFileAsync(blobClient, file);
 
-		return blobClient.Uri;
+		var uriBuilder = new UriBuilder(blobClient.Uri);
+		uriBuilder.Host = _domain;
+		return uriBuilder.Uri;
 	}
 
 	public async Task<Uri> UploadAsync(IFormFile file, string fileName)
@@ -35,7 +39,9 @@ public abstract class BlobContainer : IBlobContainer
 		var blobClient = _blobContainerClient.GetBlobClient(fileName);
 		await UploadFileAsync(blobClient, file);
 
-		return blobClient.Uri;
+		var uriBuilder = new UriBuilder(blobClient.Uri);
+		uriBuilder.Host = _domain;
+		return uriBuilder.Uri;
 	}
 
 	private async Task UploadFileAsync(BlobClient blobClient, IFormFile file)

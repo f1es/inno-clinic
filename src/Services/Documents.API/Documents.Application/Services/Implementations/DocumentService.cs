@@ -14,7 +14,6 @@ public class DocumentService : IDocumentService
 	private readonly IFilenameGenerator _filenameGenerator;
 	private readonly IDocumentsContainer _documentsContainer;
 
-	private const string DocumentsContainerName = "documents";
 	public DocumentService(
 		IUnitOfWork unitOfWork,
 		IFilenameGenerator filenameGenerator,

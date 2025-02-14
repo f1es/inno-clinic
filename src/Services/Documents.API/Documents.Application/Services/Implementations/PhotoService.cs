@@ -11,12 +11,10 @@ namespace Documents.Application.Services.Implementations;
 
 public class PhotoService : IPhotoService
 {
-	//private readonly BlobServiceClient _blobServiceClient;
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFilenameGenerator _filenameGenerator; 
 	private readonly IPhotosContainer _photosContainer;
 
-	private const string PhotosContainerName = "photos";
 	public PhotoService(
 		IUnitOfWork unitOfWork,
 		IFilenameGenerator filenameGenerator,

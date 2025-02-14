@@ -5,9 +5,10 @@ namespace Documents.API.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureMongoOptions(this IServiceCollection services, WebApplicationBuilder builder)
+	public static void ConfigureOptions(this IServiceCollection services, WebApplicationBuilder builder)
 	{
 		services.Configure<MongoDbOptions>(builder.Configuration.GetSection("MongoDbOptions"));
+		services.Configure<DomainsOptions>(builder.Configuration.GetSection("Domains"));
 	}
 
 	public static void ConfigureAzureServices(this IServiceCollection services, WebApplicationBuilder builder)
