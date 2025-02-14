@@ -1,4 +1,6 @@
+using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.JWT;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -9,9 +11,13 @@ namespace Authorization.Application.Services.Implementations.JWT;
 public class JwtProvider : IJwtProvider
 {
     private readonly JwtSecurityTokenHandler _tokenHandler;
-    public JwtProvider(JwtSecurityTokenHandler tokenHandler)
+    private readonly JwtTokenOptions _jwtTokenOptions;
+    public JwtProvider(
+        JwtSecurityTokenHandler tokenHandler,
+        IOptions<JwtTokenOptions> jwtOptions)
     {
         _tokenHandler = tokenHandler;
+        _jwtTokenOptions = jwtOptions.Value;
     }
 
     public string GenerateToken(string key, int lifeTimeHours, ClaimsIdentity claims)
@@ -22,8 +28,8 @@ public class JwtProvider : IJwtProvider
             Subject = claims,
             Expires = DateTime.UtcNow.AddHours(lifeTimeHours),
             SigningCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256Signature),
-            Issuer = "http://localhost:5006"
-        };
+            Issuer = _jwtTokenOptions.Issuer,
+		};
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
         return _tokenHandler.WriteToken(token);
@@ -75,7 +81,7 @@ public class JwtProvider : IJwtProvider
         var symmetricKey = ReadKey(key);
         var validationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
+            ValidIssuer = _jwtTokenOptions.Issuer,
             ValidateAudience = false,
             ValidateLifetime = validateLifetime,
             ValidateIssuerSigningKey = true,
@@ -84,11 +90,6 @@ public class JwtProvider : IJwtProvider
 
         var result = await _tokenHandler.ValidateTokenAsync(token, validationParameters);
 
-        if (!result.IsValid)
-        {
-            return false;
-        }
-
-        return true;
+        return result.IsValid;
     }
 }

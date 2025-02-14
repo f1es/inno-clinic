@@ -22,7 +22,8 @@ public class RegistrationService : IRegistrationService
     private readonly IAccountRepository _accountRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly IEmailSender _emailSender;
-    private readonly IOptions<SecretKeys> _keys;
+    private readonly SecretKeys _keys;
+    private readonly EndpointsOptions _endpointOptions;
 
     public RegistrationService(
         IValidator<RegisterAccountRequestDto> validator,
@@ -30,14 +31,16 @@ public class RegistrationService : IRegistrationService
         IAccountRepository accountRepository,
         IJwtProvider jwtProvider,
         IEmailSender emailSender,
-        IOptions<SecretKeys> keys)
+        IOptions<SecretKeys> keys,
+        IOptions<EndpointsOptions> endpoints)
     {
         _validator = validator;
         _passwordService = passwordService;
         _accountRepository = accountRepository;
         _jwtProvider = jwtProvider;
         _emailSender = emailSender;
-        _keys = keys;
+        _keys = keys.Value;
+        _endpointOptions = endpoints.Value;
     }
 
     public async Task RegisterAsync(RegisterAccountRequestDto registerAccountRequestDto)
@@ -68,13 +71,19 @@ public class RegistrationService : IRegistrationService
 
         var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Email, registerAccountRequestDto.Email)]);
 
-        var emailToken = _jwtProvider.GenerateToken(_keys.Value.Email, 1, claimsIdentity);
+        var emailToken = _jwtProvider.GenerateToken(_keys.Email, 1, claimsIdentity);
 
-        var endpoint = $"https://localhost:5006/api/accounts/email-verification/?token={emailToken}";
-        var subject = "Verify your email in inno clinic";
-
-        var message = new Message([registerAccountRequestDto.Email], subject, endpoint);
+        var message = BuildMessage(emailToken, [registerAccountRequestDto.Email]);
 
         await _emailSender.SendEmailAsync(message);
     }
+
+    private Message BuildMessage(string emailToken, string[] emails)
+    {
+		var emailVerificationUri = new UriBuilder(_endpointOptions.EmailVerification);
+		emailVerificationUri.Query = $"?token={emailToken}";
+		var subject = "Verify your email in inno clinic";
+
+		return new Message(emails, subject, emailVerificationUri.ToString());
+	}
 }

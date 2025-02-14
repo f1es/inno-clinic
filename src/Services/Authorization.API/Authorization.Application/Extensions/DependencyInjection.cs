@@ -38,12 +38,4 @@ public static class DependencyInjection
 
 	public static void ConfigureValidators(this IServiceCollection services) =>
 		services.AddValidatorsFromAssemblyContaining(typeof(RegisterAccountRequestDtoValidator));
-
-	public static void ConfigureOptions(this IServiceCollection services, WebApplicationBuilder builder)
-	{
-		services.Configure<JwtTokenOptions>(builder.Configuration.GetSection("JwtTokenOptions"));
-		services.Configure<EmailOptions>(builder.Configuration.GetSection("EmailConfiguration"));
-		services.Configure<SecretKeys>(builder.Configuration.GetSection("SecretKeys"));
-	}
-
 }

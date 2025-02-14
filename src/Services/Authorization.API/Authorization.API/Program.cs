@@ -15,7 +15,7 @@ builder.Services.ConfigureRepository();
 builder.Services.ConfigureServices();
 builder.Services.ConfigureDbContext(builder);
 builder.Services.ConfigureValidators();
-builder.Services.ConfigureOptions(builder);
+builder.Services.ConfigureOptions(builder.Configuration);
 
 var app = builder.Build();
 

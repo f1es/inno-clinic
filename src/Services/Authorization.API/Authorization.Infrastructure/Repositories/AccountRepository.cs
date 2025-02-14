@@ -17,7 +17,7 @@ public class AccountRepository : IAccountRepository
 	public void Create(Account account) => _context.Accounts.Add(account);
 	public void Delete(Account account) => _context.Accounts.Remove(account);
 	public void Update(Account account) => _context.Accounts.Update(account);
-	public async Task<IEnumerable<Account>> GetAllAsync() => await _context.Accounts.ToListAsync();
+	public async Task<IEnumerable<Account>> GetAllAsync() => await _context.Accounts.AsNoTracking().ToListAsync();
 	public async Task<Account> GetByIdAsync(Guid id, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.Accounts : _context.Accounts.AsNoTracking();

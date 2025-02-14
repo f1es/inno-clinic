@@ -19,13 +19,7 @@ public class AccountService : IAccountService
     public async Task<IEnumerable<AccountResponseDto>> GetAllAsync()
     {
         var accounts = await _accountRepository.GetAllAsync();
-        var accountsDto = new List<AccountResponseDto>();
-        foreach (var acc in accounts)
-        {
-            var accountDto = acc.ToResponseDto();
-
-            accountsDto.Add(accountDto);
-        }
+        var accountsDto = accounts.Select(acc => acc.ToResponseDto());
 
         return accountsDto;
     }
