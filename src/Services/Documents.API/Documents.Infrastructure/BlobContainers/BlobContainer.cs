@@ -17,38 +17,48 @@ public abstract class BlobContainer : IBlobContainer
 		_domain = domain;
 		_blobContainerClient.CreateIfNotExists(publicAccessType: Azure.Storage.Blobs.Models.PublicAccessType.Blob);
 	}
+
 	public async Task DeleteAsync(string fileName)
 	{
 		await _blobContainerClient.DeleteBlobIfExistsAsync(fileName);
 	}
 
-	public async Task<Uri> UpdateAsync(IFormFile file, string oldFileName, string newFileName)
+	public async Task UpdateAsync(IFormFile file, string oldFileName, string newFileName)
+	{
+		using (var stream = file.OpenReadStream())
+		{
+			await UpdateAsync(stream, oldFileName, newFileName);
+		}
+	}
+
+	public async Task UploadAsync(IFormFile file, string fileName)
+	{
+		using (var stream = file.OpenReadStream())
+		{
+			await UploadAsync(stream, fileName);
+		}
+	}
+
+	public async Task UpdateAsync(Stream stream, string oldFileName, string newFileName)
 	{
 		await _blobContainerClient.DeleteBlobIfExistsAsync(oldFileName);
 
 		var blobClient = _blobContainerClient.GetBlobClient(newFileName);
-		await UploadFileAsync(blobClient, file);
-
-		var uriBuilder = new UriBuilder(blobClient.Uri);
-		uriBuilder.Host = _domain;
-		return uriBuilder.Uri;
+		await blobClient.UploadAsync(stream, true);
 	}
 
-	public async Task<Uri> UploadAsync(IFormFile file, string fileName)
+	public async Task UploadAsync(Stream stream, string fileName)
 	{
 		var blobClient = _blobContainerClient.GetBlobClient(fileName);
-		await UploadFileAsync(blobClient, file);
+		await blobClient.UploadAsync(stream);
+	}
+
+	public Uri GetUriForFile(string fileName)
+	{
+		var blobClient = _blobContainerClient.GetBlobClient(fileName);
 
 		var uriBuilder = new UriBuilder(blobClient.Uri);
 		uriBuilder.Host = _domain;
 		return uriBuilder.Uri;
-	}
-
-	private async Task UploadFileAsync(BlobClient blobClient, IFormFile file)
-	{
-		using (var stream = file.OpenReadStream())
-		{
-			await blobClient.UploadAsync(stream, true);
-		}
 	}
 }

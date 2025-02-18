@@ -4,7 +4,8 @@ namespace Documents.Core.BlobRepositories;
 
 public interface IBlobContainer
 {
-	public Task<Uri> UploadAsync(IFormFile file, string fileName);
+	public Task UploadAsync(IFormFile file, string fileName);
 	public Task DeleteAsync(string fileName);
-	public Task<Uri> UpdateAsync(IFormFile file, string oldFileName, string newFileName);
+	public Task UpdateAsync(IFormFile file, string oldFileName, string newFileName);
+	public Uri GetUriForFile(string fileName);
 }

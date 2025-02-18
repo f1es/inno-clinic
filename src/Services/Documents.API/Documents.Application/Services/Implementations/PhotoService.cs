@@ -1,4 +1,3 @@
-using Azure.Storage.Blobs;
 using Documents.Application.Extensions;
 using Documents.Application.Services.Interfaces;
 using Documents.Core.BlobRepositories;
@@ -34,12 +33,11 @@ public class PhotoService : IPhotoService
 			throw new BadRequestException("Invalid photo format");
 		}
 
-		var filename = _filenameGenerator.Generate(photoFile.FileName);
-		var photoUri = await _photosContainer.UploadAsync(photoFile, filename);
+		var fileName = _filenameGenerator.Generate(photoFile.FileName);
+		var uri = _photosContainer.GetUriForFile(fileName);
+		var photo = new Photo(uri.ToString());
 
-		var url = new Uri(photoUri, filename);
-		var photo = new Photo(url.ToString());
-
+		await _photosContainer.UploadAsync(photoFile, fileName);
 		await _unitOfWork.PhotoRepository.CreateAsync(photo);
 
 		return photo;
@@ -73,14 +71,14 @@ public class PhotoService : IPhotoService
 		var oldPhoto = await _unitOfWork.PhotoRepository.GetByIdAsync(id);
 		PhotoNullCheck(oldPhoto, id);
 
-		var oldPhotoFileName = oldPhoto.GetFilename();
-		var filename = _filenameGenerator.Generate(photoFile.FileName);
-		var photoUri = await _photosContainer.UpdateAsync(photoFile, oldPhotoFileName, filename);
+		var oldFileName = oldPhoto.GetFilename();
+		var newFileName = _filenameGenerator.Generate(photoFile.FileName);
+		var uri = _photosContainer.GetUriForFile(newFileName);
 
-		var url = new Uri(photoUri, filename);
-		var photo = new Photo(url.ToString());
+		var photo = new Photo(uri.ToString());
 		photo.Id = id;
 
+		await _photosContainer.UpdateAsync(photoFile, oldFileName, newFileName);
 		await _unitOfWork.PhotoRepository.UpdateAsync(photo);
 	}
 

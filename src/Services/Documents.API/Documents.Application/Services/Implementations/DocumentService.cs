@@ -33,11 +33,11 @@ public class DocumentService : IDocumentService
 			throw new BadRequestException("Invalid document format");
 		}
 
-		var filename = _filenameGenerator.Generate(documentFile.FileName);
-		var fileUri = await _documentsContainer.UploadAsync(documentFile, filename);
+		var fileName = _filenameGenerator.Generate(documentFile.FileName);
+		var uri = _documentsContainer.GetUriForFile(fileName);
+		var document = new Document(uri.ToString(), resultId);
 
-		var url = new Uri(fileUri, filename);
-		var document = new Document(url.ToString(), resultId);
+		await _documentsContainer.UploadAsync(documentFile, fileName);
 		await _unitOfWork.DocumentRepository.CreateAsync(document);
 
 		return document;
@@ -70,15 +70,15 @@ public class DocumentService : IDocumentService
 		var oldDocument = await _unitOfWork.DocumentRepository.GetByIdAsync(id);
 		DocumentNullCheck(oldDocument, id);
 
-		var oldDocumentFilename = oldDocument.GetFilename();
-		var filename = _filenameGenerator.Generate(documentFile.FileName);
-		var documentUri = await _documentsContainer.UpdateAsync(documentFile, oldDocumentFilename, filename);
-
-		var url = new Uri(documentUri, filename);
-		var document = new Document(url.ToString(), resultId);
+		var oldDocumentFileName = oldDocument.GetFilename();
+		var newDocumentFileName = _filenameGenerator.Generate(documentFile.FileName);
+		var uri = _documentsContainer.GetUriForFile(newDocumentFileName);
+		var document = new Document(uri.ToString(), resultId);
 		document.Id = id;
 
 		await _unitOfWork.DocumentRepository.UpdateAsync(document);
+		await _documentsContainer.UpdateAsync(documentFile, oldDocumentFileName, newDocumentFileName);
+
 	}
 
 	private Document DocumentNullCheck(Document document, Guid id) => document ?? throw new NotFoundException(nameof(document), id);
