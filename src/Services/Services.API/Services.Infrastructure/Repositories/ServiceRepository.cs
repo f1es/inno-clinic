@@ -11,11 +11,21 @@ public class ServiceRepository : BaseRepository<Service>, IServiceRepository
 		: base(context)
     { }
 
-    public async Task<IEnumerable<Service>> GetAllAsync(CancellationToken cancellationToken) => await _context.Services.ToListAsync();
+    public async Task<IEnumerable<Service>> GetAllAsync(CancellationToken cancellationToken) => 
+		await _context.Services.AsNoTracking().ToListAsync(cancellationToken);
+
+	public async Task<IEnumerable<Service>> GetAllWithCategoryAsync(CancellationToken cancellationToken) =>
+		await _context.Services.AsNoTracking().Include(x => x.ServiceCategory).ToListAsync(cancellationToken);
 
 	public async Task<Service> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.Services : _context.Services.AsNoTracking();
-		return await query.FirstOrDefaultAsync(x => x.Id == id);
+		return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+	}
+
+	public async Task<Service> GetByIdWithCategoryAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
+	{
+		var query = trackChanges ? _context.Services : _context.Services.AsNoTracking();
+		return await query.Include(x => x.ServiceCategory).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 	}
 }

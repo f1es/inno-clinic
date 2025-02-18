@@ -6,7 +6,7 @@ using Shared.Exceptions;
 
 namespace Services.Application.CQRS.Services.Queries.GetServiceById;
 
-public class GetServiceByIdQueryHandler : IRequestHandler<GetServiceByIdQuery, ServiceResponseDto>
+public class GetServiceByIdQueryHandler : IRequestHandler<GetServiceByIdQuery, ServiceWithCategoryResponseDto>
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IServicesMapper _servicesMapper;
@@ -17,15 +17,15 @@ public class GetServiceByIdQueryHandler : IRequestHandler<GetServiceByIdQuery, S
 		_servicesMapper = servicesMapper;
 	}
 
-	public async Task<ServiceResponseDto> Handle(GetServiceByIdQuery request, CancellationToken cancellationToken)
+	public async Task<ServiceWithCategoryResponseDto> Handle(GetServiceByIdQuery request, CancellationToken cancellationToken)
 	{
-		var service = await _unitOfWork.ServiceRepository.GetByIdAsync(request.Id, cancellationToken);
+		var service = await _unitOfWork.ServiceRepository.GetByIdWithCategoryAsync(request.Id, cancellationToken);
 
 		if (service == null)
 		{
 			throw new NotFoundException(nameof(service), request.Id);
 		}
 
-		return _servicesMapper.ToResponse(service);
+		return _servicesMapper.ToResponseWithCategory(service);
 	}
 }

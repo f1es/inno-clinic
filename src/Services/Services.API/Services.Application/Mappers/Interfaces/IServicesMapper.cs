@@ -9,5 +9,6 @@ public interface IServicesMapper
 	public Service ToModel(ServiceRequestDto serviceRequestDto);
 	public void UpdateModel(ServiceRequestDto serviceRequestDto, Service service);
 	public ServiceResponseDto ToResponse(Service service);
+	public ServiceWithCategoryResponseDto ToResponseWithCategory(Service service);
 	public IEnumerable<ServiceResponseDto> ToResponse(IEnumerable<Service> services);
 }
