@@ -1,4 +1,5 @@
 using Documents.Application.Extensions;
+using Documents.Application.Orchestrators.Interfaces;
 using Documents.Application.Services.Interfaces;
 using Documents.Core.BlobRepositories;
 using Documents.Core.Models;
@@ -13,15 +14,18 @@ public class DocumentService : IDocumentService
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFilenameGenerator _filenameGenerator;
 	private readonly IDocumentsContainer _documentsContainer;
+	private readonly IDocumentOrchestrator _documentOrchestrator;
 
 	public DocumentService(
 		IUnitOfWork unitOfWork,
 		IFilenameGenerator filenameGenerator,
-		IDocumentsContainer documentsContainer)
+		IDocumentsContainer documentsContainer,
+		IDocumentOrchestrator documentOrchestrator)
 	{
 		_unitOfWork = unitOfWork;
 		_filenameGenerator = filenameGenerator;
 		_documentsContainer = documentsContainer;
+		_documentOrchestrator = documentOrchestrator;
 	}
 
 	public async Task<IEnumerable<Document>> GetAllAsync() => await _unitOfWork.DocumentRepository.GetAllAsync();
@@ -37,8 +41,9 @@ public class DocumentService : IDocumentService
 		var uri = _documentsContainer.GetUriForFile(fileName);
 		var document = new Document(uri.ToString(), resultId);
 
-		await _documentsContainer.UploadAsync(documentFile, fileName);
-		await _unitOfWork.DocumentRepository.CreateAsync(document);
+		//await _documentsContainer.UploadAsync(documentFile, fileName);
+		//await _unitOfWork.DocumentRepository.CreateAsync(document);
+		await _documentOrchestrator.CreateDocumentAsync(documentFile, document, fileName);
 
 		return document;
 	}
@@ -49,8 +54,15 @@ public class DocumentService : IDocumentService
 		DocumentNullCheck(document, id);
 
 		var fileName = document.GetFilename();
-		await _documentsContainer.DeleteAsync(fileName);
-		await _unitOfWork.DocumentRepository.DeleteAsync(id);
+		var documentStream = await _documentsContainer.DownloadAsync(fileName);
+		if (documentStream == null)
+		{
+			throw new NotFoundException(nameof(documentStream), fileName);
+		}
+
+		await _documentOrchestrator.DeleteDocumentAsync(id, documentStream, document, fileName);
+		//await _documentsContainer.DeleteAsync(fileName);
+		//await _unitOfWork.DocumentRepository.DeleteAsync(id);
 	}
 
 	public async Task<Document> GetByIdAsync(Guid id)
@@ -70,14 +82,21 @@ public class DocumentService : IDocumentService
 		var oldDocument = await _unitOfWork.DocumentRepository.GetByIdAsync(id);
 		DocumentNullCheck(oldDocument, id);
 
-		var oldDocumentFileName = oldDocument.GetFilename();
-		var newDocumentFileName = _filenameGenerator.Generate(documentFile.FileName);
-		var uri = _documentsContainer.GetUriForFile(newDocumentFileName);
-		var document = new Document(uri.ToString(), resultId);
-		document.Id = id;
+		var oldFileName = oldDocument.GetFilename();
+		var documentStream = await _documentsContainer.DownloadAsync(oldFileName);
+		if (documentStream == null)
+		{
+			throw new NotFoundException(nameof(documentStream), oldFileName);
+		}
 
-		await _unitOfWork.DocumentRepository.UpdateAsync(document);
-		await _documentsContainer.UpdateAsync(documentFile, oldDocumentFileName, newDocumentFileName);
+		var newFileName = _filenameGenerator.Generate(documentFile.FileName);
+		var uri = _documentsContainer.GetUriForFile(newFileName);
+		var newDocument = new Document(uri.ToString(), resultId);
+		newDocument.Id = id;
+
+		//await _unitOfWork.DocumentRepository.UpdateAsync(document);
+		//await _documentsContainer.UpdateAsync(documentFile, oldDocumentFileName, newDocumentFileName);
+		await _documentOrchestrator.UpdateDocumentAsync(newDocument, oldDocument, documentFile, documentStream, newFileName, oldFileName);
 
 	}
 

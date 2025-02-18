@@ -1,4 +1,5 @@
 using Documents.Application.Extensions;
+using Documents.Application.Orchestrators.Interfaces;
 using Documents.Application.Services.Interfaces;
 using Documents.Core.BlobRepositories;
 using Documents.Core.Models;
@@ -13,15 +14,18 @@ public class PhotoService : IPhotoService
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IFilenameGenerator _filenameGenerator; 
 	private readonly IPhotosContainer _photosContainer;
+	private readonly IPhotoOrchestrator _photoOrchestrator;
 
 	public PhotoService(
 		IUnitOfWork unitOfWork,
 		IFilenameGenerator filenameGenerator,
-		IPhotosContainer photosContainer)
+		IPhotosContainer photosContainer,
+		IPhotoOrchestrator photoOrchestrator)
 	{
 		_unitOfWork = unitOfWork;
 		_filenameGenerator = filenameGenerator;
 		_photosContainer = photosContainer;
+		_photoOrchestrator = photoOrchestrator;
 	}
 
 	public async Task<IEnumerable<Photo>> GetAllAsync() => await _unitOfWork.PhotoRepository.GetAllAsync();
@@ -37,8 +41,7 @@ public class PhotoService : IPhotoService
 		var uri = _photosContainer.GetUriForFile(fileName);
 		var photo = new Photo(uri.ToString());
 
-		await _photosContainer.UploadAsync(photoFile, fileName);
-		await _unitOfWork.PhotoRepository.CreateAsync(photo);
+		await _photoOrchestrator.CreatePhotoAsync(photoFile, photo, fileName);
 
 		return photo;
 	}
@@ -49,9 +52,13 @@ public class PhotoService : IPhotoService
 		PhotoNullCheck(photo, id);
 
 		var fileName = photo.GetFilename();
+		var photoStream = await _photosContainer.DownloadAsync(fileName);
+		if (photoStream == null)
+		{
+			throw new NotFoundException(nameof(photoStream), fileName);
+		}
 
-		await _photosContainer.DeleteAsync(fileName);
-		await _unitOfWork.PhotoRepository.DeleteAsync(id);
+		await _photoOrchestrator.DeletePhotoAsync(id, photoStream, photo, fileName);
 	}
 
 	public async Task<Photo> GetByIdAsync(Guid id)
@@ -72,14 +79,19 @@ public class PhotoService : IPhotoService
 		PhotoNullCheck(oldPhoto, id);
 
 		var oldFileName = oldPhoto.GetFilename();
+		var oldPhotoStream = await _photosContainer.DownloadAsync(oldFileName);
+		if (oldPhotoStream == null)
+		{
+			throw new NotFoundException(nameof(oldPhotoStream), oldFileName);
+		}
+
 		var newFileName = _filenameGenerator.Generate(photoFile.FileName);
 		var uri = _photosContainer.GetUriForFile(newFileName);
 
-		var photo = new Photo(uri.ToString());
-		photo.Id = id;
+		var newPhoto = new Photo(uri.ToString());
+		newPhoto.Id = id;
 
-		await _photosContainer.UpdateAsync(photoFile, oldFileName, newFileName);
-		await _unitOfWork.PhotoRepository.UpdateAsync(photo);
+		await _photoOrchestrator.UpdatePhotoAsync(newPhoto, oldPhoto, photoFile, oldPhotoStream, newFileName, oldFileName);
 	}
 
 	private Photo PhotoNullCheck(Photo photo, Guid id) => photo ?? throw new NotFoundException(nameof(photo), id);

@@ -53,6 +53,14 @@ public abstract class BlobContainer : IBlobContainer
 		await blobClient.UploadAsync(stream);
 	}
 
+	public async Task<Stream> DownloadAsync(string fileName)
+	{
+		var blobClient = _blobContainerClient.GetBlobClient(fileName);
+		var stream = new MemoryStream();
+		await blobClient.DownloadToAsync(stream);
+		return stream;
+	}
+
 	public Uri GetUriForFile(string fileName)
 	{
 		var blobClient = _blobContainerClient.GetBlobClient(fileName);
