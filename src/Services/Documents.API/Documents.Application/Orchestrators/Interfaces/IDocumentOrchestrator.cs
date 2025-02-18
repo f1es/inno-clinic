@@ -5,9 +5,9 @@ namespace Documents.Application.Orchestrators.Interfaces;
 
 public interface IDocumentOrchestrator
 {
-	public Task CreateDocumentAsync(IFormFile file, Document document, string fileName);
-	public Task DeleteDocumentAsync(Guid id, Stream documentStream, Document document, string fileName);
-	public Task UpdateDocumentAsync(
+	public Task CreateAsync(IFormFile file, Document document, string fileName);
+	public Task DeleteAsync(Guid id, Stream documentStream, Document document, string fileName);
+	public Task UpdateAsync(
 		Document newDocument,
 		Document oldDocument,
 		IFormFile newFile,

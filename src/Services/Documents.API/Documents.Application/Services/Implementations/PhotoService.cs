@@ -41,7 +41,7 @@ public class PhotoService : IPhotoService
 		var uri = _photosContainer.GetUriForFile(fileName);
 		var photo = new Photo(uri.ToString());
 
-		await _photoOrchestrator.CreatePhotoAsync(photoFile, photo, fileName);
+		await _photoOrchestrator.CreateAsync(photoFile, photo, fileName);
 
 		return photo;
 	}
@@ -58,7 +58,7 @@ public class PhotoService : IPhotoService
 			throw new NotFoundException(nameof(photoStream), fileName);
 		}
 
-		await _photoOrchestrator.DeletePhotoAsync(id, photoStream, photo, fileName);
+		await _photoOrchestrator.DeleteAsync(id, photoStream, photo, fileName);
 	}
 
 	public async Task<Photo> GetByIdAsync(Guid id)
@@ -91,7 +91,7 @@ public class PhotoService : IPhotoService
 		var newPhoto = new Photo(uri.ToString());
 		newPhoto.Id = id;
 
-		await _photoOrchestrator.UpdatePhotoAsync(newPhoto, oldPhoto, photoFile, oldPhotoStream, newFileName, oldFileName);
+		await _photoOrchestrator.UpdateAsync(newPhoto, oldPhoto, photoFile, oldPhotoStream, newFileName, oldFileName);
 	}
 
 	private Photo PhotoNullCheck(Photo photo, Guid id) => photo ?? throw new NotFoundException(nameof(photo), id);

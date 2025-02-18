@@ -20,7 +20,7 @@ public class DocumentOrchestrator : IDocumentOrchestrator
 		_documentContainer = documentContainer;
 	}
 
-	public async Task CreateDocumentAsync(IFormFile file, Document document, string fileName)
+	public async Task CreateAsync(IFormFile file, Document document, string fileName)
 	{
 		var addToDbFunction = async () => await _unitOfWork.DocumentRepository.CreateAsync(document);
 		var removeFromDbFunction = async () => await _unitOfWork.DocumentRepository.DeleteAsync(document.Id);
@@ -34,7 +34,7 @@ public class DocumentOrchestrator : IDocumentOrchestrator
 		await orchestration.ApplyAsync();
 	}
 
-	public async Task DeleteDocumentAsync(Guid id, Stream documentStream, Document document, string fileName)
+	public async Task DeleteAsync(Guid id, Stream documentStream, Document document, string fileName)
 	{
 		var removeFromDbFunction = async () => await _unitOfWork.DocumentRepository.DeleteAsync(id);
 		var addToDbFunction = async () => await _unitOfWork.DocumentRepository.CreateAsync(document);
@@ -48,7 +48,7 @@ public class DocumentOrchestrator : IDocumentOrchestrator
 		await orchestration.ApplyAsync();
 	}
 
-	public async Task UpdateDocumentAsync(
+	public async Task UpdateAsync(
 		Document newDocument, 
 		Document oldDocument,
 		IFormFile newFile,

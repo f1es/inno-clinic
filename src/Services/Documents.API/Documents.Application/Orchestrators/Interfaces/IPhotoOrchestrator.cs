@@ -5,9 +5,9 @@ namespace Documents.Application.Orchestrators.Interfaces;
 
 public interface IPhotoOrchestrator
 {
-	public Task CreatePhotoAsync(IFormFile file, Photo photo, string fileName);
-	public Task DeletePhotoAsync(Guid id, Stream photoStream, Photo photo, string fileName);
-	public Task UpdatePhotoAsync(
+	public Task CreateAsync(IFormFile file, Photo photo, string fileName);
+	public Task DeleteAsync(Guid id, Stream photoStream, Photo photo, string fileName);
+	public Task UpdateAsync(
 		Photo newPhoto,
 		Photo oldPhoto,
 		IFormFile newFile,

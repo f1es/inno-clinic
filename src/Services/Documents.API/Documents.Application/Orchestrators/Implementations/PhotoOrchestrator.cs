@@ -20,7 +20,7 @@ public class PhotoOrchestrator : IPhotoOrchestrator
 		_photosContainer = photosContainer;
 	}
 
-	public async Task CreatePhotoAsync(IFormFile file, Photo photo, string fileName)
+	public async Task CreateAsync(IFormFile file, Photo photo, string fileName)
 	{
 		var addToDbFunction = async () => await _unitOfWork.PhotoRepository.CreateAsync(photo);
 		var removeFromDbFunction = async () => await _unitOfWork.PhotoRepository.DeleteAsync(photo.Id);
@@ -34,7 +34,7 @@ public class PhotoOrchestrator : IPhotoOrchestrator
 		await orchestration.ApplyAsync();
 	}
 
-	public async Task DeletePhotoAsync(Guid id, Stream photoStream, Photo photo, string fileName)
+	public async Task DeleteAsync(Guid id, Stream photoStream, Photo photo, string fileName)
 	{
 		var removeFromDbFunction = async () => await _unitOfWork.PhotoRepository.DeleteAsync(id);
 		var addToDbFunction = async () => await _unitOfWork.PhotoRepository.CreateAsync(photo);
@@ -48,7 +48,7 @@ public class PhotoOrchestrator : IPhotoOrchestrator
 		await orchestration.ApplyAsync();
 	}
 
-	public async Task UpdatePhotoAsync(
+	public async Task UpdateAsync(
 		Photo newPhoto,
 		Photo oldPhoto,
 		IFormFile newFile,

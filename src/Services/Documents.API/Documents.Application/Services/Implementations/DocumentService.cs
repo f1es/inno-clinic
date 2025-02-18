@@ -41,9 +41,7 @@ public class DocumentService : IDocumentService
 		var uri = _documentsContainer.GetUriForFile(fileName);
 		var document = new Document(uri.ToString(), resultId);
 
-		//await _documentsContainer.UploadAsync(documentFile, fileName);
-		//await _unitOfWork.DocumentRepository.CreateAsync(document);
-		await _documentOrchestrator.CreateDocumentAsync(documentFile, document, fileName);
+		await _documentOrchestrator.CreateAsync(documentFile, document, fileName);
 
 		return document;
 	}
@@ -60,9 +58,7 @@ public class DocumentService : IDocumentService
 			throw new NotFoundException(nameof(documentStream), fileName);
 		}
 
-		await _documentOrchestrator.DeleteDocumentAsync(id, documentStream, document, fileName);
-		//await _documentsContainer.DeleteAsync(fileName);
-		//await _unitOfWork.DocumentRepository.DeleteAsync(id);
+		await _documentOrchestrator.DeleteAsync(id, documentStream, document, fileName);
 	}
 
 	public async Task<Document> GetByIdAsync(Guid id)
@@ -94,9 +90,7 @@ public class DocumentService : IDocumentService
 		var newDocument = new Document(uri.ToString(), resultId);
 		newDocument.Id = id;
 
-		//await _unitOfWork.DocumentRepository.UpdateAsync(document);
-		//await _documentsContainer.UpdateAsync(documentFile, oldDocumentFileName, newDocumentFileName);
-		await _documentOrchestrator.UpdateDocumentAsync(newDocument, oldDocument, documentFile, documentStream, newFileName, oldFileName);
+		await _documentOrchestrator.UpdateAsync(newDocument, oldDocument, documentFile, documentStream, newFileName, oldFileName);
 
 	}
 
