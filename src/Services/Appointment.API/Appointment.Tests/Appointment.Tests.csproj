@@ -26,9 +26,4 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\Appointment\" />
-    <Folder Include="Repositories\Result\" />
-  </ItemGroup>
-
 </Project>
