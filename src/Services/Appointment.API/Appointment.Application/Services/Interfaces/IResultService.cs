@@ -5,10 +5,10 @@ namespace Appointment.Application.Services.Interfaces;
 
 public interface IResultService
 {
-	public Task<ResultResponseDto> GetByIdAsync(Guid id);
-	public Task<IEnumerable<ResultResponseDto>> GetAllAsync();
-	public Task<ResultForDownloadResponseDto> GetForDownloadAsync(Guid id);
-	public Task<ResultResponseDto> CreateAsync(ResultRequestDto resultRequestDto);
-	public Task UpdateAsync(Guid id, ResultRequestDto resultRequestDto);
-	public Task DeleteAsync(Guid id);
+	public Task<ResultResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+	public Task<IEnumerable<ResultResponseDto>> GetAllAsync(CancellationToken cancellationToken);
+	public Task<ResultForDownloadResponseDto> GetForDownloadAsync(Guid id, CancellationToken cancellationToken);
+	public Task<ResultResponseDto> CreateAsync(ResultRequestDto resultRequestDto, CancellationToken cancellationToken);
+	public Task UpdateAsync(Guid id, ResultRequestDto resultRequestDto, CancellationToken cancellationToken);
+	public Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 }

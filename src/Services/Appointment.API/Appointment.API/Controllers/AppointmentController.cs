@@ -23,9 +23,9 @@ public class AppointmentController : ControllerBase
 	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> GetAll()
+	public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
 	{
-		var appointments = await _appointmentService.GetAllAsync();
+		var appointments = await _appointmentService.GetAllAsync(cancellationToken);
 
 		return Ok(appointments);
 	}
@@ -40,9 +40,9 @@ public class AppointmentController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Get(Guid id)
+	public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
 	{
-		var appointment = await _appointmentService.GetByIdAsync(id);
+		var appointment = await _appointmentService.GetByIdAsync(id, cancellationToken);
 
 		return Ok(appointment);
 	}
@@ -57,9 +57,9 @@ public class AppointmentController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Create(AppointmentRequestDto appointmentRequestDto)
+	public async Task<IActionResult> Create(AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken)
 	{
-		var appoinment = await _appointmentService.CreateAsync(appointmentRequestDto);
+		var appoinment = await _appointmentService.CreateAsync(appointmentRequestDto, cancellationToken);
 
 		return CreatedAtRoute("GetAppointment", new { id = appoinment.Id }, appoinment);
 	}
@@ -76,9 +76,9 @@ public class AppointmentController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Update(Guid id, AppointmentRequestDto appointmentRequestDto)
+	public async Task<IActionResult> Update(Guid id, AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken)
 	{
-		await _appointmentService.UpdateAsync(id, appointmentRequestDto);
+		await _appointmentService.UpdateAsync(id, appointmentRequestDto, cancellationToken);
 
 		return NoContent();
 	}
@@ -93,9 +93,9 @@ public class AppointmentController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Delete(Guid id)
+	public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
 	{
-		await _appointmentService.DeleteAsync(id);
+		await _appointmentService.DeleteAsync(id, cancellationToken);
 
 		return NoContent();
 	}

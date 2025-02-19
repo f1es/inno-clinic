@@ -10,11 +10,11 @@ public class AppointmentRepository : BaseRepository<Core.Models.Appointment>, IA
 		: base(context)
     { }
 
-    public async Task<IEnumerable<Core.Models.Appointment>> GetAllAsync() => await _context.Appointments.AsNoTracking().ToListAsync();
+    public async Task<IEnumerable<Core.Models.Appointment>> GetAllAsync(CancellationToken cancellationToken) => await _context.Appointments.AsNoTracking().ToListAsync(cancellationToken);
 
-	public async Task<Core.Models.Appointment> GetByIdAsync(Guid id, bool trackChanges = false)
+	public async Task<Core.Models.Appointment> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.Appointments : _context.Appointments.AsNoTracking();
-		return await query.FirstOrDefaultAsync(x => x.Id == id);
+		return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 	}
 }
