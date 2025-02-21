@@ -11,10 +11,10 @@ using Testcontainers.PostgreSql;
 
 namespace Appointment.IntegrationTests;
 
-public class AppointmentsIntegrationTestsBase : IAsyncLifetime
+public abstract class AppointmentControllerTestsBase : IAsyncLifetime
 {
 	protected readonly PostgreSqlContainer _postgresContainer;
-	protected DbContextOptions<AppointmentDbContext> _dbContextOptions;
+	protected readonly DbContextOptions<AppointmentDbContext> _dbContextOptions;
 	protected readonly AppointmentDbContext _context;
 
 	protected readonly IAppointmentsMapper _appointmentsMapper;
@@ -23,7 +23,7 @@ public class AppointmentsIntegrationTestsBase : IAsyncLifetime
 
 	protected readonly AppointmentController _appointmentController;
 
-    public AppointmentsIntegrationTestsBase()
+    public AppointmentControllerTestsBase()
     {
 		_postgresContainer = new PostgreSqlBuilder().Build();
 

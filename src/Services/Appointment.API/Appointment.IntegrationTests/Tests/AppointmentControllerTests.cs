@@ -1,5 +1,6 @@
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
+using Appointment.IntegrationTests.Utility;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Exceptions;
@@ -7,7 +8,7 @@ using System.Net;
 
 namespace Appointment.IntegrationTests.Tests;
 
-public class AppointmentControllerTests : AppointmentsIntegrationTestsBase
+public class AppointmentControllerTests : AppointmentControllerTestsBase
 {
 	private readonly Fixture _fixture;
 
@@ -150,6 +151,7 @@ public class AppointmentControllerTests : AppointmentsIntegrationTestsBase
 	{
 		var appointment = _fixture.Build<Core.Models.Appointment>().Without(x => x.Result).Create();
 		_unitOfWork.AppointmentRepository.Create(appointment);
+
 		await _unitOfWork.SaveAsync(cancellationToken);
 		_context.Entry(appointment).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
 		return appointment;
