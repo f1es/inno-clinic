@@ -1,6 +1,7 @@
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
 using Appointment.Core.Models;
+using Appointment.IntegrationTests.Utility;
 using AutoFixture;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
