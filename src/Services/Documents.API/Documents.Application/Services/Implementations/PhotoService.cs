@@ -1,9 +1,11 @@
+using Documents.Application.Dtos.Response;
 using Documents.Application.Extensions;
 using Documents.Application.Orchestrators.Interfaces;
 using Documents.Application.Services.Interfaces;
 using Documents.Core.BlobRepositories;
 using Documents.Core.Models;
 using Documents.Core.Repositories;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Shared.Exceptions;
 
@@ -28,9 +30,13 @@ public class PhotoService : IPhotoService
 		_photoOrchestrator = photoOrchestrator;
 	}
 
-	public async Task<IEnumerable<Photo>> GetAllAsync() => await _unitOfWork.PhotoRepository.GetAllAsync();
+	public async Task<IEnumerable<FileResponseDto>> GetAllAsync()
+	{
+		var photos = await _unitOfWork.PhotoRepository.GetAllAsync();
+		return photos.Adapt<IEnumerable<FileResponseDto>>();
+	}
 
-	public async Task<Photo> CreateAsync(IFormFile photoFile)
+	public async Task<FileResponseDto> CreateAsync(IFormFile photoFile)
 	{
 		if (!ValidatePhoto(photoFile))
 		{
@@ -43,7 +49,7 @@ public class PhotoService : IPhotoService
 
 		await _photoOrchestrator.CreateAsync(photoFile, photo, fileName);
 
-		return photo;
+		return photo.Adapt<FileResponseDto>();
 	}
 
 	public async Task DeleteAsync(Guid id)
@@ -52,20 +58,16 @@ public class PhotoService : IPhotoService
 		PhotoNullCheck(photo, id);
 
 		var fileName = photo.GetFilename();
-		var photoStream = await _photosContainer.DownloadAsync(fileName);
-		if (photoStream == null)
-		{
-			throw new NotFoundException(nameof(photoStream), fileName);
-		}
+		var photoStream = await DownloadPhotoAndCheckForNullAsync(fileName);
 
 		await _photoOrchestrator.DeleteAsync(id, photoStream, photo, fileName);
 	}
 
-	public async Task<Photo> GetByIdAsync(Guid id)
+	public async Task<Uri> GetByIdAsync(Guid id)
 	{
 		var photo = await _unitOfWork.PhotoRepository.GetByIdAsync(id);
 		PhotoNullCheck(photo, id);
-		return photo;
+		return new Uri(photo.Url);
 	}
 
 	public async Task UpdateAsync(Guid id, IFormFile photoFile)
@@ -79,11 +81,7 @@ public class PhotoService : IPhotoService
 		PhotoNullCheck(oldPhoto, id);
 
 		var oldFileName = oldPhoto.GetFilename();
-		var oldPhotoStream = await _photosContainer.DownloadAsync(oldFileName);
-		if (oldPhotoStream == null)
-		{
-			throw new NotFoundException(nameof(oldPhotoStream), oldFileName);
-		}
+		var oldPhotoStream = await DownloadPhotoAndCheckForNullAsync(oldFileName);
 
 		var newFileName = _filenameGenerator.Generate(photoFile.FileName);
 		var uri = _photosContainer.GetUriForFile(newFileName);
@@ -95,6 +93,16 @@ public class PhotoService : IPhotoService
 	}
 
 	private Photo PhotoNullCheck(Photo photo, Guid id) => photo ?? throw new NotFoundException(nameof(photo), id);
+
+	private async Task<Stream> DownloadPhotoAndCheckForNullAsync(string fileName)
+	{
+		var photoStream = await _photosContainer.DownloadAsync(fileName);
+		if (photoStream == null)
+		{
+			throw new NotFoundException(nameof(photoStream), fileName);
+		}
+		return photoStream;
+	}
 
 	private bool ValidatePhoto(IFormFile photoFile)
 	{

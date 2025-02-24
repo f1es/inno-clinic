@@ -1,9 +1,11 @@
+using Documents.Application.Dtos.Response;
 using Documents.Application.Extensions;
 using Documents.Application.Orchestrators.Interfaces;
 using Documents.Application.Services.Interfaces;
 using Documents.Core.BlobRepositories;
 using Documents.Core.Models;
 using Documents.Core.Repositories;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Shared.Exceptions;
 
@@ -28,9 +30,13 @@ public class DocumentService : IDocumentService
 		_documentOrchestrator = documentOrchestrator;
 	}
 
-	public async Task<IEnumerable<Document>> GetAllAsync() => await _unitOfWork.DocumentRepository.GetAllAsync();
+	public async Task<IEnumerable<FileResponseDto>> GetAllAsync()
+	{
+		var documents = await _unitOfWork.DocumentRepository.GetAllAsync();
+		return documents.Adapt<IEnumerable<FileResponseDto>>();
+	}
 
-	public async Task<Document> CreateAsync(Guid resultId, IFormFile documentFile)
+	public async Task<FileResponseDto> CreateAsync(Guid resultId, IFormFile documentFile)
 	{
 		if (!ValidateDocument(documentFile))
 		{
@@ -43,7 +49,7 @@ public class DocumentService : IDocumentService
 
 		await _documentOrchestrator.CreateAsync(documentFile, document, fileName);
 
-		return document;
+		return document.Adapt<FileResponseDto>();
 	}
 
 	public async Task DeleteAsync(Guid id)
@@ -52,20 +58,16 @@ public class DocumentService : IDocumentService
 		DocumentNullCheck(document, id);
 
 		var fileName = document.GetFilename();
-		var documentStream = await _documentsContainer.DownloadAsync(fileName);
-		if (documentStream == null)
-		{
-			throw new NotFoundException(nameof(documentStream), fileName);
-		}
+		var documentStream = await DownloadDocumentAndCheckForNullAsync(fileName);
 
 		await _documentOrchestrator.DeleteAsync(id, documentStream, document, fileName);
 	}
 
-	public async Task<Document> GetByIdAsync(Guid id)
+	public async Task<Uri> GetByIdAsync(Guid id)
 	{
 		var document = await _unitOfWork.DocumentRepository.GetByIdAsync(id);
 		DocumentNullCheck(document, id);
-		return document;
+		return new Uri(document.Url);
 	}
 
 	public async Task UpdateAsync(Guid id, Guid resultId, IFormFile documentFile)
@@ -79,11 +81,7 @@ public class DocumentService : IDocumentService
 		DocumentNullCheck(oldDocument, id);
 
 		var oldFileName = oldDocument.GetFilename();
-		var documentStream = await _documentsContainer.DownloadAsync(oldFileName);
-		if (documentStream == null)
-		{
-			throw new NotFoundException(nameof(documentStream), oldFileName);
-		}
+		var documentStream = await DownloadDocumentAndCheckForNullAsync(oldFileName);
 
 		var newFileName = _filenameGenerator.Generate(documentFile.FileName);
 		var uri = _documentsContainer.GetUriForFile(newFileName);
@@ -91,7 +89,16 @@ public class DocumentService : IDocumentService
 		newDocument.Id = id;
 
 		await _documentOrchestrator.UpdateAsync(newDocument, oldDocument, documentFile, documentStream, newFileName, oldFileName);
+	}
 
+	private async Task<Stream> DownloadDocumentAndCheckForNullAsync(string fileName)
+	{
+		var documentStream = await _documentsContainer.DownloadAsync(fileName);
+		if (documentStream == null)
+		{
+			throw new NotFoundException(nameof(documentStream), fileName);
+		}
+		return documentStream;
 	}
 
 	private Document DocumentNullCheck(Document document, Guid id) => document ?? throw new NotFoundException(nameof(document), id);

@@ -1,13 +1,13 @@
-﻿using Documents.Core.Models;
+﻿using Documents.Application.Dtos.Response;
 using Microsoft.AspNetCore.Http;
 
 namespace Documents.Application.Services.Interfaces;
 
 public interface IPhotoService
 {
-	public Task<Photo> CreateAsync(IFormFile photoFile);
+	public Task<FileResponseDto> CreateAsync(IFormFile photoFile);
 	public Task DeleteAsync(Guid id);
 	public Task UpdateAsync(Guid id, IFormFile photoFile);
-	public Task<Photo> GetByIdAsync(Guid id);
-	public Task<IEnumerable<Photo>> GetAllAsync();
+	public Task<Uri> GetByIdAsync(Guid id);
+	public Task<IEnumerable<FileResponseDto>> GetAllAsync();
 }
