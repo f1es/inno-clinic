@@ -1,0 +1,6 @@
+version: "2.1"
+services:
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    ports:
+      - 15672:15672
