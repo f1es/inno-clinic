@@ -6,15 +6,9 @@ using Shared.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.ConfigureControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.ConfigureSwaggerGen();
-builder.Services.ConfigureDbContext(builder);
-builder.Services.ConfigureMappers();
-builder.Services.ConfigureServices();
-builder.Services.ConfigureRepositories();
+builder.Services.ConfigureApiLayer(builder);
+builder.Services.ConfigureInfrastructureLayer();
+builder.Services.ConfigureApplicationLayer();
 
 var app = builder.Build();
 

@@ -6,7 +6,12 @@ namespace Appointment.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureRepositories(this IServiceCollection services)
+	private static void ConfigureRepositories(this IServiceCollection services)
+	{
+		services.AddScoped<IUnitOfWork, UnitOfWork>();
+	}
+
+	public static void ConfigureInfrastructureLayer(this IServiceCollection services)
 	{
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 	}
