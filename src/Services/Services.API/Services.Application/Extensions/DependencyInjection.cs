@@ -1,4 +1,5 @@
 using FluentValidation;
+using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Services.Application.Mappers.Implementations;
 using Services.Application.Mappers.Interfaces;
@@ -30,10 +31,26 @@ public static class DependencyInjection
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 	}
 
+	private static void ConfigureMassTransit(this IServiceCollection services)
+	{
+		services.AddMassTransit(config =>
+		{
+			config.UsingRabbitMq((context, config) =>
+			{
+				config.Host("localhost", "/", host =>
+				{
+					host.Username("guest");
+					host.Password("guest");
+				});
+			});
+		});
+	}
+
 	public static void ConfigureApplication(this IServiceCollection services)
 	{
 		services.ConfigureMappers();
 		services.ConfigureMediatr();
 		services.ConfigureValidators();
+		services.ConfigureMassTransit();
 	}
 }
