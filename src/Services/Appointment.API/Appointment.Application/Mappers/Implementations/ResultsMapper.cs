@@ -20,4 +20,7 @@ public partial class ResultsMapper : IResultsMapper
 	[MapperIgnoreSource(nameof(Result.AppointmentId))]
 	[MapperIgnoreSource(nameof(Result.Id))]
 	public partial ResultForDownloadResponseDto ToResponseForDownload(Result result);
+	[MapperIgnoreTarget(nameof(Result.Appointment))]
+	[MapperIgnoreTarget(nameof(Result.Id))]
+	public partial void Update(ResultRequestDto destination, Result source);
 }

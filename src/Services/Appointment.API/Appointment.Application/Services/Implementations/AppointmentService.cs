@@ -58,12 +58,7 @@ public class AppointmentService : IAppointmentService
 	{
 		var appointment = await GetByIdAndCheckIfExist(id, trackChanges: true);
 
-		appointment.ServiceId = appointmentRequestDto.ServiceId;
-		appointment.PatientId = appointmentRequestDto.PatientId;
-		appointment.DoctorId = appointmentRequestDto.DoctorId;
-		appointment.IsApproved = appointmentRequestDto.IsApproved;
-		appointment.Date = appointmentRequestDto.Date;
-		appointment.Time = appointmentRequestDto.Time;
+		_appointmentsMapper.Update(appointmentRequestDto, appointment);
 
 		await _unitOfWork.SaveAsync();
 	}
