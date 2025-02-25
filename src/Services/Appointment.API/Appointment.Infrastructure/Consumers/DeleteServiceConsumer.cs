@@ -2,7 +2,7 @@ using Appointment.Core.Repositories;
 using MassTransit;
 using Shared.Messages;
 
-namespace Appointment.Application.Consumers;
+namespace Appointment.Infrastructure.Consumers;
 
 public class DeleteServiceConsumer : IConsumer<DeleteServiceMessage>
 {

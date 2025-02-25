@@ -17,4 +17,7 @@ public class AppointmentRepository : BaseRepository<Core.Models.Appointment>, IA
 		var query = trackChanges ? _context.Appointments : _context.Appointments.AsNoTracking();
 		return await query.FirstOrDefaultAsync(x => x.Id == id);
 	}
+
+	public async Task RemoveServiceId(Guid serviceId) => 
+		await _context.Appointments.Where(x => x.ServiceId == serviceId).ExecuteUpdateAsync(x => x.SetProperty(p => p.ServiceId, (Guid?)null));
 }
