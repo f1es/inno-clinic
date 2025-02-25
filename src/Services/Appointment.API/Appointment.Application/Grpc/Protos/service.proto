@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package serviceGrpc;
+option csharp_namespace = "GrpcServices";
+
+message IsServiceExistRequest{
+	string service_id = 1;
+}
+
+message ProtoBool {
+	bool is_exist = 1;
+}
+
+service ServiceGrpcServiceProto {
+	rpc IsServiceExist (IsServiceExistRequest) returns (ProtoBool);
+}

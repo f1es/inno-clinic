@@ -1,7 +1,11 @@
+using Appointment.Core.GrpcClients;
 using Appointment.Core.Repositories;
 using Appointment.Infrastructure.Consumers;
+using Appointment.Infrastructure.GrpcClients;
 using Appointment.Infrastructure.Repositories;
+using GrpcServices;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Appointment.Infrastructure.Extensions;
@@ -13,7 +17,6 @@ public static class DependencyInjection
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 	}
 
-	public static void ConfigureInfrastructureLayer(this IServiceCollection services)
 	private static void ConfigureMassTransit(this IServiceCollection services)
 	{
 		services.AddMassTransit(config =>
@@ -31,8 +34,21 @@ public static class DependencyInjection
 			});
 		});
 	}
+
+	private static void ConfigureGrpcClient(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddGrpcClient<ServiceGrpcServiceProto.ServiceGrpcServiceProtoClient>(options =>
+		{
+			options.Address = new Uri(configuration.GetConnectionString("ServicesService"));
+		});
+
+		services.AddScoped<IServiceGrpcClient, ServiceGrpcClient>();
+	}
+
+	public static void ConfigureInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.ConfigureMassTransit();
+		services.ConfigureGrpcClient(configuration);
 	}
 }
