@@ -11,18 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.29.3" />
-    <PackageReference Include="Grpc.Core" Version="2.46.6" />
-    <PackageReference Include="Grpc.Tools" Version="2.70.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2" />
     <PackageReference Include="Riok.Mapperly" Version="4.1.1" />
   </ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="Grpc\Protos\service.proto" GrpcServices="Client" />
-	</ItemGroup>
 
 </Project>

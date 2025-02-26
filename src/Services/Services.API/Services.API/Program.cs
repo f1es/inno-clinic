@@ -1,6 +1,5 @@
 using Services.API.Extensions;
 using Services.Application.Extensions;
-using Services.Application.Grpc.Services;
 using Services.Infrastructure.Extensions;
 using Shared.Middlewares;
 
@@ -28,6 +27,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGrpcService<ServiceGrpService>();
 
 app.Run();
