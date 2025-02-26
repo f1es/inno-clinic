@@ -1,9 +1,11 @@
 using Appointment.Core.GrpcClients;
 using Appointment.Core.Repositories;
+using Appointment.Core.RequestClients;
 using Appointment.Infrastructure.Consumers;
 using Appointment.Infrastructure.GrpcClients;
 using Appointment.Infrastructure.Options;
 using Appointment.Infrastructure.Repositories;
+using Appointment.Infrastructure.RequestClients;
 using GrpcServices;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -49,10 +51,17 @@ public static class DependencyInjection
 		services.AddScoped<IServiceGrpcClient, ServiceGrpcClient>();
 	}
 
+	private static void ConfigureRequestClients(this IServiceCollection services)
+	{
+		services.AddScoped<HttpClient>();
+		services.AddScoped<IServicesRequestClient, ServicesRequestClient>();
+	}
+
 	public static void ConfigureInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.ConfigureMassTransit();
 		services.ConfigureGrpcClient(configuration);
+		services.ConfigureRequestClients();
 	}
 }

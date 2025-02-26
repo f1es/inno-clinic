@@ -2,8 +2,8 @@ using Appointment.Application.Mappers.Interfaces;
 using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
-using Appointment.Core.GrpcClients;
 using Appointment.Core.Repositories;
+using Appointment.Core.RequestClients;
 using Shared.Exceptions;
 
 namespace Appointment.Application.Services.Implementations;
@@ -12,16 +12,16 @@ public class AppointmentService : IAppointmentService
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IAppointmentsMapper _appointmentsMapper;
-	private readonly IServiceGrpcClient _serviceGrpcClient;
+	private readonly IServicesRequestClient _servicesRequestClient;
 
 	public AppointmentService(
 		IUnitOfWork unitOfWork, 
 		IAppointmentsMapper appointmentsMapper,
-		IServiceGrpcClient serviceGrpcClient)
+		IServicesRequestClient servicesRequestClient)
 	{
 		_unitOfWork = unitOfWork;
 		_appointmentsMapper = appointmentsMapper;
-		_serviceGrpcClient = serviceGrpcClient;
+		_servicesRequestClient = servicesRequestClient;
 	}
 
 	public async Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto)
@@ -83,7 +83,7 @@ public class AppointmentService : IAppointmentService
 			return;
 		}
 
-		if (!await _serviceGrpcClient.IsServiceExist(serviceId.Value, CancellationToken.None))
+		if (!await _servicesRequestClient.IsServiceExistAsync(serviceId.Value, CancellationToken.None))
 		{
 			throw new NotFoundException("service", serviceId.Value);
 		}

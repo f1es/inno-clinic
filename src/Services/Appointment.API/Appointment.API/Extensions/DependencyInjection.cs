@@ -38,6 +38,7 @@ public static class DependencyInjection
 	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
+		services.Configure<ServicesEndpoints>(configuration.GetSection("ServicesEndpoints"));
 	}
 
 	public static void ConfigureApiLayer(this IServiceCollection services, IConfiguration configuration)
