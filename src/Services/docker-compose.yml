@@ -1,7 +1,15 @@
-version: "2.1"
 services:
-  rabbitmq:
+  rabbitmq-broker:
     image: rabbitmq:4.0-management
     ports:
       - 15672:15672
       - 5672:5672
+    container_name: rabbitmq-broker
+    networks:
+      - broker-network
+
+networks:
+  broker-network:
+    name: clinic
+    driver: bridge
+    external: true

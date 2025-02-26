@@ -28,10 +28,12 @@ public static class DependencyInjection
 		{
 			config.UsingRabbitMq((context, config) =>
 			{
-				config.Host("localhost", "/", host =>
+				var rabbitmqOptions = context.GetRequiredService<IOptions<RabbitmqOptions>>().Value;
+
+				config.Host(rabbitmqOptions.Host, rabbitmqOptions.VirtualHost, host =>
 				{
-					host.Username("guest");
-					host.Password("guest");
+					host.Username(rabbitmqOptions.Username);
+					host.Password(rabbitmqOptions.Password);
 				});
 			});
 		});
@@ -39,8 +41,7 @@ public static class DependencyInjection
 		services.AddScoped<IDeleteServiceNotifier, DeleteServiceNotifier>();
 	}
 
-	public static void ConfigureInfrastructure(
-		this IServiceCollection services)
+	public static void ConfigureInfrastructure(this IServiceCollection services)
 	{
 		var connectionStrings = services.BuildServiceProvider().GetRequiredService<IOptions<ConnectionStrings>>().Value;
 

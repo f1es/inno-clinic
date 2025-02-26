@@ -1,5 +1,7 @@
 ﻿using Appointment.Infrastructure.Context;
+using Appointment.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 
@@ -7,11 +9,11 @@ namespace Appointment.API.Extensions;
 
 public static class DependencyInjection
 {
-	private static void ConfigureDbContext(this IServiceCollection services, WebApplicationBuilder builder)
+	private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddDbContext<AppointmentDbContext>(options =>
 		{
-			options.UseNpgsql(builder.Configuration.GetConnectionString("NpsSql"));
+			options.UseNpgsql(configuration.GetConnectionString("NpsSql"));
 		});
 	}
 
@@ -33,11 +35,17 @@ public static class DependencyInjection
 		});
 	}
 
-	public static void ConfigureApiLayer(this IServiceCollection services, WebApplicationBuilder builder)
+	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.ConfigureDbContext(builder);
+		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
+	}
+
+	public static void ConfigureApiLayer(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.ConfigureDbContext(configuration);
 		services.ConfigureControllers();
 		services.ConfigureSwaggerGen();
 		services.AddEndpointsApiExplorer();
+		services.ConfigureOptions(configuration);
 	}
 }

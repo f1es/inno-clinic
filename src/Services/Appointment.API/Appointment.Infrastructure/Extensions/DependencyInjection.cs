@@ -2,11 +2,13 @@ using Appointment.Core.GrpcClients;
 using Appointment.Core.Repositories;
 using Appointment.Infrastructure.Consumers;
 using Appointment.Infrastructure.GrpcClients;
+using Appointment.Infrastructure.Options;
 using Appointment.Infrastructure.Repositories;
 using GrpcServices;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Appointment.Infrastructure.Extensions;
 
@@ -24,10 +26,12 @@ public static class DependencyInjection
 			config.AddConsumer<DeleteServiceConsumer>();
 			config.UsingRabbitMq((context, config) =>
 			{
-				config.Host("localhost", "/", host =>
+				var rabbitmqOptions = context.GetRequiredService<IOptions<RabbitmqOptions>>().Value;
+
+				config.Host(rabbitmqOptions.Host, rabbitmqOptions.VirtualHost, host =>
 				{
-					host.Username("guest");
-					host.Password("guest");
+					host.Username(rabbitmqOptions.Username);
+					host.Password(rabbitmqOptions.Password);
 				});
 
 				config.ConfigureEndpoints(context);

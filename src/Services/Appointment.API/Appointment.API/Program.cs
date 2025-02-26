@@ -6,7 +6,7 @@ using Shared.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.ConfigureApiLayer(builder);
+builder.Services.ConfigureApiLayer(builder.Configuration);
 builder.Services.ConfigureInfrastructureLayer(builder.Configuration);
 builder.Services.ConfigureApplicationLayer();
 
