@@ -64,6 +64,8 @@ public class AppointmentService : IAppointmentService
 	{
 		var appointment = await GetByIdAndCheckIfExist(id, trackChanges: true);
 
+		await CheckIfServiceExistAsync(appointment.ServiceId);
+
 		_appointmentsMapper.Update(appointmentRequestDto, appointment);
 
 		await _unitOfWork.SaveAsync();
