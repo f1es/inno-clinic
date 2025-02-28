@@ -23,7 +23,7 @@ public class AppointmentControllerServerTests : TestServerBase
 	}
 
     [Fact]
-    public async Task GET_GetAll_StatusCodeOk()
+    public async Task GET_Endpoint_StatusCodeOk()
     {
 		// Arrange
 		var appointment = await AddAppointmentToDbAsync();
@@ -40,7 +40,7 @@ public class AppointmentControllerServerTests : TestServerBase
     }
 
     [Fact]
-    public async Task GET_Get_ValidIdFromQuery_StatusCodeOk()
+    public async Task GET_EndpointWithId_ValidIdFromQuery_StatusCodeOk()
     {
 		// Arrange
 		var appointment = await AddAppointmentToDbAsync();
@@ -58,7 +58,7 @@ public class AppointmentControllerServerTests : TestServerBase
 	}
 
     [Fact]
-	public async Task GET_Get_InvalidIdFromQuery_StatusCodeNotFound()
+	public async Task GET_EndpointWithId_InvalidIdFromQuery_StatusCodeNotFound()
 	{
 		// Arrange
 		var id = new Guid();
@@ -72,7 +72,7 @@ public class AppointmentControllerServerTests : TestServerBase
 	}
 
 	[Fact]
-    public async Task POST_Create_ValidObjectRequestFromBody_StatusCodeCreated()
+    public async Task POST_Endpoint_ValidObjectRequestFromBody_StatusCodeCreated()
     {
 		// Arrange
 		var appointmentRequest = _fixture.Create<AppointmentRequestDto>();
@@ -86,7 +86,7 @@ public class AppointmentControllerServerTests : TestServerBase
     }
 
     [Fact]
-	public async Task PUT_Update_ValidObjectRequestFromBodyAndValidIdFromQuery_StatusCodeNoContent()
+	public async Task PUT_EndpointWithId_ValidObjectRequestFromBodyAndValidIdFromQuery_StatusCodeNoContent()
     {
         // Arrange
         var appointment = await AddAppointmentToDbAsync();
@@ -104,7 +104,7 @@ public class AppointmentControllerServerTests : TestServerBase
 	}
 
 	[Fact]
-	public async Task PUT_Update_ValidObjectRequestFromBodyAndInvalidIdFromQuery_StatusCodeNotFound()
+	public async Task PUT_EndpointWithId_ValidObjectRequestFromBodyAndInvalidIdFromQuery_StatusCodeNotFound()
 	{
 		// Arrange
 		var appointmentRequest = _fixture.Create<AppointmentRequestDto>();
@@ -119,7 +119,7 @@ public class AppointmentControllerServerTests : TestServerBase
 	}
 
 	[Fact]
-	public async Task DELETE_Delete_ValidIdFromQuery_StatusCodeNoContent()
+	public async Task DELETE_EndpointWithId_ValidIdFromQuery_StatusCodeNoContent()
 	{
 		// Arrange
 		var appointment = await AddAppointmentToDbAsync();
@@ -134,7 +134,7 @@ public class AppointmentControllerServerTests : TestServerBase
 	}
 
 	[Fact]
-	public async Task DELETE_Delete_InvalidIdFromQuery_StatusCodeNotFound()
+	public async Task DELETE_EndpointWithId_InvalidIdFromQuery_StatusCodeNotFound()
 	{
 		// Arrange
 		var appointment = await AddAppointmentToDbAsync();
