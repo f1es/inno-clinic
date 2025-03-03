@@ -22,6 +22,12 @@ public class AppointmentControllerServerTests : TestServerBase
 		_fixture.Register(() => new TimeOnly(1, 1, 1));
 	}
 
+	public static IEnumerable<object[]> InvalidGuidTestData()
+	{
+		yield return new object[] { new Guid() };
+		yield return new object[] { Guid.Parse("11111111-1111-1111-1111-111111111111") };
+	}
+
     [Fact]
     public async Task GET_Endpoint_StatusCodeOk()
     {
@@ -57,12 +63,13 @@ public class AppointmentControllerServerTests : TestServerBase
         Assert.Equivalent(200, (int)response.StatusCode);
 	}
 
-    [Fact]
-	public async Task GET_EndpointWithId_InvalidIdFromQuery_StatusCodeNotFound()
+    [Theory]
+	[MemberData(nameof(InvalidGuidTestData))]
+	public async Task GET_EndpointWithId_InvalidIdFromQuery_StatusCodeNotFound(Guid invalidId)
 	{
 		// Arrange
-		var id = new Guid();
-        var url = AppointmentsEndpoint + id.ToString();
+		//var id = new Guid();
+        var url = AppointmentsEndpoint + invalidId.ToString();
 
 		// Act
 		var response = await _httpClient.GetAsync(url);
@@ -103,13 +110,14 @@ public class AppointmentControllerServerTests : TestServerBase
         updatedAppointment.Should().BeEquivalentTo(appointmentRequest);
 	}
 
-	[Fact]
-	public async Task PUT_EndpointWithId_ValidObjectRequestFromBodyAndInvalidIdFromQuery_StatusCodeNotFound()
+	[Theory]
+	[MemberData(nameof(InvalidGuidTestData))]
+	public async Task PUT_EndpointWithId_ValidObjectRequestFromBodyAndInvalidIdFromQuery_StatusCodeNotFound(Guid invalidId)
 	{
 		// Arrange
 		var appointmentRequest = _fixture.Create<AppointmentRequestDto>();
 		var httpContent = GetHttpContentOfRequest(appointmentRequest);
-		var url = AppointmentsEndpoint + new Guid().ToString();
+		var url = AppointmentsEndpoint + invalidId.ToString();
 
 		// Act 
 		var response = await _httpClient.PutAsync(url, httpContent);
@@ -133,12 +141,13 @@ public class AppointmentControllerServerTests : TestServerBase
 		Assert.Equivalent(204, (int)response.StatusCode);
 	}
 
-	[Fact]
-	public async Task DELETE_EndpointWithId_InvalidIdFromQuery_StatusCodeNotFound()
+	[Theory]
+	[MemberData(nameof(InvalidGuidTestData))]
+	public async Task DELETE_EndpointWithId_InvalidIdFromQuery_StatusCodeNotFound(Guid invalidId)
 	{
 		// Arrange
 		var appointment = await AddAppointmentToDbAsync();
-		var url = AppointmentsEndpoint + new Guid().ToString();
+		var url = AppointmentsEndpoint + invalidId.ToString();
 
 		// Act
 		var response = await _httpClient.DeleteAsync(url);
