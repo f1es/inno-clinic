@@ -68,7 +68,6 @@ public class AppointmentControllerServerTests : TestServerBase
 	public async Task GET_EndpointWithId_InvalidIdFromQuery_StatusCodeNotFound(Guid invalidId)
 	{
 		// Arrange
-		//var id = new Guid();
         var url = AppointmentsEndpoint + invalidId.ToString();
 
 		// Act
