@@ -33,4 +33,6 @@ volumes:
 
 networks:
   profiles-network:
+    name: clinic
     driver: bridge
+    external: true
