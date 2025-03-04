@@ -15,17 +15,20 @@ public class AccountController : ControllerBase
 	private readonly IAccessService _accessService;
 	private readonly IRegistrationService _registrationService;
 	private readonly IEmailVerificationService _emailVerificationService;
+	private readonly IRoleService _roleService;
 
 	public AccountController(
 		IAccountService accountService,
 		IAccessService accessService,
 		IRegistrationService registrationService,
-		IEmailVerificationService emailVerificationService)
+		IEmailVerificationService emailVerificationService,
+		IRoleService roleService)
 	{
 		_accountService = accountService;
 		_accessService = accessService;
 		_registrationService = registrationService;
 		_emailVerificationService = emailVerificationService;
+		_roleService = roleService;
 	}
 
 	/// <summary>
@@ -186,6 +189,25 @@ public class AccountController : ControllerBase
 		var tokens = Request.GetAccessAndRefreshTokens();
 
 		await _accessService.RevokeAsync(tokens);
+
+		return NoContent();
+	}
+
+	/// <summary>
+	/// Update role for user, if Role in dto is null, it also set role to null
+	/// </summary>
+	/// <param name="id"></param>
+	/// <param name="updateRoleRequestDto"></param>
+	/// <returns></returns>
+	[HttpPost("{id:guid}/grant-role")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> GrantRole(Guid id, UpdateRoleRequestDto updateRoleRequestDto)
+	{
+		await _roleService.GrantRoleAsync(id, updateRoleRequestDto);
 
 		return NoContent();
 	}

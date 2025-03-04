@@ -34,6 +34,7 @@ public static class DependencyInjection
 		services.AddScoped<IRefreshProvider, RefreshProvider>();
 		services.AddScoped<IRegistrationService, RegistrationService>();
 		services.AddScoped<IEmailVerificationService, EmailVerificationService>();
+		services.AddScoped<IRoleService, RoleService>();
 	}
 
 	public static void ConfigureValidators(this IServiceCollection services) =>

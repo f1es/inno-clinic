@@ -1,6 +1,5 @@
 using Authorization.Core.Dto.Response;
 using Authorization.Core.Models;
-using System.Runtime.CompilerServices;
 
 namespace Authorization.Application.Mappers;
 
@@ -16,5 +15,6 @@ public static class AccountMappers
 			account.CreatedAt,
 			account.UpdatedBy,
 			account.UpdatedAt,
+			account.Role,
 			account.PhotoId);
 }

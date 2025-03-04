@@ -56,7 +56,7 @@ public class AccessService : IAccessService
             throw new UnauthorizedException($"Email {account.Email} is not verified");
         }
 
-        var claimsIdentity = new ClaimsIdentity([new Claim("id", account.Id.ToString())]);
+        var claimsIdentity = PutClaims(account.Id, account.Role);
 
         var accessToken = _jwtProvider.GenerateToken(_keys.Value.Access, _jwtTokenOptions.Value.AccessTokenLifetime, claimsIdentity);
         var refreshToken = _refreshProvider.GenerateToken();
@@ -135,5 +135,16 @@ public class AccessService : IAccessService
 		{
 			throw new BadRequestException("Invalid client request");
 		}
+	}
+    private ClaimsIdentity PutClaims(Guid accountId, string? accountRole)
+    {
+        var claimsIdentity = new ClaimsIdentity();
+        claimsIdentity.AddClaim(new Claim("id", accountId.ToString()));
+        if (accountRole != null)
+        {
+            claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, accountRole));
+        }
+
+        return claimsIdentity;
 	}
 }

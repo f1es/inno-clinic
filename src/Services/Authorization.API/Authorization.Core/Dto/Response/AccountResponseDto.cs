@@ -9,4 +9,5 @@ public record AccountResponseDto(
 	DateTime CreatedAt,
 	string? UpdatedBy,
 	DateTime? UpdatedAt,
+	string? Role,
 	Guid PhotoId);
