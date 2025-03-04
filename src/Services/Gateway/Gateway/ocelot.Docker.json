@@ -5,8 +5,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "services-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/services",
@@ -24,8 +24,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "services-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/services",
@@ -46,8 +46,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "services-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/services/{id}",
@@ -70,8 +70,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "services-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/services-categories",
@@ -90,8 +90,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5001
+          "Host": "services-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/services-categories/{id}",
@@ -111,8 +111,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "appointment-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/appointments",
@@ -131,8 +131,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "appointment-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/appointments/{id}",
@@ -154,8 +154,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "appointment-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/appointments/{id}",
@@ -173,8 +173,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "appointment-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/results",
@@ -195,8 +195,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "appointment-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/results",
@@ -217,8 +217,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5005
+          "Host": "appointment-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/results/{id}/download",
@@ -236,8 +236,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "offices-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/offices",
@@ -251,8 +251,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "offices-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/offices",
@@ -273,8 +273,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "offices-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/offices/{id}",
@@ -288,8 +288,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5002
+          "Host": "offices-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/offices/{id}",
@@ -311,8 +311,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/doctors",
@@ -327,8 +327,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/doctors/{id}",
@@ -344,8 +344,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/patients",
@@ -367,8 +367,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/patients/{id}",
@@ -391,8 +391,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/receptionists",
@@ -414,8 +414,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/receptionists/{id}",
@@ -438,8 +438,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/specializations",
@@ -454,8 +454,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5003
+          "Host": "profiles-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/specializations/{id}",
@@ -475,8 +475,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "documents-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/documents",
@@ -495,8 +495,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "documents-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/documents/{id}",
@@ -516,8 +516,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "documents-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/photos",
@@ -536,8 +536,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5004
+          "Host": "documents-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/photos/{id}",
@@ -557,8 +557,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts",
@@ -571,9 +571,7 @@
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": [
-          "receptionist"
-        ]
+        "Role": "receptionist"
       }
     },
     {
@@ -581,8 +579,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts/register",
@@ -596,8 +594,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts/login",
@@ -611,8 +609,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts/refresh",
@@ -630,8 +628,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts/revoke",
@@ -649,8 +647,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts/{id}/grant-role",
@@ -673,8 +671,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts/{id}",
@@ -699,8 +697,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5006
+          "Host": "auth-app",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/gateway/accounts/email-verification",
@@ -720,7 +718,7 @@
         {
           "Name": "Services API v1",
           "Version": "v1",
-          "Url": "http://localhost:5001/swagger/v1/swagger.json"
+          "Url": "http://services-app:5001/swagger/v1/swagger.json"
         }
       ]
     },
@@ -731,7 +729,7 @@
         {
           "Name": "Documents API v1",
           "Version": "v1",
-          "Url": "http://localhost:5004/swagger/v1/swagger.json"
+          "Url": "http://documents-app:5004/swagger/v1/swagger.json"
         }
       ]
     },
@@ -742,7 +740,7 @@
         {
           "Name": "Profiles API v1",
           "Version": "v1",
-          "Url": "http://localhost:5003/swagger/v1/swagger.json"
+          "Url": "http://profiles-app:5003/swagger/v1/swagger.json"
         }
       ]
     },
@@ -753,7 +751,7 @@
         {
           "Name": "Authorization API v1",
           "Version": "v1",
-          "Url": "http://localhost:5006/swagger/v1/swagger.json"
+          "Url": "http://auth-app:8080/swagger/v1/swagger.json"
         }
       ]
     },
@@ -764,7 +762,7 @@
         {
           "Name": "Offices API v1",
           "Version": "v1",
-          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+          "Url": "http://offices-app:5002/swagger/v1/swagger.json"
         }
       ]
     },
@@ -775,7 +773,7 @@
         {
           "Name": "Appointment API v1",
           "Version": "v1",
-          "Url": "http://localhost:5005/swagger/v1/swagger.json"
+          "Url": "http://appointment-app:5005/swagger/v1/swagger.json"
         }
       ]
     }
