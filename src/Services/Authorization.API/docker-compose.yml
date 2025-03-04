@@ -33,4 +33,6 @@ volumes:
 
 networks:
   auth-network:
-    driver: bridge
+        name: clinic
+        driver: bridge
+        external: true
