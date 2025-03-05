@@ -2,7 +2,7 @@ services:
   profiles-mssql-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
-      - 1433:1433
+      - 1434:1433
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=1rr23r2MyStrongPassword1234321
@@ -10,6 +10,29 @@ services:
     volumes:
       - profiles-service-db:/var/lib/mssql/data
     container_name: profiles_service_db
+    networks:
+        - profiles-network
     
+  profiles-app:
+      build:
+        context: "."
+        dockerfile: Dockerfile
+      ports:
+        - 5003:8080
+        - 5013:8081
+      container_name: profiles_service_app
+      environment:
+        - ASPNETCORE_ENVIRONMENT=Docker
+      depends_on:
+        - profiles-mssql-db
+      networks:
+        - profiles-network
+
 volumes:
   profiles-service-db:
+
+networks:
+  profiles-network:
+    name: clinic
+    driver: bridge
+    external: true

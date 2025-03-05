@@ -11,11 +11,12 @@ public class ServiceCategoryRepository : BaseRepository<ServiceCategory>, IServi
 		: base(context)
 	{ }
 
-	public async Task<IEnumerable<ServiceCategory>> GetAllAsync(CancellationToken cancellationToken) => await _context.ServiceCategories.ToListAsync();
+	public async Task<IEnumerable<ServiceCategory>> GetAllAsync(CancellationToken cancellationToken) =>
+		await _context.ServiceCategories.AsNoTracking().ToListAsync(cancellationToken);
 
 	public async Task<ServiceCategory> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.ServiceCategories : _context.ServiceCategories.AsNoTracking();
-		return await query.FirstOrDefaultAsync(x => x.Id == id);
+		return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 	}
 }

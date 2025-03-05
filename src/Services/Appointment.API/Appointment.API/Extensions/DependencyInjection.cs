@@ -2,8 +2,12 @@
 using Appointment.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 using System.Text.Json.Serialization;
+using Appointment.API.Options;
 
 namespace Appointment.API.Extensions;
 
@@ -35,6 +39,45 @@ public static class DependencyInjection
 		});
 	}
 
+	private static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+	{
+		var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
+
+		services.AddAuthentication(options =>
+		{
+			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+		})
+			.AddJwtBearer(options =>
+			{
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						if (context.Request.Cookies.ContainsKey("sec"))
+						{
+							context.Token = context.Request.Cookies["sec"];
+						}
+
+						return Task.CompletedTask;
+					}
+				};
+				options.RequireHttpsMetadata = false;
+				options.SaveToken = true;
+				options.ClaimsIssuer = jwtOptions.Issuer;
+				options.TokenValidationParameters = new TokenValidationParameters
+				{
+					ValidateAudience = false,
+					ValidateIssuerSigningKey = true,
+					ValidateLifetime = true,
+					ValidateIssuer = false,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
+				};
+			});
+
+		services.AddAuthorization();
+	}
+
 	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
@@ -48,5 +91,6 @@ public static class DependencyInjection
 		services.ConfigureSwaggerGen();
 		services.AddEndpointsApiExplorer();
 		services.ConfigureOptions(configuration);
+		services.ConfigureAuthentication(configuration);
 	}
 }

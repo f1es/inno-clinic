@@ -11,16 +11,15 @@ public static class DependencyInjection
 	public static void ConfigureOptions(this IServiceCollection services, WebApplicationBuilder builder)
 	{
 		services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
-		services.Configure<Keys>(builder.Configuration.GetSection("Keys"));
 	}
 
-	public static void ConfigureAuthentication(this IServiceCollection services, WebApplicationBuilder builder)
+	public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
-		var key = builder.Configuration.GetSection("Keys").GetRequiredSection("Access");
+		var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
 		services.AddAuthentication(options =>
 		{
-			options.DefaultAuthenticateScheme =	JwtBearerDefaults.AuthenticationScheme;
+			options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
 			options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 		})
 			.AddJwtBearer(options =>
@@ -39,13 +38,14 @@ public static class DependencyInjection
 				};
 				options.RequireHttpsMetadata = false;
 				options.SaveToken = true;
+				options.ClaimsIssuer = jwtOptions.Issuer;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
-					ValidateIssuer = false,
 					ValidateAudience = false,
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key.Value))
+					ValidateIssuer = false,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
 				};
 			});
 

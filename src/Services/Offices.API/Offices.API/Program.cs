@@ -20,14 +20,14 @@ builder.Services.ConfigureMediatr();
 builder.Services.ConfigureAutomapper();
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureOptions(builder);
-builder.Services.ConfigureAuthentication(builder);
+builder.Services.ConfigureAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
 	app.UseSwagger();
 	app.UseSwaggerUI();
@@ -35,7 +35,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

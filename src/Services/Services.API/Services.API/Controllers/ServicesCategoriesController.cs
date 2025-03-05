@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Application.CQRS.ServicesCategories.Commands.CreateServiceCategory;
 using Services.Application.CQRS.ServicesCategories.Commands.DeleteServiceCategory;
@@ -14,6 +15,7 @@ namespace Services.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/services-categories")]
+[Authorize]
 public class ServicesCategoriesController : ControllerBase
 {
 	private readonly IMediator _mediator;
@@ -66,6 +68,7 @@ public class ServicesCategoriesController : ControllerBase
 	/// <returns></returns>
 	[HttpPost]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Create(ServiceCategoryRequestDto serviceCategoryRequestDto, CancellationToken cancellationToken)
@@ -84,6 +87,7 @@ public class ServicesCategoriesController : ControllerBase
 	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -104,6 +108,7 @@ public class ServicesCategoriesController : ControllerBase
 	/// <returns></returns>
 	[HttpPut("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
