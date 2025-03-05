@@ -7,6 +7,29 @@ services:
     volumes:
       - offices-service-db:/var/lib/mongodb/data
     container_name: offices_service_db
+    networks:
+        - offices-network
+
+  offices-app:
+      build:
+        context: "."
+        dockerfile: Dockerfile
+      ports:
+        - 5002:8080
+        - 5012:8081
+      container_name: offices_service_app
+      environment:
+        - ASPNETCORE_ENVIRONMENT=Docker
+      depends_on:
+        - offices-service-db
+      networks:
+        - offices-network
+
+networks:
+  offices-network:
+    driver: bridge
 
 volumes:
   offices-service-db:
+
+
