@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Services.Core.Models;
 using Services.Core.Repositories;
 using Services.Infrastructure.Context;
-using System.Threading;
 
 namespace Services.Infrastructure.Repositories;
 

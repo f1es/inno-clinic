@@ -1,9 +1,11 @@
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Services.Core.Notifiers;
 using Services.Core.Repositories;
 using Services.Infrastructure.Context;
+using Services.Infrastructure.Notifiers;
 using Services.Infrastructure.Options;
 using Services.Infrastructure.Repositories;
 
@@ -20,12 +22,31 @@ public static class DependencyInjection
 			options.UseSqlServer(connectionString);
 		});
 
-	public static void ConfigureInfrastructure(
-		this IServiceCollection services)
+	private static void ConfigureMassTransit(this IServiceCollection services)
+	{
+		services.AddMassTransit(config =>
+		{
+			config.UsingRabbitMq((context, config) =>
+			{
+				var rabbitmqOptions = context.GetRequiredService<IOptions<RabbitmqOptions>>().Value;
+
+				config.Host(rabbitmqOptions.Host, rabbitmqOptions.VirtualHost, host =>
+				{
+					host.Username(rabbitmqOptions.Username);
+					host.Password(rabbitmqOptions.Password);
+				});
+			});
+		});
+
+		services.AddScoped<IDeleteServiceNotifier, DeleteServiceNotifier>();
+	}
+
+	public static void ConfigureInfrastructure(this IServiceCollection services)
 	{
 		var connectionStrings = services.BuildServiceProvider().GetRequiredService<IOptions<ConnectionStrings>>().Value;
 
 		services.ConfigureDbContext(connectionStrings.DefaultConnection);
 		services.ConfigureRepositories();
+		services.ConfigureMassTransit();
 	}
 }

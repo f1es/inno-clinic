@@ -33,5 +33,7 @@ volumes:
 
 networks:
   appointment-network:
+    name: clinic
     driver: bridge
+    external: true
   

@@ -3,6 +3,7 @@ using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
 using Appointment.Core.Repositories;
+using Appointment.Core.RequestClients;
 using Shared.Exceptions;
 
 namespace Appointment.Application.Services.Implementations;
@@ -11,18 +12,23 @@ public class AppointmentService : IAppointmentService
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IAppointmentsMapper _appointmentsMapper;
+	private readonly IServicesRequestClient _servicesRequestClient;
 
 	public AppointmentService(
 		IUnitOfWork unitOfWork, 
-		IAppointmentsMapper appointmentsMapper)
+		IAppointmentsMapper appointmentsMapper,
+		IServicesRequestClient servicesRequestClient)
 	{
 		_unitOfWork = unitOfWork;
 		_appointmentsMapper = appointmentsMapper;
+		_servicesRequestClient = servicesRequestClient;
 	}
 
 	public async Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken)
 	{
 		var appointment = _appointmentsMapper.ToModel(appointmentRequestDto);
+
+		await CheckIfServiceExistAsync(appointment.ServiceId);
 
 		_unitOfWork.AppointmentRepository.Create(appointment);
 		await _unitOfWork.SaveAsync(cancellationToken);
@@ -58,12 +64,9 @@ public class AppointmentService : IAppointmentService
 	{
 		var appointment = await GetByIdAndCheckIfExist(id, cancellationToken, trackChanges: true);
 
-		appointment.ServiceId = appointmentRequestDto.ServiceId;
-		appointment.PatientId = appointmentRequestDto.PatientId;
-		appointment.DoctorId = appointmentRequestDto.DoctorId;
-		appointment.IsApproved = appointmentRequestDto.IsApproved;
-		appointment.Date = appointmentRequestDto.Date;
-		appointment.Time = appointmentRequestDto.Time;
+		await CheckIfServiceExistAsync(appointment.ServiceId);
+
+		_appointmentsMapper.Update(appointmentRequestDto, appointment);
 
 		await _unitOfWork.SaveAsync(cancellationToken);
 	}
@@ -73,5 +76,18 @@ public class AppointmentService : IAppointmentService
 		var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id, cancellationToken, trackChanges);
 
 		return appointment ?? throw new NotFoundException(nameof(appointment), id);
+	}
+
+	private async Task CheckIfServiceExistAsync(Guid? serviceId)
+	{
+		if (serviceId == null)
+		{
+			return;
+		}
+
+		if (!await _servicesRequestClient.IsServiceExistAsync(serviceId.Value, CancellationToken.None))
+		{
+			throw new NotFoundException("service", serviceId.Value);
+		}
 	}
 }

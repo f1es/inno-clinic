@@ -15,4 +15,7 @@ public partial class AppointmentsMapper : IAppointmentsMapper
 	public partial AppointmentResponseDto ToResponse(Core.Models.Appointment appointment);
 	[MapperIgnoreSource(nameof(Core.Models.Appointment.Result))]
 	public partial IEnumerable<AppointmentResponseDto> ToResponse(IEnumerable<Core.Models.Appointment> appointments);
+	[MapperIgnoreTarget(nameof(Core.Models.Appointment.Id))]
+	[MapperIgnoreTarget(nameof(Core.Models.Appointment.Result))]
+	public partial void Update(AppointmentRequestDto source, Core.Models.Appointment destination);
 }

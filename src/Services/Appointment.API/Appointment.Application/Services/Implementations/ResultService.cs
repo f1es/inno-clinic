@@ -64,10 +64,7 @@ public class ResultService : IResultService
 	{
 		var result = await GetByIdAsyncAndCheckIfExist(id, cancellationToken, trackChanges: true);
 
-		result.AppointmentId = resultRequestDto.AppointmentId;
-		result.Conclusion = resultRequestDto.Conclusion;
-		result.Reccomendations = resultRequestDto.Reccomendations;
-		result.Complaints = resultRequestDto.Complaints;
+		_resultsMapper.Update(resultRequestDto, result);
 
 		await _unitOfWork.SaveAsync(cancellationToken);
 	}

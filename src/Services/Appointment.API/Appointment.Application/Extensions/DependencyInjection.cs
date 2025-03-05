@@ -8,15 +8,21 @@ namespace Appointment.Application.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureMappers(this IServiceCollection services)
+	private static void ConfigureMappers(this IServiceCollection services)
 	{
 		services.AddScoped<IResultsMapper, ResultsMapper>();
 		services.AddScoped<IAppointmentsMapper, AppointmentsMapper>();
 	}
 
-	public static void ConfigureServices(this IServiceCollection services)
+	private static void ConfigureServices(this IServiceCollection services)
 	{
 		services.AddScoped<IAppointmentService, AppointmentService>();
 		services.AddScoped<IResultService, ResultService>();
+	}
+
+	public static void ConfigureApplicationLayer(this IServiceCollection services)
+	{
+		services.ConfigureMappers();
+		services.ConfigureServices();
 	}
 }
