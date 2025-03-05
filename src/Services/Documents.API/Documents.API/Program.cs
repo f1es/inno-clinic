@@ -20,6 +20,7 @@ builder.Services.ConfigureAzureServices(builder);
 builder.Services.ConfigureOptions(builder);
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureServices();
+builder.Services.ConfigureAuthentication(builder.Configuration);
 
 var app = builder.Build();
 

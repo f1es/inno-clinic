@@ -1,10 +1,12 @@
 ﻿using Documents.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Documents.API.Controllers;
 
 [ApiController]
 [Route("api/documents")]
+[Authorize]
 public class DocumentsController : ControllerBase
 {
 	private readonly IDocumentService _documentService;
@@ -54,6 +56,7 @@ public class DocumentsController : ControllerBase
 	/// <returns></returns>
 	[HttpPost]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist, doctor")]
 	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -71,6 +74,7 @@ public class DocumentsController : ControllerBase
 	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist, doctor")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -90,6 +94,7 @@ public class DocumentsController : ControllerBase
 	/// <returns></returns>
 	[HttpPut("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist, doctor")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]

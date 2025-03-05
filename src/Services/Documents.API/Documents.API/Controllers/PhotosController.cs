@@ -1,10 +1,12 @@
 ﻿using Documents.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Documents.API.Controllers;
 
 [ApiController]
 [Route("api/photos")]
+[Authorize]
 public class PhotosController : ControllerBase
 {
 	private readonly IPhotoService _photoService;
