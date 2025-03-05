@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using System.Text.Json.Serialization;
+using Appointment.API.Options;
 
 namespace Appointment.API.Extensions;
 
@@ -90,6 +91,6 @@ public static class DependencyInjection
 		services.ConfigureSwaggerGen();
 		services.AddEndpointsApiExplorer();
 		services.ConfigureOptions(configuration);
-		services.ConfigureAuthentication(configuration)
+		services.ConfigureAuthentication(configuration);
 	}
 }
