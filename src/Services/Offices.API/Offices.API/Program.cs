@@ -20,6 +20,7 @@ builder.Services.ConfigureMediatr();
 builder.Services.ConfigureAutomapper();
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureOptions(builder);
+builder.Services.ConfigureAuthentication(builder.Configuration);
 
 var app = builder.Build();
 
