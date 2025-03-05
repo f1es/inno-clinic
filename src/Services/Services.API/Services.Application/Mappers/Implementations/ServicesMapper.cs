@@ -17,5 +17,7 @@ public partial class ServicesMapper : IServicesMapper
 	public partial void UpdateModel(ServiceRequestDto serviceRequestDto, Service service);
 	[MapperIgnoreSource(nameof(Service.ServiceCategory))]
 	public partial ServiceResponseDto ToResponse(Service service);
+	[MapperIgnoreSource(nameof(Service.ServiceCategoryId))]
+	public partial ServiceWithCategoryResponseDto ToResponseWithCategory(Service service);
 	public partial IEnumerable<ServiceResponseDto> ToResponse(IEnumerable<Service> services);
 }

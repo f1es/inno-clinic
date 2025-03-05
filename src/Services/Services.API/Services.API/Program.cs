@@ -1,3 +1,4 @@
+using Serilog;
 using Services.API.Extensions;
 using Services.Application.Extensions;
 using Services.Infrastructure.Extensions;
@@ -9,9 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureApi(builder.Configuration);
 builder.Services.ConfigureInfrastructure();
-builder.Services.ConfigureApplication();
+builder.Services.ConfigureApplication(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
@@ -27,5 +30,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+Log.Information("Application started");
 
 app.Run();

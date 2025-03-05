@@ -1,5 +1,7 @@
 using FluentValidation;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Services.Application.Mappers.Implementations;
 using Services.Application.Mappers.Interfaces;
 using Services.Application.MediatR.PipelineBehaviors;
@@ -30,10 +32,21 @@ public static class DependencyInjection
 		services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 	}
 
-	public static void ConfigureApplication(this IServiceCollection services)
+	private static void ConfigureSerilog(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddSerilog();
+
+		Log.Logger = new LoggerConfiguration()
+		.ReadFrom.Configuration(configuration)
+		.Enrich.FromLogContext()
+		.CreateLogger();
+	}
+
+	public static void ConfigureApplication(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.ConfigureMappers();
 		services.ConfigureMediatr();
 		services.ConfigureValidators();
+		services.ConfigureSerilog(configuration);
 	}
 }
