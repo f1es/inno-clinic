@@ -1,5 +1,6 @@
 ﻿using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Text.Json;
@@ -8,6 +9,7 @@ namespace Appointment.API.Controllers;
 
 [ApiController]
 [Route("api/results")]
+[Authorize]
 public class ResultController : ControllerBase
 {
 	private readonly IResultService _resultService;
@@ -56,6 +58,7 @@ public class ResultController : ControllerBase
 	/// <returns></returns>
 	[HttpPost]
 	[Produces("application/json")]
+	[Authorize(Roles = "doctor, receptionist")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -73,6 +76,7 @@ public class ResultController : ControllerBase
 	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "doctor, receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -91,6 +95,7 @@ public class ResultController : ControllerBase
 	/// <returns></returns>
 	[HttpPut("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "doctor, receptionist")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
