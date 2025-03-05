@@ -25,9 +25,9 @@ public class ResultController : ControllerBase
 	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> GetAll()
+	public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
 	{
-		var results = await _resultService.GetAllAsync();
+		var results = await _resultService.GetAllAsync(cancellationToken);
 
 		return Ok(results);
 	}
@@ -42,9 +42,9 @@ public class ResultController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Get(Guid id)
+	public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
 	{
-		var result = await _resultService.GetByIdAsync(id);
+		var result = await _resultService.GetByIdAsync(id, cancellationToken);
 
 		return Ok(result);
 	}
@@ -59,9 +59,9 @@ public class ResultController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Create(ResultRequestDto resultRequestDto)
+	public async Task<IActionResult> Create(ResultRequestDto resultRequestDto, CancellationToken cancellationToken)
 	{
-		var result = await _resultService.CreateAsync(resultRequestDto);
+		var result = await _resultService.CreateAsync(resultRequestDto, cancellationToken);
 
 		return CreatedAtRoute("GetResult", new { id = result.Id }, result);
 	}
@@ -76,9 +76,9 @@ public class ResultController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Delete(Guid id)
+	public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
 	{
-		await _resultService.DeleteAsync(id);
+		await _resultService.DeleteAsync(id, cancellationToken);
 
 		return NoContent();
 	}
@@ -95,9 +95,9 @@ public class ResultController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Update(Guid id, ResultRequestDto resultRequestDto)
+	public async Task<IActionResult> Update(Guid id, ResultRequestDto resultRequestDto, CancellationToken cancellationToken)
 	{
-		await _resultService.UpdateAsync(id, resultRequestDto);
+		await _resultService.UpdateAsync(id, resultRequestDto, cancellationToken);
 
 		return NoContent();
 	}
@@ -112,9 +112,9 @@ public class ResultController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Download(Guid id)
+	public async Task<IActionResult> Download(Guid id, CancellationToken cancellationToken)
 	{
-		var result = await _resultService.GetForDownloadAsync(id);
+		var result = await _resultService.GetForDownloadAsync(id, cancellationToken);
 
 		return File(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(result)), "text/plain", fileDownloadName: "result.txt");
 	}

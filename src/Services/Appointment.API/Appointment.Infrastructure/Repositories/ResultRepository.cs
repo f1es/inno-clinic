@@ -11,11 +11,11 @@ public class ResultRepository : BaseRepository<Result>, IResultRepository
         : base(context)
     { }
 
-	public async Task<IEnumerable<Result>> GetAllAsync() => await _context.Results.AsNoTracking().ToListAsync();
+	public async Task<IEnumerable<Result>> GetAllAsync(CancellationToken cancellationToken) => await _context.Results.AsNoTracking().ToListAsync(cancellationToken);
 
-	public Task<Result> GetByIdAsync(Guid id, bool trackChanges = false)
+	public Task<Result> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.Results : _context.Results.AsNoTracking();
-		return query.FirstOrDefaultAsync(x => x.Id == id);
+		return query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 	}
 }

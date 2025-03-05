@@ -5,9 +5,9 @@ namespace Appointment.Application.Services.Interfaces;
 
 public interface IAppointmentService
 {
-	public Task<AppointmentResponseDto> GetByIdAsync(Guid id);
-	public Task<IEnumerable<AppointmentResponseDto>> GetAllAsync();
-	public Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto);
-	public Task UpdateAsync(Guid id, AppointmentRequestDto appointmentRequestDto);
-	public Task DeleteAsync(Guid id);
+	public Task<AppointmentResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+	public Task<IEnumerable<AppointmentResponseDto>> GetAllAsync(CancellationToken cancellationToken);
+	public Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken);
+	public Task UpdateAsync(Guid id, AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken);
+	public Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 }
