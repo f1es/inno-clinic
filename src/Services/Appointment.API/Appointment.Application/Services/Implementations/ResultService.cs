@@ -21,60 +21,60 @@ public class ResultService : IResultService
 		_resultsMapper = resultsMapper;
 	}
 
-	public async Task<ResultResponseDto> CreateAsync(ResultRequestDto resultRequestDto)
+	public async Task<ResultResponseDto> CreateAsync(ResultRequestDto resultRequestDto, CancellationToken cancellationToken)
 	{
 		var result = _resultsMapper.ToModel(resultRequestDto);
 
 		_unitOfWork.ResultRepository.Create(result);
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 
 		return _resultsMapper.ToResponse(result);
 	}
 
-	public async Task DeleteAsync(Guid id)
+	public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
 	{
-		var result = await GetByIdAsyncAndCheckIfExist(id);
+		var result = await GetByIdAsyncAndCheckIfExist(id, cancellationToken);
 
 		_unitOfWork.ResultRepository.Delete(result);
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 	}
 
-	public async Task<IEnumerable<ResultResponseDto>> GetAllAsync()
+	public async Task<IEnumerable<ResultResponseDto>> GetAllAsync(CancellationToken cancellationToken)
 	{
-		var results = await _unitOfWork.ResultRepository.GetAllAsync();
+		var results = await _unitOfWork.ResultRepository.GetAllAsync(cancellationToken);
 
 		return _resultsMapper.ToResponse(results);
 	}
 
-	public async Task<ResultResponseDto> GetByIdAsync(Guid id)
+	public async Task<ResultResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
 	{
-		var result = await GetByIdAsyncAndCheckIfExist(id);
+		var result = await GetByIdAsyncAndCheckIfExist(id, cancellationToken);
 
 		return _resultsMapper.ToResponse(result);
 	}
 
-	public async Task<ResultForDownloadResponseDto> GetForDownloadAsync(Guid id)
+	public async Task<ResultForDownloadResponseDto> GetForDownloadAsync(Guid id, CancellationToken cancellationToken)
 	{
-		var result = await GetByIdAsyncAndCheckIfExist(id);
+		var result = await GetByIdAsyncAndCheckIfExist(id, cancellationToken);
 
 		return _resultsMapper.ToResponseForDownload(result);
 	}
 
-	public async Task UpdateAsync(Guid id, ResultRequestDto resultRequestDto)
+	public async Task UpdateAsync(Guid id, ResultRequestDto resultRequestDto, CancellationToken cancellationToken)
 	{
-		var result = await GetByIdAsyncAndCheckIfExist(id, trackChanges: true);
+		var result = await GetByIdAsyncAndCheckIfExist(id, cancellationToken, trackChanges: true);
 
 		result.AppointmentId = resultRequestDto.AppointmentId;
 		result.Conclusion = resultRequestDto.Conclusion;
 		result.Reccomendations = resultRequestDto.Reccomendations;
 		result.Complaints = resultRequestDto.Complaints;
 
-		await _unitOfWork.SaveAsync();
+		await _unitOfWork.SaveAsync(cancellationToken);
 	}
 
-	private async Task<Result> GetByIdAsyncAndCheckIfExist(Guid id, bool trackChanges = false)
+	private async Task<Result> GetByIdAsyncAndCheckIfExist(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
-		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id, trackChanges);
+		var result = await _unitOfWork.ResultRepository.GetByIdAsync(id, cancellationToken, trackChanges);
 
 		return result ?? throw new NotFoundException(nameof(result), id);
 	}
