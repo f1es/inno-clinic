@@ -19,7 +19,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureMediatr();
 builder.Services.ConfigureAutomapper();
 builder.Services.ConfigureRepositories();
-builder.Services.ConfigureMongoOptions(builder);
+builder.Services.ConfigureOptions(builder);
+builder.Services.ConfigureAuthentication(builder);
 
 var app = builder.Build();
 
@@ -34,6 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

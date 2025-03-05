@@ -12,6 +12,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Appointment.Application", "Appointment.Application\Appointment.Application.csproj", "{27648410-050E-44CC-BA46-1B96AF619D6D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointment.IntegrationTests", "Appointment.IntegrationTests\Appointment.IntegrationTests.csproj", "{2E985CCF-8137-4CAC-A5EC-D27DEECC6FE8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointment.Tests", "Appointment.Tests\Appointment.Tests.csproj", "{4E442044-FAD1-4CA5-B26A-207C48BF2AAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +40,10 @@ Global
 		{2E985CCF-8137-4CAC-A5EC-D27DEECC6FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E985CCF-8137-4CAC-A5EC-D27DEECC6FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E985CCF-8137-4CAC-A5EC-D27DEECC6FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E442044-FAD1-4CA5-B26A-207C48BF2AAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E442044-FAD1-4CA5-B26A-207C48BF2AAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E442044-FAD1-4CA5-B26A-207C48BF2AAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E442044-FAD1-4CA5-B26A-207C48BF2AAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
