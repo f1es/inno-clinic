@@ -54,7 +54,7 @@ public class AppointmentController : ControllerBase
 	/// <returns></returns>
 	[HttpPost]
 	[Produces("application/json")]
-	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Create(AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken)

@@ -3,6 +3,7 @@ using Appointment.Application.Mappers.Interfaces;
 using Appointment.Application.Services.Implementations;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Repositories;
+using Appointment.Core.RequestClients;
 using AutoFixture;
 using Moq;
 using Shared.Exceptions;
@@ -12,6 +13,7 @@ namespace Appointment.Tests.Services;
 public class AppointmentServiceTests
 {
 	private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+	private readonly Mock<IServicesRequestClient> _servicesRequestClientMock;
 	private readonly IAppointmentsMapper _appointmentsMapper;
 	private readonly Fixture _fixture;
 
@@ -20,6 +22,7 @@ public class AppointmentServiceTests
     public AppointmentServiceTests()
     {
 		_unitOfWorkMock = new Mock<IUnitOfWork>();
+		_servicesRequestClientMock = new Mock<IServicesRequestClient>();
 		_appointmentsMapper = new AppointmentsMapper();
 		_fixture = new Fixture();
 		_fixture.Register(() => DateOnly.FromDateTime(_fixture.Create<DateTime>()));
@@ -27,7 +30,8 @@ public class AppointmentServiceTests
 
 		_appointmentService = new AppointmentService(
 			_unitOfWorkMock.Object,
-			_appointmentsMapper);
+			_appointmentsMapper,
+			_servicesRequestClientMock.Object);
 	}
 
 	[Fact]
@@ -40,15 +44,15 @@ public class AppointmentServiceTests
 		};
 		var responseDtoCollection = _appointmentsMapper.ToResponse(appointmentsCollection);
 
-		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetAllAsync())
+		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetAllAsync(CancellationToken.None))
 			.ReturnsAsync(appointmentsCollection);
 
 		// Act 
-		var result = await _appointmentService.GetAllAsync();
+		var result = await _appointmentService.GetAllAsync(CancellationToken.None);
 
 		// Assert
 
-		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetAllAsync(), Times.Once);
+		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetAllAsync(CancellationToken.None), Times.Once);
 
 		Assert.NotNull(result);
 		Assert.Equivalent(responseDtoCollection, result);
@@ -66,14 +70,14 @@ public class AppointmentServiceTests
 
 		var appointmentResponse = _appointmentsMapper.ToResponse(appointment);
 
-		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(appointment);
 
 		// Act
-		var result = await _appointmentService.GetByIdAsync(id);
+		var result = await _appointmentService.GetByIdAsync(id, CancellationToken.None);
 
 		// Assert
-		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetByIdAsync(id, trackChanges), Times.Once);
+		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges), Times.Once);
 
 		Assert.Equivalent(appointmentResponse, result);
 	}
@@ -85,10 +89,10 @@ public class AppointmentServiceTests
 		var id = new Guid();
 		var trackChanges = false;
 
-		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(It.IsAny<Core.Models.Appointment>());
 		// Act
-		var function = async () => await _appointmentService.GetByIdAsync(id);
+		var function = async () => await _appointmentService.GetByIdAsync(id, CancellationToken.None);
 
 		// Assert
 		await Assert.ThrowsAsync<NotFoundException>(function);
@@ -99,14 +103,14 @@ public class AppointmentServiceTests
 	{
 		// Arrange
 		_unitOfWorkMock.Setup(x => x.AppointmentRepository.Create(It.IsAny<Core.Models.Appointment>()));
-		_unitOfWorkMock.Setup(x => x.SaveAsync());
+		_unitOfWorkMock.Setup(x => x.SaveAsync(CancellationToken.None));
 
 		var appointmentRequest = _fixture.Create<AppointmentRequestDto>();
 		var model = _appointmentsMapper.ToModel(appointmentRequest);
 		var response = _appointmentsMapper.ToResponse(model);
 
 		// Act
-		var result = await _appointmentService.CreateAsync(appointmentRequest);
+		var result = await _appointmentService.CreateAsync(appointmentRequest, CancellationToken.None);
 
 		// Assert
 		_unitOfWorkMock.Verify(x =>
@@ -127,14 +131,14 @@ public class AppointmentServiceTests
 		var trackChanges = true;
 
 		var id = Guid.NewGuid();
-		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(appointment);
 
 		// Act 
-		await _appointmentService.UpdateAsync(id, appointmentRequest);
+		await _appointmentService.UpdateAsync(id, appointmentRequest, CancellationToken.None);
 
 		// Assert
-		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetByIdAsync(id, trackChanges), Times.Once);
+		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges), Times.Once);
 
 		Assert.Equivalent(appointment, appointmentAfterUpdate);
 	}
@@ -147,11 +151,11 @@ public class AppointmentServiceTests
 		var id = new Guid();
 		var trackChanges = false;
 
-		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(It.IsAny<Core.Models.Appointment>());
 
 		// Act
-		var function = async () => await _appointmentService.UpdateAsync(id, appointmentRequest);
+		var function = async () => await _appointmentService.UpdateAsync(id, appointmentRequest, CancellationToken.None);
 
 		// Assert
 		await Assert.ThrowsAsync<NotFoundException>(function);
@@ -165,16 +169,16 @@ public class AppointmentServiceTests
 		var appointment = _fixture.Build<Core.Models.Appointment>().Without(x => x.Result).Create();
 		var trackChange = false;
 
-		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, trackChange))
+		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChange))
 			.ReturnsAsync(appointment);
 
 		_unitOfWorkMock.Setup(x => x.AppointmentRepository.Delete(appointment));
 
 		// Act 
-		await _appointmentService.DeleteAsync(id);
+		await _appointmentService.DeleteAsync(id, CancellationToken.None);
 
 		// Assert
-		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetByIdAsync(id, trackChange), Times.Once);
+		_unitOfWorkMock.Verify(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChange), Times.Once);
 		_unitOfWorkMock.Verify(x => x.AppointmentRepository.Delete(appointment), Times.Once);
 	}
 
@@ -185,11 +189,11 @@ public class AppointmentServiceTests
 		var id = new Guid();
 		var trackChanges = false;
 
-		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(It.IsAny<Core.Models.Appointment>());
 
 		// Act 
-		var function = async () => await _appointmentService.DeleteAsync(id);
+		var function = async () => await _appointmentService.DeleteAsync(id, CancellationToken.None);
 
 		// Assert
 		await Assert.ThrowsAsync<NotFoundException>(function);
