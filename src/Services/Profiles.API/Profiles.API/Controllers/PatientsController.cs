@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Profiles.Application.Services.Interfaces;
 using Profiles.Core.Dtos.Request;
 using Profiles.Core.Parameters;
@@ -7,6 +8,7 @@ namespace Profiles.API.Controllers;
 
 [ApiController]
 [Route("api/patients")]
+[Authorize(Roles = "receptionist, doctor")]
 public class PatientsController : ControllerBase
 {
 	private readonly IPatientService _patientService;
