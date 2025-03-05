@@ -4,9 +4,11 @@ using Appointment.Application.Mappers.Interfaces;
 using Appointment.Application.Services.Implementations;
 using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Repositories;
+using Appointment.Core.RequestClients;
 using Appointment.Infrastructure.Context;
 using Appointment.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Testcontainers.PostgreSql;
 
 namespace Appointment.IntegrationTests.Utility;
@@ -38,7 +40,12 @@ public abstract class AppointmentControllerTestsBase : IAsyncLifetime
 
         _unitOfWork = new UnitOfWork(_context);
         _appointmentsMapper = new AppointmentsMapper();
-        _appointmentService = new AppointmentService(_unitOfWork, _appointmentsMapper);
+        
+        var serviceRequestClientMock = new Mock<IServicesRequestClient>();
+        serviceRequestClientMock.Setup(x => x.IsServiceExistAsync(It.IsAny<Guid>(), CancellationToken.None))
+            .ReturnsAsync(true);
+
+        _appointmentService = new AppointmentService(_unitOfWork, _appointmentsMapper, serviceRequestClientMock.Object);
         _appointmentController = new AppointmentController(_appointmentService);
     }
 

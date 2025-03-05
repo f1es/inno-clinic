@@ -39,14 +39,14 @@ public class ResultServiceTests
 		};
 		var resultsResponse = _resultsMapper.ToResponse(results);
 
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetAllAsync())
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetAllAsync(CancellationToken.None))
 			.ReturnsAsync(results);
 
 		// Act
-		var actResult = await _resultService.GetAllAsync();
+		var actResult = await _resultService.GetAllAsync(CancellationToken.None);
 
 		// Assert
-		_unitOfWorkMock.Verify(x => x.ResultRepository.GetAllAsync(), Times.Once);
+		_unitOfWorkMock.Verify(x => x.ResultRepository.GetAllAsync(CancellationToken.None), Times.Once);
 		Assert.Equivalent(resultsResponse, actResult);
 	}
 
@@ -58,14 +58,14 @@ public class ResultServiceTests
 		var trackChanges = false;
 		var result = _fixture.Build<Result>().Without(x => x.Appointment).Create();
 
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(result);
 
 		// Act
-		var actResult = await _resultService.GetByIdAsync(id);
+		var actResult = await _resultService.GetByIdAsync(id, CancellationToken.None);
 
 		// Assert
-		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, trackChanges), Times.Once);
+		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges), Times.Once);
 		Assert.Equivalent(_resultsMapper.ToResponse(result), result);
 	}
 
@@ -76,11 +76,11 @@ public class ResultServiceTests
 		var id = new Guid();
 		var trackChanges = false;
 
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(It.IsAny<Result>());
 
 		// Act
-		var function = async () => await _resultService.GetByIdAsync(id);
+		var function = async () => await _resultService.GetByIdAsync(id, CancellationToken.None);
 
 		// Assert
 		await Assert.ThrowsAsync<NotFoundException>(function);
@@ -97,7 +97,7 @@ public class ResultServiceTests
 		_unitOfWorkMock.Setup(x => x.ResultRepository.Create(It.IsAny<Result>()));
 
 		// Act
-		var actResult = await _resultService.CreateAsync(resultRequest);
+		var actResult = await _resultService.CreateAsync(resultRequest, CancellationToken.None);
 
 		// Assert
 		_unitOfWorkMock.Verify(x => x.ResultRepository.Create(It.IsAny<Result>()), Times.Once);
@@ -117,14 +117,14 @@ public class ResultServiceTests
 		var id = resultInDb.Id;
 		var trackChanges = true;
 
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(resultInDb);
 
 		// Act
-		await _resultService.UpdateAsync(id, resultRequest);
+		await _resultService.UpdateAsync(id, resultRequest, CancellationToken.None);
 
 		// Assert
-		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, trackChanges), Times.Once);
+		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges), Times.Once);
 		Assert.Equivalent(resultInDb, resultAfterUpdate);
 	}
 
@@ -137,11 +137,11 @@ public class ResultServiceTests
 		var id = new Guid();
 		var trackChanges = true;
 
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(It.IsAny<Result>());
 
 		// Act
-		var function = async () => await _resultService.UpdateAsync(id, resultRequest);
+		var function = async () => await _resultService.UpdateAsync(id, resultRequest, CancellationToken.None);
 
 		// Assert
 		await Assert.ThrowsAsync<NotFoundException>(function);
@@ -155,15 +155,15 @@ public class ResultServiceTests
 		var id = Guid.NewGuid();
 		var trackChanges = false;
 
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges)).
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges)).
 			ReturnsAsync(result);
 		_unitOfWorkMock.Setup(x => x.ResultRepository.Delete(result));
 
 		// Act
-		await _resultService.DeleteAsync(id);
+		await _resultService.DeleteAsync(id, CancellationToken.None);
 
 		// Assert
-		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, trackChanges), Times.Once);
+		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges), Times.Once);
 		_unitOfWorkMock.Verify(x => x.ResultRepository.Delete(result), Times.Once);
 	}
 
@@ -175,12 +175,12 @@ public class ResultServiceTests
 		var trackChanges = false;
 		var result = _fixture.Build<Result>().Without(x => x.Appointment).Create();
 
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges)).
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, CancellationToken.None, trackChanges)).
 			ReturnsAsync(It.IsAny<Result>());
 		_unitOfWorkMock.Setup(x => x.ResultRepository.Delete(result));
 
 		// Act
-		var function = async () => await _resultService.DeleteAsync(id);
+		var function = async () => await _resultService.DeleteAsync(id, CancellationToken.None);
 
 		// Assert
 		await Assert.ThrowsAsync<NotFoundException>(function);
