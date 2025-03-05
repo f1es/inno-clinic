@@ -3,6 +3,7 @@ using Authorization.Application.Services.Interfaces.Accounts;
 using Authorization.Application.Services.Interfaces.Authentication;
 using Authorization.Application.Services.Interfaces.Email;
 using Authorization.Core.Dto.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Authorization.API.Controllers;
@@ -74,6 +75,7 @@ public class AccountController : ControllerBase
 	/// <returns></returns>
 	[HttpGet]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetAll()
@@ -90,6 +92,7 @@ public class AccountController : ControllerBase
 	/// <returns></returns>
 	[HttpGet("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -107,6 +110,7 @@ public class AccountController : ControllerBase
 	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -125,6 +129,7 @@ public class AccountController : ControllerBase
 	/// <returns></returns>
 	[HttpPut("{id:guid}")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -201,6 +206,7 @@ public class AccountController : ControllerBase
 	/// <returns></returns>
 	[HttpPost("{id:guid}/grant-role")]
 	[Produces("application/json")]
+	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
