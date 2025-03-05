@@ -6,7 +6,11 @@ namespace Authorization.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureRepository(this IServiceCollection services)
+	public static void ConfigureInfrastructureLayer(this IServiceCollection services)
+	{
+		services.ConfigureRepository();
+	}
+	private static void ConfigureRepository(this IServiceCollection services)
 	{
 		services.AddScoped<IAccountRepository, AccountRepository>();
 	}

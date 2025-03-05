@@ -96,8 +96,7 @@ public class AccessService : IAccessService
             throw new BadRequestException("Refresh token is expired");
         }
 
-		var accountIdClaim = principal.Claims.FirstOrDefault(x => x.Type == "id");
-		var claimsIdentity = new ClaimsIdentity([accountIdClaim]);
+		var claimsIdentity = PutClaims(accountId, account.Role);
 
         tokens.AccessToken = _jwtProvider.GenerateToken(_keys.Value.Access, _jwtTokenOptions.Value.AccessTokenLifetime, claimsIdentity);
         tokens.RefreshToken = _refreshProvider.GenerateToken();

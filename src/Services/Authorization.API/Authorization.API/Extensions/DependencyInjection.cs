@@ -7,13 +7,22 @@ namespace Authorization.API.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureDbContext(this IServiceCollection services, WebApplicationBuilder builder) =>
+	public static void ConfigureApiLayer(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.ConfigureDbContext(configuration);
+		services.ConfigureOptions(configuration);
+		services.AddControllers();
+		services.AddEndpointsApiExplorer();
+		services.AddSwaggerGen();
+	}
+
+	private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration) =>
 		services.AddDbContext<AuthorizationDbContext>(option =>
 		{
-			option.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"));
+			option.UseSqlServer(configuration.GetConnectionString("DataBase"));
 		});
 
-	public static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
+	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<JwtTokenOptions>(configuration.GetSection("JwtTokenOptions"));
 		services.Configure<EmailOptions>(configuration.GetSection("EmailConfiguration"));

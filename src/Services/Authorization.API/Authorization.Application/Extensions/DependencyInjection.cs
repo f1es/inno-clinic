@@ -22,7 +22,12 @@ namespace Authorization.Application.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureServices(this IServiceCollection services)
+	public static void ConfigureApplicationLayer(this IServiceCollection services)
+	{
+		services.ConfigureServices();
+		services.ConfigureValidators();
+	}
+	private static void ConfigureServices(this IServiceCollection services)
 	{
 		services.AddScoped<IPasswordHasher<Account>, PasswordHasher<Account>>();
 		services.AddScoped<IPasswordService, PasswordService>();
@@ -37,6 +42,6 @@ public static class DependencyInjection
 		services.AddScoped<IRoleService, RoleService>();
 	}
 
-	public static void ConfigureValidators(this IServiceCollection services) =>
+	private static void ConfigureValidators(this IServiceCollection services) =>
 		services.AddValidatorsFromAssemblyContaining(typeof(RegisterAccountRequestDtoValidator));
 }
