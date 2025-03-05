@@ -30,6 +30,63 @@ public class ResultServiceTests
 	}
 
 	[Fact]
+	public async Task GetAllAsync_Void_ReturnsResultResponseDtoCollection()
+	{
+		// Arrange 
+		var results = new List<Result>
+		{
+			_fixture.Build<Result>().Without(x => x.Appointment).Create()
+		};
+		var resultsResponse = _resultsMapper.ToResponse(results);
+
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetAllAsync())
+			.ReturnsAsync(results);
+
+		// Act
+		var actResult = await _resultService.GetAllAsync();
+
+		// Assert
+		_unitOfWorkMock.Verify(x => x.ResultRepository.GetAllAsync(), Times.Once);
+		Assert.Equivalent(resultsResponse, actResult);
+	}
+
+	[Fact]
+	public async Task GetByIdAsync_ResultId_ReturnsResultResponseDto()
+	{
+		// Arrange
+		var id = Guid.NewGuid();
+		var trackChanges = false;
+		var result = _fixture.Build<Result>().Without(x => x.Appointment).Create();
+
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+			.ReturnsAsync(result);
+
+		// Act
+		var actResult = await _resultService.GetByIdAsync(id);
+
+		// Assert
+		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, trackChanges), Times.Once);
+		Assert.Equivalent(_resultsMapper.ToResponse(result), result);
+	}
+
+	[Fact]
+	public async Task GetByIdAsync_InvalidResultId_ThrowsNotFoundException()
+	{
+		// Arrange
+		var id = new Guid();
+		var trackChanges = false;
+
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+			.ReturnsAsync(It.IsAny<Result>());
+
+		// Act
+		var function = async () => await _resultService.GetByIdAsync(id);
+
+		// Assert
+		await Assert.ThrowsAsync<NotFoundException>(function);
+	}
+
+	[Fact]
 	public async Task CreateAsync_ValidObjectRequest_ReturnsResultResponseDto()
 	{
 		// Arrange
@@ -46,6 +103,48 @@ public class ResultServiceTests
 		_unitOfWorkMock.Verify(x => x.ResultRepository.Create(It.IsAny<Result>()), Times.Once);
 
 		Assert.Equivalent(resultResponse, actResult);
+	}
+
+	[Fact]
+	public async Task UpdateAsync_ResultIdAndValidObjectRequest_ReturnsTask()
+	{
+		// Arrange
+		var resultInDb = _fixture.Build<Result>().Without(x => x.Appointment).Create();
+		var resultRequest = _fixture.Create<ResultRequestDto>();
+		var resultAfterUpdate = _resultsMapper.ToModel(resultRequest);
+		resultAfterUpdate.Id = resultInDb.Id;
+
+		var id = resultInDb.Id;
+		var trackChanges = true;
+
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+			.ReturnsAsync(resultInDb);
+
+		// Act
+		await _resultService.UpdateAsync(id, resultRequest);
+
+		// Assert
+		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, trackChanges), Times.Once);
+		Assert.Equivalent(resultInDb, resultAfterUpdate);
+	}
+
+	[Fact]
+	public async Task UpdateAsync_InvalidResultIdAndValidObjectRequest_ThrowsNotFoundException()
+	{
+		// Arrange
+		var resultRequest = _fixture.Create<ResultRequestDto>();
+
+		var id = new Guid();
+		var trackChanges = true;
+
+		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
+			.ReturnsAsync(It.IsAny<Result>());
+
+		// Act
+		var function = async () => await _resultService.UpdateAsync(id, resultRequest);
+
+		// Assert
+		await Assert.ThrowsAsync<NotFoundException>(function);
 	}
 
 	[Fact]
@@ -82,103 +181,6 @@ public class ResultServiceTests
 
 		// Act
 		var function = async () => await _resultService.DeleteAsync(id);
-
-		// Assert
-		await Assert.ThrowsAsync<NotFoundException>(function);
-	}
-
-	[Fact]
-	public async Task GetAllAsync_Void_ReturnsResultResponseDtoCollection()
-	{
-		// Arrange 
-		var results = new List<Result>
-		{
-			_fixture.Build<Result>().Without(x => x.Appointment).Create()
-		};
-		var resultsResponse = _resultsMapper.ToResponse(results);
-
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetAllAsync())
-			.ReturnsAsync(results);
-
-		// Act
-		var actResult = await _resultService.GetAllAsync();
-
-		// Assert
-		_unitOfWorkMock.Verify(X => X.ResultRepository.GetAllAsync(), Times.Once);
-	}
-
-	[Fact]
-	public async Task GetByIdAsync_ResultId_ReturnsResultResponseDto()
-	{
-		// Arrange
-		var id = Guid.NewGuid();
-		var trackChanges = false;
-		var result = _fixture.Build<Result>().Without(x => x.Appointment).Create();
-
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
-			.ReturnsAsync(result);
-
-		// Act
-		var actResult = await _resultService.GetByIdAsync(id);
-
-		// Assert
-		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, trackChanges), Times.Once);
-	}
-
-	[Fact]
-	public async Task GetByIdAsync_InvalidResultId_ThrowsNotFoundException()
-	{
-		// Arrange
-		var id = new Guid();
-		var trackChanges = false;
-
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
-			.ReturnsAsync(It.IsAny<Result>());
-
-		// Act
-		var function = async () => await _resultService.GetByIdAsync(id);
-
-		// Assert
-		await Assert.ThrowsAsync<NotFoundException>(function);
-	}
-
-	[Fact]
-	public async Task UpdateAsync_ResultIdAndValidObjectRequest_ReturnsTask()
-	{
-		// Arrange
-		var resultBeforeUpdate = _fixture.Build<Result>().Without(x => x.Appointment).Create();
-		var resultRequest = _fixture.Create<ResultRequestDto>();
-		var resultAfterUpdate = _resultsMapper.ToModel(resultRequest);
-		resultAfterUpdate.Id = resultBeforeUpdate.Id;
-
-		var id = resultBeforeUpdate.Id;
-		var trackChanges = true;
-
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
-			.ReturnsAsync(resultBeforeUpdate);
-
-		// Act
-		await _resultService.UpdateAsync(id, resultRequest);
-
-		// Assert
-		_unitOfWorkMock.Verify(x => x.ResultRepository.GetByIdAsync(id, trackChanges), Times.Once);
-		Assert.Equivalent(resultBeforeUpdate, resultAfterUpdate);
-	}
-
-	[Fact]
-	public async Task UpdateAsync_InvalidResultIdAndValidObjectRequest_ThrowsNotFoundException()
-	{
-		// Arrange
-		var resultRequest = _fixture.Create<ResultRequestDto>();
-
-		var id = new Guid();
-		var trackChanges = true;
-
-		_unitOfWorkMock.Setup(x => x.ResultRepository.GetByIdAsync(id, trackChanges))
-			.ReturnsAsync(It.IsAny<Result>());
-
-		// Act
-		var function = async () => await _resultService.UpdateAsync(id, resultRequest);
 
 		// Assert
 		await Assert.ThrowsAsync<NotFoundException>(function);
