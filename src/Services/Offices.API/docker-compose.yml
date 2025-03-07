@@ -27,7 +27,9 @@ services:
 
 networks:
   offices-network:
+    name: clinic
     driver: bridge
+    external: true
 
 volumes:
   offices-service-db:

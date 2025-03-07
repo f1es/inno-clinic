@@ -36,9 +36,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "receptionist"
       }
     },
     {
@@ -60,9 +57,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "receptionist"
       }
     },
     {
@@ -144,9 +138,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "doctor"
       }
     },
     {
@@ -187,7 +178,7 @@
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": "doctor"
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "doctor"
       }
     },
     {
@@ -209,7 +200,7 @@
         "AllowedScopes": []
       },
       "RouteClaimsRequirement": {
-        "Role": "doctor"
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "doctor"
       }
     },
     {
@@ -263,9 +254,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "receptionist"
       }
     },
     {
@@ -301,9 +289,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "receptionist"
       }
     },
     {
@@ -357,9 +342,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "doctor"
       }
     },
     {
@@ -381,9 +363,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "doctor"
       }
     },
     {
@@ -404,9 +383,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "receptionist"
       }
     },
     {
@@ -428,9 +404,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "receptionist"
       }
     },
     {
@@ -569,9 +542,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": "receptionist"
       }
     },
     {
@@ -659,11 +629,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": [
-          "receptionist"
-        ]
       }
     },
     {
@@ -685,11 +650,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "Role": [
-          "receptionist"
-        ]
       }
     },
     {
