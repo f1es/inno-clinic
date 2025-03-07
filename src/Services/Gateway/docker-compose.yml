@@ -1,0 +1,19 @@
+services:
+  gateway:
+    build:
+      context: "."
+      dockerfile: Dockerfile
+    ports:
+      - 5007:8080
+      - 5017:8081
+    container_name: gateway_app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+    networks:
+      - gateway-network
+
+networks:
+  gateway-network:
+        name: clinic
+        driver: bridge
+        external: true
