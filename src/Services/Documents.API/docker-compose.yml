@@ -12,9 +12,9 @@ services:
   documets-service-azurite:
     image: mcr.microsoft.com/azure-storage/azurite
     ports:
-      - "10000:10000"
-      - "10001:10001"
-      - "10002:10002"
+      - 10000:10000
+      - 10001:10001
+      - 10002:10002
     restart: unless-stopped
     volumes: 
       - azurite-data:/var/azurite/data
@@ -44,4 +44,6 @@ volumes:
 
 networks:
   documents-network:
-    driver: bridge
+      name: clinic
+      driver: bridge
+      external: true

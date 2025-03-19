@@ -28,6 +28,7 @@ app.UseHttpsRedirection();
 
 await app.UseOcelot();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
