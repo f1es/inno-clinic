@@ -18,6 +18,7 @@ public static class DependencyInjection
 	{
 		services.AddScoped<IAppointmentService, AppointmentService>();
 		services.AddScoped<IResultService, ResultService>();
+		services.AddScoped<ITimeSlotService, TimeSlotService>();
 	}
 
 	public static void ConfigureApplicationLayer(this IServiceCollection services)

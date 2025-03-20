@@ -13,20 +13,28 @@ public class AppointmentService : IAppointmentService
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IAppointmentsMapper _appointmentsMapper;
 	private readonly IServicesRequestClient _servicesRequestClient;
+	private readonly ITimeSlotService _timeSlotService;
 
 	public AppointmentService(
 		IUnitOfWork unitOfWork, 
 		IAppointmentsMapper appointmentsMapper,
-		IServicesRequestClient servicesRequestClient)
+		IServicesRequestClient servicesRequestClient,
+		ITimeSlotService timeSlotService)
 	{
 		_unitOfWork = unitOfWork;
 		_appointmentsMapper = appointmentsMapper;
 		_servicesRequestClient = servicesRequestClient;
+		_timeSlotService = timeSlotService;
 	}
 
 	public async Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken)
 	{
 		var appointment = _appointmentsMapper.ToModel(appointmentRequestDto);
+
+		if (!await _timeSlotService.CheckIfSlotAvailableAsync(appointment, cancellationToken))
+		{
+			throw new BadRequestException($"Time {appointment.BeginTime} - {appointment.EndTime} already reserved or incorrect");
+		}
 
 		await CheckIfServiceExistAsync(appointment.ServiceId);
 
