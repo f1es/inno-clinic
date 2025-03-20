@@ -21,6 +21,7 @@ public abstract class AppointmentControllerTestsBase : IAsyncLifetime
 
     protected readonly IAppointmentsMapper _appointmentsMapper;
     protected readonly IUnitOfWork _unitOfWork;
+    protected readonly ITimeSlotService _timeSlotService;
     protected readonly IAppointmentService _appointmentService;
 
     protected readonly AppointmentController _appointmentController;
@@ -40,13 +41,14 @@ public abstract class AppointmentControllerTestsBase : IAsyncLifetime
 
         _unitOfWork = new UnitOfWork(_context);
         _appointmentsMapper = new AppointmentsMapper();
+        _timeSlotService = new TimeSlotService(_unitOfWork);
         
         var serviceRequestClientMock = new Mock<IServicesRequestClient>();
         serviceRequestClientMock.Setup(x => x.IsServiceExistAsync(It.IsAny<Guid>(), CancellationToken.None))
             .ReturnsAsync(true);
 
-        _appointmentService = new AppointmentService(_unitOfWork, _appointmentsMapper, serviceRequestClientMock.Object);
-        _appointmentController = new AppointmentController(_appointmentService);
+        _appointmentService = new AppointmentService(_unitOfWork, _appointmentsMapper, serviceRequestClientMock.Object, _timeSlotService);
+        _appointmentController = new AppointmentController(_appointmentService, _timeSlotService);
     }
 
     public Task InitializeAsync()

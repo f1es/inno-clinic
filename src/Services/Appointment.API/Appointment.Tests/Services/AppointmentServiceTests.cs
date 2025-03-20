@@ -1,6 +1,7 @@
 using Appointment.Application.Mappers.Implementations;
 using Appointment.Application.Mappers.Interfaces;
 using Appointment.Application.Services.Implementations;
+using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Repositories;
 using Appointment.Core.RequestClients;
@@ -14,6 +15,7 @@ public class AppointmentServiceTests
 {
 	private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 	private readonly Mock<IServicesRequestClient> _servicesRequestClientMock;
+	private readonly Mock<ITimeSlotService> _timeSlotServiceMock;
 	private readonly IAppointmentsMapper _appointmentsMapper;
 	private readonly Fixture _fixture;
 
@@ -23,6 +25,7 @@ public class AppointmentServiceTests
     {
 		_unitOfWorkMock = new Mock<IUnitOfWork>();
 		_servicesRequestClientMock = new Mock<IServicesRequestClient>();
+		_timeSlotServiceMock = new Mock<ITimeSlotService>();
 		_appointmentsMapper = new AppointmentsMapper();
 		_fixture = new Fixture();
 		_fixture.Register(() => DateOnly.FromDateTime(_fixture.Create<DateTime>()));
@@ -31,7 +34,8 @@ public class AppointmentServiceTests
 		_appointmentService = new AppointmentService(
 			_unitOfWorkMock.Object,
 			_appointmentsMapper,
-			_servicesRequestClientMock.Object);
+			_servicesRequestClientMock.Object,
+			_timeSlotServiceMock.Object);
 	}
 
 	[Fact]
@@ -104,6 +108,8 @@ public class AppointmentServiceTests
 		// Arrange
 		_unitOfWorkMock.Setup(x => x.AppointmentRepository.Create(It.IsAny<Core.Models.Appointment>()));
 		_unitOfWorkMock.Setup(x => x.SaveAsync(CancellationToken.None));
+		_timeSlotServiceMock.Setup(x => x.CheckIfSlotAvailableAsync(It.IsAny<Core.Models.Appointment>(), CancellationToken.None)).ReturnsAsync(true);
+		_servicesRequestClientMock.Setup(x => x.IsServiceExistAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync(true);
 
 		var appointmentRequest = _fixture.Create<AppointmentRequestDto>();
 		var model = _appointmentsMapper.ToModel(appointmentRequest);
@@ -133,6 +139,7 @@ public class AppointmentServiceTests
 		var id = Guid.NewGuid();
 		_unitOfWorkMock.Setup(x => x.AppointmentRepository.GetByIdAsync(id, CancellationToken.None, trackChanges))
 			.ReturnsAsync(appointment);
+		_servicesRequestClientMock.Setup(x => x.IsServiceExistAsync(It.IsAny<Guid>(), CancellationToken.None)).ReturnsAsync(true);
 
 		// Act 
 		await _appointmentService.UpdateAsync(id, appointmentRequest, CancellationToken.None);
