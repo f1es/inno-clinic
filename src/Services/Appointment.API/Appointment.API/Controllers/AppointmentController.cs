@@ -11,10 +11,12 @@ namespace Appointment.API.Controllers;
 public class AppointmentController : ControllerBase
 {
 	private readonly IAppointmentService _appointmentService;
+	private readonly ITimeSlotService _timeSlotService;
 
-	public AppointmentController(IAppointmentService appointmentService)
+	public AppointmentController(IAppointmentService appointmentService, ITimeSlotService timeSlotService)
 	{
 		_appointmentService = appointmentService;
+		_timeSlotService = timeSlotService;
 	}
 
 	/// <summary>
@@ -102,5 +104,23 @@ public class AppointmentController : ControllerBase
 		await _appointmentService.DeleteAsync(id, cancellationToken);
 
 		return NoContent();
+	}
+
+	/// <summary>
+	/// Returns splitted available time periods for some date
+	/// </summary>
+	/// <param name="availableTimesRequestDto"></param>
+	/// <param name="cancellationToken"></param>
+	/// <returns></returns>
+	[HttpPost("reservations")]
+	[Produces("application/json")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> GetAvailableAppointmentTimes(AvailableTimesRequestDto availableTimesRequestDto, CancellationToken cancellationToken)
+	{
+		var times = await _timeSlotService.GetAvailablePeriodsForDateAsync(availableTimesRequestDto, cancellationToken);
+
+		return Ok(times);
 	}
 }
