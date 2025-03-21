@@ -83,7 +83,12 @@ public class AppointmentControllerServerTests : TestServerBase
     {
 		// Arrange
 		var appointmentRequest = _fixture.Create<AppointmentRequestDto>();
-        var httpContent = GetHttpContentOfRequest(appointmentRequest);
+		appointmentRequest = appointmentRequest with
+		{
+			BeginTime = new TimeOnly(9, 0, 0),
+			EndTime = new TimeOnly(10, 0, 0)
+		};
+		var httpContent = GetHttpContentOfRequest(appointmentRequest);
 
         // Act
         var response = await _httpClient.PostAsync(AppointmentsEndpoint, httpContent);
