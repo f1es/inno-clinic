@@ -1,6 +1,7 @@
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
 using Appointment.IntegrationTests.Utility;
+using Appointment.IntegrationTests.Utility.WebFactory;
 using AutoFixture;
 using FluentAssertions;
 using System.Net.Http.Json;
