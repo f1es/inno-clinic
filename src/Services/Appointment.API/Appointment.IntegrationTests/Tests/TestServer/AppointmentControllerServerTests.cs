@@ -1,3 +1,4 @@
+using Appointment.Application.Models;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
 using Appointment.IntegrationTests.Utility;
@@ -161,15 +162,44 @@ public class AppointmentControllerServerTests : TestServerBase
 		Assert.Equivalent(404, (int)response.StatusCode);
 	}
 
+	[Fact]
+	public async Task POST_ReservationsEndpoint_ValidObjectRequestFromBody_StatusCodeOk()
+	{
+		// Arrange
+		var appointment = await AddAppointmentToDbAsync();
+		var url = AppointmentsEndpoint + "reservations";
+		var periodsRequest = new AvailableTimesRequestDto(DateOnly.FromDateTime(DateTime.Today), 60);
+		var httpContent = GetHttpContentOfRequest(periodsRequest);
+
+		// Act
+		var response = await _httpClient.PostAsync(url, httpContent);
+
+		// Assert
+		Assert.Equivalent(200, (int)response.StatusCode);
+
+		var responseContent = await response.Content.ReadAsStringAsync();
+		var anonumysTimePeriod = new { Begin = new TimeOnly(), End = new TimeOnly() };
+		var anonumysPeriods = Newtonsoft.Json.JsonConvert.DeserializeAnonymousType(responseContent, new[] { anonumysTimePeriod });
+		var periods = anonumysPeriods.Select(x => new TimePeriod(x.Begin, x.End)).ToList();
+
+		Assert.Equivalent(1, periods.Count);
+	}
+
 	private async Task<Core.Models.Appointment> AddAppointmentToDbAsync()
     {
-		var appointment = _fixture.Build<Core.Models.Appointment>().Without(x => x.Result).Create();
+		var appointment = _fixture.Build<Core.Models.Appointment>()
+			.Without(x => x.Result)
+			.With(x => x.Date, DateOnly.FromDateTime(DateTime.Today))
+			.With(x => x.BeginTime, new TimeOnly(9, 0, 0))
+			.With(x => x.EndTime, new TimeOnly(17, 0, 0))
+			.Create();
+
         _context.Appointments.Add(appointment);
 		await _context.SaveChangesAsync(default);
         _context.Entry(appointment).State = Microsoft.EntityFrameworkCore.EntityState.Detached;
         return appointment;
 	}
 
-    private HttpContent GetHttpContentOfRequest(AppointmentRequestDto appointmentRequest) =>
-		new StringContent(JsonSerializer.Serialize(appointmentRequest), Encoding.UTF8, "application/json");
+    private HttpContent GetHttpContentOfRequest(object obj) =>
+		new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
 }
