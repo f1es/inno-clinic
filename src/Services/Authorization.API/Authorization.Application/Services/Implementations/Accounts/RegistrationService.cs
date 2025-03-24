@@ -46,14 +46,18 @@ public class RegistrationService : IRegistrationService
     public async Task RegisterAsync(RegisterAccountRequestDto registerAccountRequestDto)
     {
         var validationResult = await _validator.ValidateAsync(registerAccountRequestDto);
-
         if (!validationResult.IsValid)
         {
             throw new BadRequestException($"{validationResult.GetErrors()}");
         }
 
-        var passwordHash = _passwordService.Hash(registerAccountRequestDto.Password);
+        var emailUniqueness = _accountRepository.GetByEmailAsync(registerAccountRequestDto.Email);
+        if (emailUniqueness != null)
+        {
+            throw new BadRequestException($"User with email {registerAccountRequestDto.Email} already exist");
+        }
 
+        var passwordHash = _passwordService.Hash(registerAccountRequestDto.Password);
         var account = new Account
         {
             Email = registerAccountRequestDto.Email,
@@ -64,15 +68,12 @@ public class RegistrationService : IRegistrationService
             IsEmailVerified = false,
             CreatedBy = "Annonumys"
         };
-
         _accountRepository.Create(account);
 
         await _accountRepository.SaveAsync();
 
         var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Email, registerAccountRequestDto.Email)]);
-
         var emailToken = _jwtProvider.GenerateToken(_keys.Email, 1, claimsIdentity);
-
         var message = BuildMessage(emailToken, [registerAccountRequestDto.Email]);
 
         await _emailSender.SendEmailAsync(message);
