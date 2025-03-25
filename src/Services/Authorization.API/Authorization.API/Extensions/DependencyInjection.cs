@@ -19,6 +19,7 @@ public static class DependencyInjection
 		services.AddEndpointsApiExplorer();
 		services.AddSwaggerGen();
 		services.ConfigureAuthentication(configuration);
+		services.ConfigureCors();
 	}
 
 	private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration) =>
@@ -72,5 +73,18 @@ public static class DependencyInjection
 			});
 
 		services.AddAuthorization();
+	}
+
+	private static void ConfigureCors(this IServiceCollection services)
+	{
+		services.AddCors(options =>
+		{
+			options.AddPolicy("CorsPolicy", cors =>
+			{
+				cors.WithOrigins("http://localhost:4200")
+				.AllowAnyHeader()
+				.AllowAnyMethod();
+			});
+		});
 	}
 }
