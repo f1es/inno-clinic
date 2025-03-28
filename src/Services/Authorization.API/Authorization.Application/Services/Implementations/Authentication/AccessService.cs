@@ -18,8 +18,8 @@ public class AccessService : IAccessService
     private readonly IAccountRepository _accountRepository;
     private readonly IPasswordService _passwordService;
     private readonly IJwtProvider _jwtProvider;
-    private readonly IOptions<SecretKeys> _keys;
-    private readonly IOptions<JwtTokenOptions> _jwtTokenOptions;
+    private readonly SecretKeys _keys;
+    private readonly JwtTokenOptions _jwtTokenOptions;
     private readonly IRefreshProvider _refreshProvider;
 
 	public AccessService(
@@ -33,9 +33,9 @@ public class AccessService : IAccessService
 		_accountRepository = accountRepository;
 		_passwordService = passwordHasher;
 		_jwtProvider = jwtProvider;
-		_keys = keys;
+		_keys = keys.Value;
 		_refreshProvider = refreshProvider;
-		_jwtTokenOptions = jwtTokenOptions;
+		_jwtTokenOptions = jwtTokenOptions.Value;
 	}
 
 	public async Task<Tokens> LoginAsync(LoginAccountRequestDto loginAccountRequestDto)
@@ -58,11 +58,11 @@ public class AccessService : IAccessService
 
         var claimsIdentity = PutClaims(account.Id, account.Role);
 
-        var accessToken = _jwtProvider.GenerateToken(_keys.Value.Access, _jwtTokenOptions.Value.AccessTokenLifetime, claimsIdentity);
+        var accessToken = _jwtProvider.GenerateToken(_keys.Access, _jwtTokenOptions.AccessTokenLifetimeMinutes, claimsIdentity);
         var refreshToken = _refreshProvider.GenerateToken();
 
         account.RefreshToken = refreshToken;
-        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(31);
+        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtTokenOptions.RefreshTokenLifetimeDays);
 
         await _accountRepository.SaveAsync();
 
@@ -79,7 +79,7 @@ public class AccessService : IAccessService
     {
 		TokensNullCheck(tokens);
 
-		var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Value.Access);
+		var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Access);
         var accountId = GetAccountIdFromPrincipal(principal);
 
         var account = await _accountRepository.GetByIdAsync(accountId, trackChanges: true);
@@ -98,11 +98,11 @@ public class AccessService : IAccessService
 
 		var claimsIdentity = PutClaims(accountId, account.Role);
 
-        tokens.AccessToken = _jwtProvider.GenerateToken(_keys.Value.Access, _jwtTokenOptions.Value.AccessTokenLifetime, claimsIdentity);
+        tokens.AccessToken = _jwtProvider.GenerateToken(_keys.Access, _jwtTokenOptions.AccessTokenLifetimeMinutes, claimsIdentity);
         tokens.RefreshToken = _refreshProvider.GenerateToken();
 
         account.RefreshToken = tokens.RefreshToken;
-        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtTokenOptions.Value.RefreshTokenLifetime);
+        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtTokenOptions.RefreshTokenLifetimeDays);
 
         await _accountRepository.SaveAsync();
 
@@ -113,7 +113,7 @@ public class AccessService : IAccessService
     {
         TokensNullCheck(tokens);
 
-        var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Value.Access);
+        var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Access);
         var accountId = GetAccountIdFromPrincipal(principal);
 
         var account = await _accountRepository.GetByIdAsync(accountId, trackChanges: true);
@@ -132,7 +132,7 @@ public class AccessService : IAccessService
     {
 		if (tokens.AccessToken == null || tokens.RefreshToken == null)
 		{
-			throw new BadRequestException("Invalid client request");
+			throw new BadRequestException("Invalid client request, missing tokens");
 		}
 	}
     private ClaimsIdentity PutClaims(Guid accountId, string? accountRole)

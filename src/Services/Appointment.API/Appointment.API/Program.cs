@@ -14,6 +14,8 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
+app.UseCors("CorsPolicy");
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsProduction())
 {

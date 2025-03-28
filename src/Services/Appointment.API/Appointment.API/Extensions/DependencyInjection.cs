@@ -13,6 +13,17 @@ namespace Appointment.API.Extensions;
 
 public static class DependencyInjection
 {
+	public static void ConfigureApiLayer(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.ConfigureDbContext(configuration);
+		services.ConfigureControllers();
+		services.ConfigureSwaggerGen();
+		services.AddEndpointsApiExplorer();
+		services.ConfigureOptions(configuration);
+		services.ConfigureAuthentication(configuration);
+		services.ConfigureCors();
+	}
+
 	private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddDbContext<AppointmentDbContext>(options =>
@@ -36,6 +47,44 @@ public static class DependencyInjection
 		{
 			options.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });
 			options.MapType<TimeOnly>(() => new OpenApiSchema { Type = "string", Format = "time", Pattern = "00:00:00" });
+
+			options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+			{
+				In = ParameterLocation.Header,
+				Description = "Add your access token",
+				Name = "Authorization",
+				Scheme = "Bearer",
+				Type = SecuritySchemeType.Http
+			});
+
+			options.AddSecurityRequirement(new OpenApiSecurityRequirement
+			{
+				{
+					new OpenApiSecurityScheme
+					{
+						Reference = new OpenApiReference
+						{
+							Type = ReferenceType.SecurityScheme,
+							Id = "Bearer"
+						}
+					},
+					Array.Empty<string>()
+				}
+			});
+		});
+	}
+
+	private static void ConfigureCors(this IServiceCollection services)
+	{
+		services.AddCors(options =>
+		{
+			options.AddPolicy("CorsPolicy", cors =>
+			{
+				cors.WithOrigins("http://localhost:4200")
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowCredentials();
+			});
 		});
 	}
 
@@ -82,15 +131,5 @@ public static class DependencyInjection
 	{
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
 		services.Configure<ServicesEndpoints>(configuration.GetSection("ServicesEndpoints"));
-	}
-
-	public static void ConfigureApiLayer(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.ConfigureDbContext(configuration);
-		services.ConfigureControllers();
-		services.ConfigureSwaggerGen();
-		services.AddEndpointsApiExplorer();
-		services.ConfigureOptions(configuration);
-		services.ConfigureAuthentication(configuration);
 	}
 }

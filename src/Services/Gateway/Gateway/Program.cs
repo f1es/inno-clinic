@@ -15,11 +15,14 @@ builder.Services.AddControllers();
 builder.Services.AddOcelot(builder.Configuration);
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureCors();
 builder.Services.ConfigureAuthentication(builder);
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseCors("CorsPolicy");
 
 app.UseSwaggerForOcelotUI(options =>
 	options.PathToSwaggerGenerator = "/swagger/docs");
