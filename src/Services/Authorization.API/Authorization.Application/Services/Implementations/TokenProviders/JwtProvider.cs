@@ -20,13 +20,13 @@ public class JwtProvider : IJwtProvider
         _jwtTokenOptions = jwtOptions.Value;
     }
 
-    public string GenerateToken(string key, int lifeTimeHours, ClaimsIdentity claims)
+    public string GenerateToken(string key, int lifeTime, ClaimsIdentity claims)
     {
         var symmetricKey = ReadKey(key);
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = claims,
-            Expires = DateTime.UtcNow.AddHours(lifeTimeHours),
+            Expires = DateTime.UtcNow.AddMinutes(lifeTime),
             SigningCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256Signature),
             Issuer = _jwtTokenOptions.Issuer,
 		};

@@ -2,6 +2,7 @@
 using Authorization.Application.Services.Interfaces.Accounts;
 using Authorization.Application.Services.Interfaces.Authentication;
 using Authorization.Application.Services.Interfaces.Email;
+using Authorization.Application.Utility;
 using Authorization.Core.Dto.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,8 +64,6 @@ public class AccountController : ControllerBase
 	public async Task<IActionResult> Login(LoginAccountRequestDto loginAccountRequestDto)
 	{
 		var tokens = await _accessService.LoginAsync(loginAccountRequestDto);
-
-		Response.AddAccessAndRefreshTokensToCookie(tokens);
 
 		return Ok(tokens);
 	}
@@ -168,13 +167,9 @@ public class AccountController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Refresh()
+	public async Task<IActionResult> Refresh(Tokens tokens)
 	{
-		var tokens = Request.GetAccessAndRefreshTokens();
-
 		tokens = await _accessService.RefreshAsync(tokens);
-
-		Response.AddAccessAndRefreshTokensToCookie(tokens);
 
 		return Ok(tokens);
 	}
