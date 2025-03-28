@@ -24,6 +24,30 @@ public static class DependencyInjection
 		{
 			options.MapType<DateOnly>(() => new OpenApiSchema { Type = "string", Format = "date" });
 			options.MapType<TimeOnly>(() => new OpenApiSchema { Type = "string", Format = "time", Pattern = "00:00:00" });
+
+			options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+			{
+				In = ParameterLocation.Header,
+				Description = "Add your access token",
+				Name = "Authorization",
+				Scheme = "Bearer",
+				Type = SecuritySchemeType.Http
+			});
+
+			options.AddSecurityRequirement(new OpenApiSecurityRequirement
+			{
+				{
+					new OpenApiSecurityScheme
+					{
+						Reference = new OpenApiReference
+						{
+							Type = ReferenceType.SecurityScheme,
+							Id = "Bearer"
+						}
+					},
+					Array.Empty<string>()
+				}
+			});
 		});
 	}
 
@@ -66,4 +90,17 @@ public static class DependencyInjection
 		services.AddAuthorization();
 	}
 
+	public static void ConfigureCors(this IServiceCollection services)
+	{
+		services.AddCors(options =>
+		{
+			options.AddPolicy("CorsPolicy", cors =>
+			{
+				cors.WithOrigins("http://localhost:4200")
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowCredentials();
+			});
+		});
+	}
 }

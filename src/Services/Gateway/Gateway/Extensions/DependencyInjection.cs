@@ -1,6 +1,7 @@
 ﻿using Gateway.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 namespace Gateway.Extensions;
@@ -44,6 +45,20 @@ public static class DependencyInjection
 			});
 
 		services.AddAuthorization();
+	}
+
+	public static void ConfigureCors(this IServiceCollection services)
+	{
+		services.AddCors(options =>
+		{
+			options.AddPolicy("CorsPolicy", cors =>
+			{
+				cors.WithOrigins("http://localhost:4200")
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowCredentials();
+			});
+		});
 	}
 }
 
