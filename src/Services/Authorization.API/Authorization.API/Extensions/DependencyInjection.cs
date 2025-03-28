@@ -83,7 +83,8 @@ public static class DependencyInjection
 			{
 				cors.WithOrigins("http://localhost:4200")
 				.AllowAnyHeader()
-				.AllowAnyMethod();
+				.AllowAnyMethod()
+				.AllowCredentials();
 			});
 		});
 	}

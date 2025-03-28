@@ -16,6 +16,8 @@ var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
+app.UseCors("CorsPolicy");
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsProduction())
 {
@@ -28,7 +30,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors("CorsPolicy");
 
 app.Run();

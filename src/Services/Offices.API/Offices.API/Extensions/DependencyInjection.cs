@@ -51,4 +51,18 @@ public static class DependencyInjection
 
 		services.AddAuthorization();
 	}
+
+	public static void ConfigureCors(this IServiceCollection services)
+	{
+		services.AddCors(options =>
+		{
+			options.AddPolicy("CorsPolicy", cors =>
+			{
+				cors.WithOrigins("http://localhost:4200")
+				.AllowAnyHeader()
+				.AllowAnyMethod()
+				.AllowCredentials();
+			});
+		});
+	}
 }
