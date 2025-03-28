@@ -587,11 +587,7 @@
       "UpstreamHttpMethod": [
         "POST"
       ],
-      "SwaggerKey": "authorization",
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      }
+      "SwaggerKey": "authorization"
     },
     {
       "DownstreamPathTemplate": "/api/accounts/revoke",
