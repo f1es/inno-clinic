@@ -17,6 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
 builder.Services.ConfigureCors();
+builder.Services.ConfigureRedis(builder.Configuration);
 builder.Services.ConfigureMediatr();
 builder.Services.ConfigureAutomapper();
 builder.Services.ConfigureRepositories();
