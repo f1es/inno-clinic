@@ -22,8 +22,20 @@ services:
         - ASPNETCORE_ENVIRONMENT=Docker
       depends_on:
         - offices-service-db
+        - offices-redis
       networks:
         - offices-network
+
+  offices-redis:
+    image: redis:7.4.2
+    command: redis-server --loglevel verbose
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - cache:/data
+    networks:
+      - offices-network
 
 networks:
   offices-network:
@@ -33,5 +45,5 @@ networks:
 
 volumes:
   offices-service-db:
-
-
+  cache:
+    driver: local
