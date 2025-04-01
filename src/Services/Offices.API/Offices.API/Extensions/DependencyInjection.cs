@@ -12,6 +12,7 @@ public static class DependencyInjection
 	public static void ConfigureOptions(this IServiceCollection services, WebApplicationBuilder builder)
 	{
 		services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+		services.Configure<RedisSettings>(builder.Configuration.GetSection("RedisSettings"));
 	}
 
 	public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -94,6 +95,17 @@ public static class DependencyInjection
 					Array.Empty<string>()
 				}
 			});
+		});
+	}
+
+	public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
+	{
+		var redisSettings = configuration.GetSection("RedisSettings").Get<RedisSettings>();
+
+		services.AddStackExchangeRedisCache(options =>
+		{
+			options.Configuration = redisSettings.Server;
+			options.InstanceName = redisSettings.InstanceName;
 		});
 	}
 }

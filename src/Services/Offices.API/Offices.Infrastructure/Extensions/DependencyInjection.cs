@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Offices.Core.Cache;
 using Offices.Core.Repositories;
+using Offices.Infrastructure.Cache;
 using Offices.Infrastructure.Context;
 using Offices.Infrastructure.Repositories;
 
@@ -11,5 +13,6 @@ public static class DependencyInjection
 	{
 		services.AddSingleton<OfficesContext>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.AddScoped<ICacheService, CacheService>();
 	}
 }
