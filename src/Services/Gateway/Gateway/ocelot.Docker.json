@@ -160,6 +160,21 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/appointments/reservations",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/appointments/reservations",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "SwaggerKey": "appointments"
+    },
+    {
       "DownstreamPathTemplate": "/api/results",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

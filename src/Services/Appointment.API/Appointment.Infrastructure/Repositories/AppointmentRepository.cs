@@ -12,6 +12,9 @@ public class AppointmentRepository : BaseRepository<Core.Models.Appointment>, IA
 
     public async Task<IEnumerable<Core.Models.Appointment>> GetAllAsync(CancellationToken cancellationToken) => await _context.Appointments.AsNoTracking().ToListAsync(cancellationToken);
 
+	public async Task<IEnumerable<Core.Models.Appointment>> GetAllByDayAsync(DateOnly day, CancellationToken cancellationToken) =>
+		await _context.Appointments.AsNoTracking().Where(x => x.Date == day).ToListAsync(cancellationToken);
+
 	public async Task<Core.Models.Appointment> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.Appointments : _context.Appointments.AsNoTracking();

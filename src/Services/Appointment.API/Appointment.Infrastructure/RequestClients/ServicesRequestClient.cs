@@ -19,6 +19,6 @@ public class ServicesRequestClient : IServicesRequestClient
 	{
 		var uri = $"{_servicesEndpoints.Url}{_servicesEndpoints.IsServiceExist}{serviceId.ToString()}";
 		var response = await _httpClient.GetAsync(uri, cancellationToken);
-		return response.IsSuccessStatusCode ? true : false;
+		return response.IsSuccessStatusCode;
 	}
 }

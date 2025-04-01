@@ -1,8 +1,10 @@
 using Appointment.Infrastructure.Context;
+using Appointment.IntegrationTests.Utility.WebFactory;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Respawn;
 using System.Data.Common;
+using System.Net.Http.Headers;
 
 namespace Appointment.IntegrationTests.Utility;
 
@@ -18,6 +20,8 @@ public class TestServerBase : IClassFixture<WebAppFactory>, IAsyncLifetime
         _scope = testsWebAppFactory.Services.CreateScope();
         _httpClient = testsWebAppFactory.CreateDefaultClient();
         _context = _scope.ServiceProvider.GetRequiredService<AppointmentDbContext>();
+
+		_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test");
 	}
 
 	public async Task InitializeAsync()

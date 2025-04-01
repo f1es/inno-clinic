@@ -76,9 +76,14 @@ public class AppointmentControllerTests : AppointmentControllerTestsBase
         // Arrange
         var cancellationToken = new CancellationToken();
         var appointmentRequestDto = _fixture.Build<AppointmentRequestDto>().Create();
+		appointmentRequestDto = appointmentRequestDto with
+		{
+			BeginTime = new TimeOnly(9, 0, 0),
+			EndTime = new TimeOnly(10, 0, 0)
+		};
 
-        // Act
-        var response = await _appointmentController.Create(appointmentRequestDto, cancellationToken);
+		// Act
+		var response = await _appointmentController.Create(appointmentRequestDto, cancellationToken);
 
         // Assert
         var responseObject = response as ObjectResult;

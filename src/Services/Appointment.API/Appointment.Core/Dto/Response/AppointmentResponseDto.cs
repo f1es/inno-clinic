@@ -6,5 +6,6 @@ public record AppointmentResponseDto(
 	Guid? DoctorId,
 	Guid? ServiceId,
 	DateOnly Date,
-	TimeOnly Time,
+	TimeOnly BeginTime,
+	TimeOnly EndTime,
 	bool IsApproved);
