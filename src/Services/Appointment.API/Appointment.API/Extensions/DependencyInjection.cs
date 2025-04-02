@@ -1,7 +1,6 @@
 ﻿using Appointment.Infrastructure.Context;
 using Appointment.Infrastructure.Options;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -131,5 +130,8 @@ public static class DependencyInjection
 	{
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
 		services.Configure<ServicesEndpoints>(configuration.GetSection("ServicesEndpoints"));
+		services.Configure<PatientsEndpoints>(configuration.GetSection("PatientsEndpoints"));
+		services.Configure<AccountsEndpoints>(configuration.GetSection("AccountsEndpoints"));
+		services.Configure<EmailCredentials>(configuration.GetSection("EmailCredentials"));
 	}
 }

@@ -1,7 +1,7 @@
 namespace Appointment.Infrastructure.Options;
 
-public class ServicesEndpoints
+public class PatientsEndpoints
 {
 	public string Url { get; set; }
-	public string ServicesEndpoint { get; set; }
+	public string PatientsEndpoint { get; set; }
 }

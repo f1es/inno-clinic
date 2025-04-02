@@ -17,7 +17,7 @@ public class ServicesRequestClient : IServicesRequestClient
 
 	public async Task<bool> IsServiceExistAsync(Guid serviceId, CancellationToken cancellationToken)
 	{
-		var uri = $"{_servicesEndpoints.Url}{_servicesEndpoints.IsServiceExist}{serviceId.ToString()}";
+		var uri = $"{_servicesEndpoints.Url}{_servicesEndpoints.ServicesEndpoint}{serviceId.ToString()}";
 		var response = await _httpClient.GetAsync(uri, cancellationToken);
 		return response.IsSuccessStatusCode;
 	}
