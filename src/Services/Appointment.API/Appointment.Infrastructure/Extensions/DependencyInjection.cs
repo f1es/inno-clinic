@@ -1,6 +1,7 @@
 using Appointment.Core.Repositories;
 using Appointment.Core.RequestClients;
 using Appointment.Infrastructure.Consumers;
+using Appointment.Infrastructure.Email;
 using Appointment.Infrastructure.Options;
 using Appointment.Infrastructure.Repositories;
 using Appointment.Infrastructure.RequestClients;
@@ -8,6 +9,7 @@ using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Quartz;
 
 namespace Appointment.Infrastructure.Extensions;
 
@@ -42,6 +44,14 @@ public static class DependencyInjection
 	{
 		services.AddScoped<HttpClient>();
 		services.AddScoped<IServicesRequestClient, ServicesRequestClient>();
+		services.AddScoped<IPatientsRequestClient, PatientsRequestClient>();
+		services.AddScoped<IAccountRequestClient, AccountRequestClient>();
+	}
+
+	private static void ConfigureQuartzScheduler(this IServiceCollection services)
+	{
+		services.AddQuartz();
+		services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 	}
 
 	public static void ConfigureInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
