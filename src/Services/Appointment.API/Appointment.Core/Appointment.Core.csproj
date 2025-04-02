@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Fles.InnoClinic.Shared" Version="1.0.1" />
+    <PackageReference Include="MimeKit" Version="4.11.0" />
   </ItemGroup>
 
 </Project>
