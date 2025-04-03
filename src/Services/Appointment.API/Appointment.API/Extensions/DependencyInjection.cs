@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using System.Text.Json.Serialization;
 using Appointment.API.Options;
+using Appointment.Application.Options;
 
 namespace Appointment.API.Extensions;
 
@@ -133,5 +134,6 @@ public static class DependencyInjection
 		services.Configure<PatientsEndpoints>(configuration.GetSection("PatientsEndpoints"));
 		services.Configure<AccountsEndpoints>(configuration.GetSection("AccountsEndpoints"));
 		services.Configure<EmailCredentials>(configuration.GetSection("EmailCredentials"));
+		services.Configure<CronOptions>(configuration.GetSection("CronOptions"));
 	}
 }
