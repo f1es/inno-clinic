@@ -21,6 +21,7 @@ public static class DependencyInjection
 		services.AddScoped<IAppointmentService, AppointmentService>();
 		services.AddScoped<IResultService, ResultService>();
 		services.AddScoped<ITimeSlotService, TimeSlotService>();
+		services.AddScoped<INotifyService, NotifyService>();
 	}
 
 	private static void ConfigureQuartzScheduler(this IServiceCollection services)

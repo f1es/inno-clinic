@@ -1,3 +1,4 @@
+using Appointment.Core.Email;
 using Appointment.Core.Repositories;
 using Appointment.Core.RequestClients;
 using Appointment.Infrastructure.Consumers;
@@ -48,10 +49,9 @@ public static class DependencyInjection
 		services.AddScoped<IAccountRequestClient, AccountRequestClient>();
 	}
 
-	private static void ConfigureQuartzScheduler(this IServiceCollection services)
+	private static void ConfigureSmtpClient(this IServiceCollection services)
 	{
-		services.AddQuartz();
-		services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+		services.AddScoped<IEmailSender, EmailSender>();
 	}
 
 	public static void ConfigureInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
@@ -59,5 +59,6 @@ public static class DependencyInjection
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.ConfigureMassTransit();
 		services.ConfigureRequestClients();
+		services.ConfigureSmtpClient();
 	}
 }

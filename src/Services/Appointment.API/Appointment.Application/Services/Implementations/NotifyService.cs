@@ -50,7 +50,7 @@ public class NotifyService : INotifyService
 			throw new NotFoundException(nameof(account), patient.AccountId.Value);
 		}
 
-		var messageContent = $"We remind you than tomorrow at ${appointment.BeginTime} you have an appointment in Inno Clinic";
+		var messageContent = $"We remind you than tomorrow at {appointment.BeginTime} you have an appointment in Inno Clinic";
 		var message = new MessageRequestDto([account.Email], "Reminder", messageContent);
 		await _emailSender.SendEmailAsync(message, cancellationToken);
 	}
