@@ -51,7 +51,7 @@ public class RegistrationService : IRegistrationService
             throw new BadRequestException($"{validationResult.GetErrors()}");
         }
 
-        var emailUniqueness = _accountRepository.GetByEmailAsync(registerAccountRequestDto.Email);
+        var emailUniqueness = await _accountRepository.GetByEmailAsync(registerAccountRequestDto.Email);
         if (emailUniqueness != null)
         {
             throw new BadRequestException($"User with email {registerAccountRequestDto.Email} already exist");
