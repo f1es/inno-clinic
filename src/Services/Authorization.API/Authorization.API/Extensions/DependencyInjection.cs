@@ -2,6 +2,7 @@
 using Authorization.Application.Configuration;
 using Authorization.Application.Options;
 using Authorization.Infrastructure.Context;
+using Authorization.Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -35,6 +36,7 @@ public static class DependencyInjection
 		services.Configure<EmailOptions>(configuration.GetSection("EmailConfiguration"));
 		services.Configure<SecretKeys>(configuration.GetSection("SecretKeys"));
 		services.Configure<EndpointsOptions>(configuration.GetSection("Endpoints"));
+		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
 	}
 
 	private static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)

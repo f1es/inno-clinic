@@ -8,6 +8,9 @@ public static class AccountMappers
 	public static AccountResponseDto ToResponseDto(this Account account) => 
 		new AccountResponseDto(
 			account.Id,
+			account.FirstName,
+			account.LastName,
+			account.MiddleName,
 			account.Email,
 			account.PhoneNumber,
 			account.IsEmailVerified,
