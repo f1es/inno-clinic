@@ -26,8 +26,7 @@ public static class DependencyInjection
 	{
 		services.AddMassTransit(options =>
 		{
-			options.AddConsumer<DeleteFullNameConsumer>();
-			options.AddConsumer<UpdateFullNameConsumer>();
+			options.AddConsumer<FullNameConsumer>();
 
 			options.UsingRabbitMq((context, options) =>
 			{
@@ -41,8 +40,7 @@ public static class DependencyInjection
 
 				options.ReceiveEndpoint(QueueNames.FullNameQueue, options =>
 				{
-					options.ConfigureConsumer<DeleteFullNameConsumer>(context);
-					options.ConfigureConsumer<UpdateFullNameConsumer>(context);
+					options.ConfigureConsumer<FullNameConsumer>(context);
 				});
 			});
 		});
