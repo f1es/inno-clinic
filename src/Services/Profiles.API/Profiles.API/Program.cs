@@ -12,10 +12,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwaggerGen();
 builder.Services.ConfigureCors();
+builder.Services.ConfigureMassTransit();
 builder.Services.ConfigureDbContext(builder);
 builder.Services.ConfigureRepositories();
 builder.Services.ConfigureServices();
 builder.Services.ConfigureAuthentication(builder.Configuration);
+builder.Services.ConfigureOptions(builder.Configuration);
 
 var app = builder.Build();
 
