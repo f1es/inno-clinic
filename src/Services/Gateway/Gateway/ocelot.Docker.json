@@ -175,6 +175,25 @@
       "SwaggerKey": "appointments"
     },
     {
+      "DownstreamPathTemplate": "/api/appointments/for-patient",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/appointments/for-patient",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "SwaggerKey": "appointments",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/results",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -191,9 +210,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "doctor"
       }
     },
     {
@@ -213,9 +229,6 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
-      },
-      "RouteClaimsRequirement": {
-        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": "doctor"
       }
     },
     {

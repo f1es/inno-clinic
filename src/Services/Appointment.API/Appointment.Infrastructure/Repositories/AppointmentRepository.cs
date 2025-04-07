@@ -15,12 +15,15 @@ public class AppointmentRepository : BaseRepository<Core.Models.Appointment>, IA
 	public async Task<IEnumerable<Core.Models.Appointment>> GetAllByDayAsync(DateOnly day, CancellationToken cancellationToken) =>
 		await _context.Appointments.AsNoTracking().Where(x => x.Date == day).ToListAsync(cancellationToken);
 
+	public async Task<IEnumerable<Core.Models.Appointment>> GetAllByAccountIdAsync(Guid accountId, CancellationToken cancellationToken) =>
+		await _context.Appointments.AsNoTracking().Where(x => x.AccountId == accountId).ToListAsync(cancellationToken);
+
 	public async Task<Core.Models.Appointment> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{
 		var query = trackChanges ? _context.Appointments : _context.Appointments.AsNoTracking();
 		return await query.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 	}
 
-	public async Task RemoveServiceId(Guid serviceId) => 
+	public async Task RemoveServiceIdAsync(Guid serviceId) => 
 		await _context.Appointments.Where(x => x.ServiceId == serviceId).ExecuteUpdateAsync(x => x.SetProperty(p => p.ServiceId, (Guid?)null));
 }

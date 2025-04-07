@@ -15,6 +15,6 @@ public class DeleteServiceConsumer : IConsumer<DeleteServiceMessage>
 
 	public async Task Consume(ConsumeContext<DeleteServiceMessage> context)
 	{
-		await _unitOfWork.AppointmentRepository.RemoveServiceId(context.Message.Id);
+		await _unitOfWork.AppointmentRepository.RemoveServiceIdAsync(context.Message.Id);
 	}
 }

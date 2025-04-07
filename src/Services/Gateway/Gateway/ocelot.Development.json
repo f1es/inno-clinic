@@ -184,6 +184,25 @@
       "SwaggerKey": "appointments"
     },
     {
+      "DownstreamPathTemplate": "/api/appointments/for-patient",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/appointments/for-patient",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "SwaggerKey": "appointments",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/results",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [

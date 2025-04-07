@@ -9,6 +9,7 @@ using Appointment.Infrastructure.Context;
 using Appointment.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using System.IdentityModel.Tokens.Jwt;
 using Testcontainers.PostgreSql;
 
 namespace Appointment.IntegrationTests.Utility;
@@ -23,6 +24,7 @@ public abstract class AppointmentControllerTestsBase : IAsyncLifetime
     protected readonly IUnitOfWork _unitOfWork;
     protected readonly ITimeSlotService _timeSlotService;
     protected readonly IAppointmentService _appointmentService;
+    protected readonly IJwtService _jwtService;
 
     protected readonly AppointmentController _appointmentController;
 
@@ -41,13 +43,15 @@ public abstract class AppointmentControllerTestsBase : IAsyncLifetime
 
         _unitOfWork = new UnitOfWork(_context);
         _appointmentsMapper = new AppointmentsMapper();
+        var jwtHandler = new JwtSecurityTokenHandler();
+        _jwtService = new JwtService(jwtHandler);
         _timeSlotService = new TimeSlotService(_unitOfWork);
         
         var serviceRequestClientMock = new Mock<IServicesRequestClient>();
         serviceRequestClientMock.Setup(x => x.IsServiceExistAsync(It.IsAny<Guid>(), CancellationToken.None))
             .ReturnsAsync(true);
 
-        _appointmentService = new AppointmentService(_unitOfWork, _appointmentsMapper, serviceRequestClientMock.Object, _timeSlotService);
+        _appointmentService = new AppointmentService(_unitOfWork, _appointmentsMapper, serviceRequestClientMock.Object, _timeSlotService, _jwtService);
         _appointmentController = new AppointmentController(_appointmentService, _timeSlotService);
     }
 

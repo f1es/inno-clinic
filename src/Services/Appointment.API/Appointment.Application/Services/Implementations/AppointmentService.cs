@@ -14,22 +14,26 @@ public class AppointmentService : IAppointmentService
 	private readonly IAppointmentsMapper _appointmentsMapper;
 	private readonly IServicesRequestClient _servicesRequestClient;
 	private readonly ITimeSlotService _timeSlotService;
+	private readonly IJwtService _jwtService;
 
 	public AppointmentService(
-		IUnitOfWork unitOfWork, 
+		IUnitOfWork unitOfWork,
 		IAppointmentsMapper appointmentsMapper,
 		IServicesRequestClient servicesRequestClient,
-		ITimeSlotService timeSlotService)
+		ITimeSlotService timeSlotService,
+		IJwtService jwtService)
 	{
 		_unitOfWork = unitOfWork;
 		_appointmentsMapper = appointmentsMapper;
 		_servicesRequestClient = servicesRequestClient;
 		_timeSlotService = timeSlotService;
+		_jwtService = jwtService;
 	}
 
-	public async Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken)
+	public async Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto, string jwt, CancellationToken cancellationToken)
 	{
 		var appointment = _appointmentsMapper.ToModel(appointmentRequestDto);
+		appointment.AccountId = _jwtService.GetAccountId(jwt);
 
 		if (!await _timeSlotService.CheckIfSlotAvailableAsync(appointment, cancellationToken))
 		{
@@ -59,6 +63,14 @@ public class AppointmentService : IAppointmentService
 		var appointments = await _unitOfWork.AppointmentRepository.GetAllAsync(cancellationToken);
 
 		return _appointmentsMapper.ToResponse(appointments);
+	}
+
+	public async Task<IEnumerable<AppointmentResponseDto>> GetByJwtAsync(string jwt, CancellationToken cancellationToken)
+	{
+		var accountId = _jwtService.GetAccountId(jwt);
+		var appoitnemnts = await _unitOfWork.AppointmentRepository.GetAllByAccountIdAsync(accountId, cancellationToken);
+
+		return _appointmentsMapper.ToResponse(appoitnemnts);
 	}
 
 	public async Task<AppointmentResponseDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)

@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Quartz;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Appointment.Application.Extensions;
 
@@ -25,6 +26,8 @@ public static class DependencyInjection
 		services.AddScoped<IResultService, ResultService>();
 		services.AddScoped<ITimeSlotService, TimeSlotService>();
 		services.AddScoped<INotifyService, NotifyService>();
+		services.AddScoped<IJwtService, JwtService>();
+		services.AddScoped<JwtSecurityTokenHandler>();
 	}
 
 	private static void ConfigureQuartzScheduler(this IServiceCollection services, IConfiguration configuration)

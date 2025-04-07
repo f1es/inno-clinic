@@ -1,4 +1,5 @@
-﻿using Appointment.Application.Services.Interfaces;
+﻿using Appointment.API.Extensions;
+using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,17 @@ public class AppointmentController : ControllerBase
 		return Ok(appointments);
 	}
 
+	[HttpGet("for-patient")]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> GetForPatient(CancellationToken cancellationToken)
+	{
+		var jwt = Request.GetJwtFromHeader();
+		var appointments = await _appointmentService.GetByJwtAsync(jwt, cancellationToken);
+
+		return Ok(appointments);
+	}
+
 	/// <summary>
 	/// Get appointment by id method
 	/// </summary>
@@ -63,7 +75,8 @@ public class AppointmentController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Create(AppointmentRequestDto appointmentRequestDto, CancellationToken cancellationToken)
 	{
-		var appoinment = await _appointmentService.CreateAsync(appointmentRequestDto, cancellationToken);
+		var jwt = Request.GetJwtFromHeader();
+		var appoinment = await _appointmentService.CreateAsync(appointmentRequestDto, jwt, cancellationToken);
 
 		return CreatedAtRoute("GetAppointment", new { id = appoinment.Id }, appoinment);
 	}

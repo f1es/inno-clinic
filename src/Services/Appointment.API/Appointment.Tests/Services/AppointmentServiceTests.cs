@@ -16,6 +16,7 @@ public class AppointmentServiceTests
 	private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 	private readonly Mock<IServicesRequestClient> _servicesRequestClientMock;
 	private readonly Mock<ITimeSlotService> _timeSlotServiceMock;
+	private readonly Mock<IJwtService> _jwtServiceMock;
 	private readonly IAppointmentsMapper _appointmentsMapper;
 	private readonly Fixture _fixture;
 
@@ -26,6 +27,7 @@ public class AppointmentServiceTests
 		_unitOfWorkMock = new Mock<IUnitOfWork>();
 		_servicesRequestClientMock = new Mock<IServicesRequestClient>();
 		_timeSlotServiceMock = new Mock<ITimeSlotService>();
+		_jwtServiceMock = new Mock<IJwtService>();
 		_appointmentsMapper = new AppointmentsMapper();
 		_fixture = new Fixture();
 		_fixture.Register(() => DateOnly.FromDateTime(_fixture.Create<DateTime>()));
@@ -35,7 +37,8 @@ public class AppointmentServiceTests
 			_unitOfWorkMock.Object,
 			_appointmentsMapper,
 			_servicesRequestClientMock.Object,
-			_timeSlotServiceMock.Object);
+			_timeSlotServiceMock.Object,
+			_jwtServiceMock.Object);
 	}
 
 	[Fact]
@@ -116,7 +119,7 @@ public class AppointmentServiceTests
 		var response = _appointmentsMapper.ToResponse(model);
 
 		// Act
-		var result = await _appointmentService.CreateAsync(appointmentRequest, CancellationToken.None);
+		var result = await _appointmentService.CreateAsync(appointmentRequest, It.IsAny<string>(), CancellationToken.None);
 
 		// Assert
 		_unitOfWorkMock.Verify(x =>
