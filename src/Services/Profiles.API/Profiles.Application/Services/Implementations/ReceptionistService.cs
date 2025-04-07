@@ -5,19 +5,23 @@ using Profiles.Core.Dtos.Request;
 using Profiles.Core.Dtos.Response;
 using Profiles.Core.Models;
 using Profiles.Core.Parameters;
+using Profiles.Core.Publishers;
 using Profiles.Core.Repositories;
 using Profiles.Core.Utility;
 using Shared.Exceptions;
+using Shared.Queues.Messages;
 
 namespace Profiles.Application.Services.Implementations;
 
 public class ReceptionistService : IReceptionistService
 {
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IFullNamePublisher _fullNamePublisher;
 
-	public ReceptionistService(IUnitOfWork unitOfWork)
+	public ReceptionistService(IUnitOfWork unitOfWork, IFullNamePublisher fullNamePublisher)
 	{
 		_unitOfWork = unitOfWork;
+		_fullNamePublisher = fullNamePublisher;
 	}
 
 	public async Task<ReceptionistResponseDto> CreateAsync(ReceptionistRequestDto receptionistRequestDto)
@@ -27,6 +31,13 @@ public class ReceptionistService : IReceptionistService
 		_unitOfWork.ReceptionistRepository.Create(receptionist);
 
 		await _unitOfWork.SaveAsync();
+
+		var updateFullNameMessage = new UpdateFullNameMessage(
+			receptionist.AccountId,
+			receptionist.FirstName,
+			receptionist.LastName,
+			receptionist.MiddleName);
+		await _fullNamePublisher.PublishUpdateAsync(updateFullNameMessage, cancellationToken: default);
 
 		return receptionist.Adapt<ReceptionistResponseDto>();
 	}
@@ -40,6 +51,9 @@ public class ReceptionistService : IReceptionistService
 		_unitOfWork.ReceptionistRepository.Delete(receptionist);
 
 		await _unitOfWork.SaveAsync();
+
+		var deleteFullNameMessage = new DeleteFullNameMessage(receptionist.AccountId);
+		await _fullNamePublisher.PublishDeleteAsync(deleteFullNameMessage, cancellationToken: default);
 	}
 
 	public async Task<PagedList<ReceptionistResponseDto>> GetAllAsync(RequestParameters requestParameters)
@@ -67,6 +81,13 @@ public class ReceptionistService : IReceptionistService
 		receptionistRequestDto.Adapt(receptionist);
 
 		await _unitOfWork.SaveAsync();
+
+		var updateFullNameMessage = new UpdateFullNameMessage(
+			receptionist.AccountId,
+			receptionist.FirstName,
+			receptionist.LastName,
+			receptionist.MiddleName);
+		await _fullNamePublisher.PublishUpdateAsync(updateFullNameMessage, cancellationToken: default);
 	}
 
 	private Receptionist ReceptionistNullCheck(Receptionist receptionist, Guid id) => receptionist ?? throw new NotFoundException(nameof(receptionist), id); 

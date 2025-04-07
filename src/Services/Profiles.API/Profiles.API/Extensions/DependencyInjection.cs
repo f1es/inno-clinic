@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Profiles.API.Options;
 using Profiles.Infrastructure.Context;
+using Profiles.Infrastructure.Options;
 using System.Text;
 
 namespace Profiles.API.Extensions;
@@ -102,5 +103,10 @@ public static class DependencyInjection
 				.AllowCredentials();
 			});
 		});
+	}
+
+	public static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.Configure<RabbitMqOptions>(configuration.GetSection("RabbitmqOptions"));
 	}
 }

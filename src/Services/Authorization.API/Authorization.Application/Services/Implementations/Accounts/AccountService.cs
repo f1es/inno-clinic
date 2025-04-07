@@ -1,9 +1,12 @@
 using Authorization.Application.Mappers;
+using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Accounts;
+using Authorization.Application.Services.Interfaces.JWT;
 using Authorization.Core.Dto.Request;
 using Authorization.Core.Dto.Response;
 using Authorization.Core.Models;
 using Authorization.Core.Repositories;
+using Microsoft.Extensions.Options;
 using Shared.Exceptions;
 
 namespace Authorization.Application.Services.Implementations.Accounts;
@@ -11,10 +14,14 @@ namespace Authorization.Application.Services.Implementations.Accounts;
 public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
+    private readonly IJwtProvider _jwtProvider;
+    private readonly SecretKeys _secretKeys;
 
-    public AccountService(IAccountRepository accountRepository)
+    public AccountService(IAccountRepository accountRepository, IJwtProvider jwtProvider, IOptions<SecretKeys> secretKeys)
     {
         _accountRepository = accountRepository;
+        _jwtProvider = jwtProvider;
+        _secretKeys = secretKeys.Value;
     }
     public async Task<IEnumerable<AccountResponseDto>> GetAllAsync()
     {
@@ -29,6 +36,13 @@ public class AccountService : IAccountService
         var account = await _accountRepository.GetByIdAsync(id);
 
         return account.ToResponseDto();
+    }
+
+    public async Task<AccountResponseDto> GetByJwtAsync(string accessToken)
+    {
+        var accountId = _jwtProvider.GetAccountId(accessToken, _secretKeys.Access);
+
+        return await GetByIdAsync(accountId);
     }
 
     public async Task DeleteAsync(Guid id)

@@ -664,6 +664,25 @@
       }
     },
     {
+      "DownstreamPathTemplate": "/api/accounts/get-info",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "auth-app",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/gateway/accounts/get-info",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "SwaggerKey": "authorization",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      }
+    },
+    {
       "DownstreamPathTemplate": "/api/accounts/email-verification",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
