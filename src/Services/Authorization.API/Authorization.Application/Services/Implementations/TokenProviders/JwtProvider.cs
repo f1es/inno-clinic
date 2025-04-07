@@ -2,6 +2,7 @@ using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.JWT;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Exceptions;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -73,6 +74,19 @@ public class JwtProvider : IJwtProvider
 	public async Task<bool> VerifyAccessTokenAsync(string token, string key) => await VerifyTokenAsync(token, key);
 
 	public JwtSecurityToken ReadToken(string token) => _tokenHandler.ReadJwtToken(token);
+
+    public Guid GetAccountId(string token, string key)
+    {
+        var principal = GetPrincipalFromExpiredToken(token, key);
+        var stringId = principal.FindFirstValue("id");
+        if (stringId == null)
+        {
+            throw new BadRequestException($"Token doesn't have account id");
+        }
+
+        var accountId = Guid.Parse(stringId);
+        return accountId;
+    }
 
 	private SymmetricSecurityKey ReadKey(string key) => new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
 

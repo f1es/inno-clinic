@@ -58,7 +58,6 @@ public class AccountController : ControllerBase
 	[HttpPost("login")]
 	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
-	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Login(LoginAccountRequestDto loginAccountRequestDto)
@@ -93,11 +92,32 @@ public class AccountController : ControllerBase
 	[Produces("application/json")]
 	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GetById(Guid id)
 	{
 		var account = await _accountService.GetByIdAsync(id);
+
+		return Ok(account);
+	}
+
+	/// <summary>
+	/// Get accout by id in access token payload
+	/// </summary>
+	/// <returns></returns>
+	[HttpGet("get-info")]
+	[Produces("application/json")]
+	[Authorize]
+	[ProducesResponseType(StatusCodes.Status200OK)]
+	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status404NotFound)]
+	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
+	public async Task<IActionResult> GetAccountByJwt()
+	{
+		var accessToken = Request.GetJwtFromHeader();
+		var account = await _accountService.GetByJwtAsync(accessToken);
 
 		return Ok(account);
 	}
@@ -111,6 +131,8 @@ public class AccountController : ControllerBase
 	[Produces("application/json")]
 	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
+	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Delete(Guid id)
@@ -204,6 +226,8 @@ public class AccountController : ControllerBase
 	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status400BadRequest)]
+	[ProducesResponseType(StatusCodes.Status401Unauthorized)]
+	[ProducesResponseType(StatusCodes.Status403Forbidden)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> GrantRole(Guid id, UpdateRoleRequestDto updateRoleRequestDto)
