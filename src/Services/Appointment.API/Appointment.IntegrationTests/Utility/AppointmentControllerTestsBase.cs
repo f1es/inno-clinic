@@ -42,7 +42,8 @@ public abstract class AppointmentControllerTestsBase : IAsyncLifetime
         _context.Database.Migrate();
 
         _unitOfWork = new UnitOfWork(_context);
-        _appointmentsMapper = new AppointmentsMapper();
+        var resultsMapper = new ResultsMapper();
+        _appointmentsMapper = new AppointmentsMapper(resultsMapper);
         var jwtHandler = new JwtSecurityTokenHandler();
         _jwtService = new JwtService(jwtHandler);
         _timeSlotService = new TimeSlotService(_unitOfWork);

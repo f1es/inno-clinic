@@ -1,3 +1,5 @@
+using Appointment.Core.Models;
+
 namespace Appointment.Core.Dto.Response;
 
 public record AppointmentResponseDto(
@@ -5,7 +7,9 @@ public record AppointmentResponseDto(
 	Guid? PatientId,
 	Guid? DoctorId,
 	Guid? ServiceId,
+	Guid? AccountId,
 	DateOnly Date,
 	TimeOnly BeginTime,
 	TimeOnly EndTime,
-	bool IsApproved);
+	bool IsApproved,
+	ResultResponseDto? Result);

@@ -10,13 +10,14 @@ public class AppointmentRepository : BaseRepository<Core.Models.Appointment>, IA
 		: base(context)
     { }
 
-    public async Task<IEnumerable<Core.Models.Appointment>> GetAllAsync(CancellationToken cancellationToken) => await _context.Appointments.AsNoTracking().ToListAsync(cancellationToken);
+    public async Task<IEnumerable<Core.Models.Appointment>> GetAllAsync(CancellationToken cancellationToken) => 
+		await _context.Appointments.AsNoTracking().Include(x => x.Result).ToListAsync(cancellationToken);
 
 	public async Task<IEnumerable<Core.Models.Appointment>> GetAllByDayAsync(DateOnly day, CancellationToken cancellationToken) =>
-		await _context.Appointments.AsNoTracking().Where(x => x.Date == day).ToListAsync(cancellationToken);
+		await _context.Appointments.AsNoTracking().Include(x => x.Result).Where(x => x.Date == day).ToListAsync(cancellationToken);
 
 	public async Task<IEnumerable<Core.Models.Appointment>> GetAllByAccountIdAsync(Guid accountId, CancellationToken cancellationToken) =>
-		await _context.Appointments.AsNoTracking().Where(x => x.AccountId == accountId).ToListAsync(cancellationToken);
+		await _context.Appointments.AsNoTracking().Include(x => x.Result).Where(x => x.AccountId == accountId).ToListAsync(cancellationToken);
 
 	public async Task<Core.Models.Appointment> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 	{

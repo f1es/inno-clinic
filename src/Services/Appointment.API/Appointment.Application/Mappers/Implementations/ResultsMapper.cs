@@ -6,16 +6,27 @@ using Riok.Mapperly.Abstractions;
 
 namespace Appointment.Application.Mappers.Implementations;
 
-[Mapper]
+[Mapper(AllowNullPropertyAssignment = true)]
 public partial class ResultsMapper : IResultsMapper
 {
 	[MapperIgnoreTarget(nameof(Result.Appointment))]
 	[MapperIgnoreTarget(nameof(Result.Id))]
 	public partial Result ToModel(ResultRequestDto resultRequestDto);
-	[MapperIgnoreSource(nameof(Result.Appointment))]
-	public partial ResultResponseDto ToResponse(Result result);
-	[MapperIgnoreSource(nameof(Result.Appointment))]
-	public partial IEnumerable<ResultResponseDto> ToResponse(IEnumerable<Result> results);
+	public ResultResponseDto? ToResponse(Result? result)
+	{
+		if (result == null)
+		{
+			return null;
+		}
+
+		return new ResultResponseDto(
+			result.Id,
+			result.Complaints,
+			result.Conclusion,
+			result.Reccomendations,
+			result.AppointmentId);
+	}
+	public IEnumerable<ResultResponseDto?> ToResponse(IEnumerable<Result?> results) => results.Select(ToResponse);
 	[MapperIgnoreSource(nameof(Result.Appointment))]
 	[MapperIgnoreSource(nameof(Result.AppointmentId))]
 	[MapperIgnoreSource(nameof(Result.Id))]

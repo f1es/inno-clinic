@@ -28,7 +28,8 @@ public class AppointmentServiceTests
 		_servicesRequestClientMock = new Mock<IServicesRequestClient>();
 		_timeSlotServiceMock = new Mock<ITimeSlotService>();
 		_jwtServiceMock = new Mock<IJwtService>();
-		_appointmentsMapper = new AppointmentsMapper();
+		var resultsMapper = new ResultsMapper();
+		_appointmentsMapper = new AppointmentsMapper(resultsMapper);
 		_fixture = new Fixture();
 		_fixture.Register(() => DateOnly.FromDateTime(_fixture.Create<DateTime>()));
 		_fixture.Register(() => TimeOnly.FromDateTime(_fixture.Create<DateTime>()));
