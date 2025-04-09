@@ -5,9 +5,9 @@ namespace Documents.Application.Services.Interfaces;
 
 public interface IDocumentService
 {
-	public Task<FileResponseDto> CreateAsync(Guid resultId, IFormFile documentFile);
+	public Task<DocumentResponseDto> CreateAsync(Guid resultId, IFormFile documentFile);
 	public Task DeleteAsync(Guid id);
 	public Task UpdateAsync(Guid id, Guid resultId, IFormFile documentFile);
 	public Task<Uri> GetByIdAsync(Guid id);
-	public Task<IEnumerable<FileResponseDto>> GetAllAsync();
+	public Task<IEnumerable<DocumentResponseDto>> GetAllAsync();
 }

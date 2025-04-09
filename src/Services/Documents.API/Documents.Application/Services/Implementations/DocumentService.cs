@@ -30,13 +30,13 @@ public class DocumentService : IDocumentService
 		_documentOrchestrator = documentOrchestrator;
 	}
 
-	public async Task<IEnumerable<FileResponseDto>> GetAllAsync()
+	public async Task<IEnumerable<DocumentResponseDto>> GetAllAsync()
 	{
 		var documents = await _unitOfWork.DocumentRepository.GetAllAsync();
-		return documents.Adapt<IEnumerable<FileResponseDto>>();
+		return documents.Adapt<IEnumerable<DocumentResponseDto>>();
 	}
 
-	public async Task<FileResponseDto> CreateAsync(Guid resultId, IFormFile documentFile)
+	public async Task<DocumentResponseDto> CreateAsync(Guid resultId, IFormFile documentFile)
 	{
 		if (!ValidateDocument(documentFile))
 		{
@@ -49,7 +49,7 @@ public class DocumentService : IDocumentService
 
 		await _documentOrchestrator.CreateAsync(documentFile, document, fileName);
 
-		return document.Adapt<FileResponseDto>();
+		return document.Adapt<DocumentResponseDto>();
 	}
 
 	public async Task DeleteAsync(Guid id)
