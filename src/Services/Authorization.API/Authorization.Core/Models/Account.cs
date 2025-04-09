@@ -20,5 +20,5 @@ public class Account
 	public string? RefreshToken { get; set; }
 	public DateTime? RefreshTokenExpirationDate { get; set; }
 
-	public Guid PhotoId { get; set; }
+	public Guid? PhotoId { get; set; }
 }

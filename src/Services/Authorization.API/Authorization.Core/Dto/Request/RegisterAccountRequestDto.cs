@@ -4,4 +4,4 @@ public record RegisterAccountRequestDto(
 	string Email,
 	string Password,
 	string PhoneNumber,
-	Guid PhotoId);
+	Guid? PhotoId);

@@ -13,4 +13,4 @@ public record AccountResponseDto(
 	string? UpdatedBy,
 	DateTime? UpdatedAt,
 	string? Role,
-	Guid PhotoId);
+	Guid? PhotoId);
