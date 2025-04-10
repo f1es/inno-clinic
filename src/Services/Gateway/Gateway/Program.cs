@@ -1,3 +1,4 @@
+using Gateway.DelegateHandlers;
 using Gateway.Extensions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
@@ -12,7 +13,7 @@ builder.Configuration.AddJsonFile($"ocelot.{environment}.json", optional: false,
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddOcelot(builder.Configuration);
+builder.Services.AddOcelot(builder.Configuration).AddDelegatingHandler<RetryHandler>(true); ;
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureCors();
