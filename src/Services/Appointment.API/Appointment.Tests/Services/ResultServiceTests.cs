@@ -1,6 +1,7 @@
 using Appointment.Application.Mappers.Implementations;
 using Appointment.Application.Mappers.Interfaces;
 using Appointment.Application.Services.Implementations;
+using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Models;
 using Appointment.Core.Repositories;
@@ -13,6 +14,7 @@ namespace Appointment.Tests.Services;
 public class ResultServiceTests
 {
 	private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+	private readonly Mock<IPdfService> _pdfServiceMock;
 	private readonly IResultsMapper _resultsMapper;
 	private readonly Fixture _fixture;
 
@@ -21,12 +23,14 @@ public class ResultServiceTests
     public ResultServiceTests()
     {
 		_unitOfWorkMock = new Mock<IUnitOfWork>();
+		_pdfServiceMock = new Mock<IPdfService>();
 		_resultsMapper = new ResultsMapper();
 		_fixture = new Fixture();
 
 		_resultService = new ResultService(
 			_unitOfWorkMock.Object,
-			_resultsMapper);
+			_resultsMapper,
+			_pdfServiceMock.Object);
 	}
 
 	[Fact]

@@ -43,10 +43,10 @@ public static class DependencyInjection
 
 	private static void ConfigureRequestClients(this IServiceCollection services)
 	{
-		services.AddScoped<HttpClient>();
 		services.AddScoped<IServicesRequestClient, ServicesRequestClient>();
 		services.AddScoped<IPatientsRequestClient, PatientsRequestClient>();
 		services.AddScoped<IAccountRequestClient, AccountRequestClient>();
+		services.AddScoped<IDocumentRequestClient, DocumentsRequestClient>();
 	}
 
 	private static void ConfigureSmtpClient(this IServiceCollection services)

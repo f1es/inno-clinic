@@ -4,6 +4,7 @@ using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
 using Appointment.Core.Models;
 using Appointment.Core.Repositories;
+using Appointment.Core.RequestClients;
 using Shared.Exceptions;
 
 namespace Appointment.Application.Services.Implementations;
@@ -12,21 +13,31 @@ public class ResultService : IResultService
 {
 	private readonly IUnitOfWork _unitOfWork;
 	private readonly IResultsMapper	_resultsMapper;
+	private	readonly IPdfService _dfService;
+	private readonly IDocumentRequestClient _documentRequestClient;
 
 	public ResultService(
 		IUnitOfWork unitOfWork,
-		IResultsMapper resultsMapper)
+		IResultsMapper resultsMapper,
+		IPdfService dfService,
+		IDocumentRequestClient documentRequestClient)
 	{
 		_unitOfWork = unitOfWork;
 		_resultsMapper = resultsMapper;
+		_dfService = dfService;
+		_documentRequestClient = documentRequestClient;
 	}
 
 	public async Task<ResultResponseDto> CreateAsync(ResultRequestDto resultRequestDto, CancellationToken cancellationToken)
 	{
 		var result = _resultsMapper.ToModel(resultRequestDto);
 
+		using var stream = _dfService.ToPdf(result);
+		await _documentRequestClient.CreateDocumentAsync(stream);
+
 		_unitOfWork.ResultRepository.Create(result);
 		await _unitOfWork.SaveAsync(cancellationToken);
+
 
 		return _resultsMapper.ToResponse(result);
 	}

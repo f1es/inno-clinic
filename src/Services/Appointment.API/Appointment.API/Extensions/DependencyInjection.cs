@@ -8,6 +8,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Appointment.API.Options;
 using Appointment.Application.Options;
+using Appointment.Core.RequestClients;
+using Appointment.Infrastructure.RequestClients;
 
 namespace Appointment.API.Extensions;
 
@@ -22,6 +24,7 @@ public static class DependencyInjection
 		services.ConfigureOptions(configuration);
 		services.ConfigureAuthentication(configuration);
 		services.ConfigureCors();
+		services.ConfigureHttpClientForRequestClients();
 	}
 
 	private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -135,5 +138,14 @@ public static class DependencyInjection
 		services.Configure<AccountsEndpoints>(configuration.GetSection("AccountsEndpoints"));
 		services.Configure<EmailCredentials>(configuration.GetSection("EmailCredentials"));
 		services.Configure<CronOptions>(configuration.GetSection("CronOptions"));
+		services.Configure<DocumentsEndpoints>(configuration.GetSection("DocumentsEndpoints"));
+	}
+
+	private static void ConfigureHttpClientForRequestClients(this IServiceCollection services)
+	{
+		services.AddHttpClient<IAccountRequestClient, AccountRequestClient>();
+		services.AddHttpClient<IDocumentRequestClient, DocumentsRequestClient>();
+		services.AddHttpClient<IPatientsRequestClient, PatientsRequestClient>();
+		services.AddHttpClient<IServicesRequestClient, ServicesRequestClient>();
 	}
 }
