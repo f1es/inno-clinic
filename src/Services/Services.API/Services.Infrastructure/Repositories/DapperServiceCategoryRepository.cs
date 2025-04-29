@@ -45,7 +45,13 @@ namespace Services.Infrastructure.Repositories
 		{
 			var sql = @"SELECT * FROM dbo.ServiceCategories;";
 
-			return await _connection.QueryAsync<ServiceCategory>(sql, transaction: _transaction);
+			var command = new CommandDefinition(
+				commandText: sql,
+				cancellationToken: cancellationToken,
+				transaction: _transaction
+			);
+
+			return await _connection.QueryAsync<ServiceCategory>(command);
 		}
 
 		public async Task<ServiceCategory> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
@@ -55,7 +61,14 @@ namespace Services.Infrastructure.Repositories
 
 			var sqlParams = new { Id = id };
 
-			return await _connection.QueryFirstOrDefaultAsync<ServiceCategory>(sql, sqlParams, _transaction);
+			var command = new CommandDefinition(
+				commandText: sql,
+				parameters: sqlParams,
+				transaction: _transaction,
+				cancellationToken: cancellationToken
+			);
+
+			return await _connection.QueryFirstOrDefaultAsync<ServiceCategory>(command);
 		}
 
 		public void Update(ServiceCategory entity)
