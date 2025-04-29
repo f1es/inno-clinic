@@ -28,6 +28,7 @@ public class UpdateServiceCategoryCommandHandler : IRequestHandler<UpdateService
 		}
 
 		_serviceCategoriesMapper.UpdateModel(request.ServiceCategoryRequestDto, serviceCategory);
+		_unitOfWork.ServiceCategoryRepository.Update(serviceCategory);
 
 		await _unitOfWork.SaveAsync(cancellationToken);
 	}
