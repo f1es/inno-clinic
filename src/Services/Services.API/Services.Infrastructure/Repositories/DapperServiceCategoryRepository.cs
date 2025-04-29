@@ -34,7 +34,7 @@ namespace Services.Infrastructure.Repositories
 		public void Delete(ServiceCategory entity)
 		{
 			var sql = @"DELETE FROM dbo.ServiceCategories
-						WHERE @Id = Id;";
+						WHERE Id = @Id;";
 
 			var sqlParams = new { Id = entity.Id };
 
@@ -57,7 +57,7 @@ namespace Services.Infrastructure.Repositories
 		public async Task<ServiceCategory> GetByIdAsync(Guid id, CancellationToken cancellationToken, bool trackChanges = false)
 		{
 			var sql = @"SELECT * FROM dbo.ServiceCategories
-						WHERE @Id = Id;";
+						WHERE Id = @Id;";
 
 			var sqlParams = new { Id = id };
 
@@ -75,7 +75,7 @@ namespace Services.Infrastructure.Repositories
 		{
 			var sql = @"UPDATE dbo.ServiceCategories
 						SET categoryName = @categoryName, timeSlotSize = @timeSlotSize
-						WHERE @Id = Id;";
+						WHERE Id = @Id;";
 
 			var sqlParams = new { categoryName = entity.CategoryName, timeSlotSize = entity.TimeSlotSize, Id = entity.Id };
 
