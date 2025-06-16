@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Offices.API.Options;
+using Offices.Infrastructure.HealthChecks;
 using Offices.Infrastructure.Options;
 using System.Text;
 
@@ -9,13 +10,26 @@ namespace Offices.API.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureOptions(this IServiceCollection services, WebApplicationBuilder builder)
+	public static void ConfigureApiLayer(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
-		services.Configure<RedisSettings>(builder.Configuration.GetSection("RedisSettings"));
+		services.AddControllers();
+		services.AddEndpointsApiExplorer();
+
+		services.ConfigureOptions(configuration);
+		services.ConfigureAuthentication(configuration);
+		services.ConfigureCors();
+		services.ConfigureSwagger();
+		services.ConfigureRedis(configuration);
+		services.ConfigureHealthChecks(configuration);
 	}
 
-	public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
+		services.Configure<RedisSettings>(configuration.GetSection("RedisSettings"));
+	}
+
+	private static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
 		var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
@@ -54,7 +68,7 @@ public static class DependencyInjection
 		services.AddAuthorization();
 	}
 
-	public static void ConfigureCors(this IServiceCollection services)
+	private static void ConfigureCors(this IServiceCollection services)
 	{
 		services.AddCors(options =>
 		{
@@ -68,7 +82,7 @@ public static class DependencyInjection
 		});
 	}
 
-	public static void ConfigureSwagger(this IServiceCollection services)
+	private static void ConfigureSwagger(this IServiceCollection services)
 	{
 		services.AddSwaggerGen(options =>
 		{
@@ -98,7 +112,7 @@ public static class DependencyInjection
 		});
 	}
 
-	public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
+	private static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
 	{
 		var redisSettings = configuration.GetSection("RedisSettings").Get<RedisSettings>();
 
@@ -107,5 +121,11 @@ public static class DependencyInjection
 			options.Configuration = redisSettings.Server;
 			options.InstanceName = redisSettings.InstanceName;
 		});
+	}
+
+	private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddHealthChecks()
+			.AddCheck<MongoDbHealthCheck>("mongodb");
 	}
 }

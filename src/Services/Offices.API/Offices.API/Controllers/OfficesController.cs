@@ -33,11 +33,11 @@ public class OfficesController : ControllerBase
 	[Produces("application/json")]
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> GetAll()
+	public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var getOfficesQuery = new GetOfficesQuery();
 
-        var offices = await _mediator.Send(getOfficesQuery);
+        var offices = await _mediator.Send(getOfficesQuery, cancellationToken);
 
         return Ok(offices);
     }
@@ -52,11 +52,11 @@ public class OfficesController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status200OK)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Get(Guid id)
+	public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
     {
         var getOfficeQuery = new GetOfficeQuery(id);
 
-        var office = await _mediator.Send(getOfficeQuery);
+        var office = await _mediator.Send(getOfficeQuery, cancellationToken);
 
         return Ok(office);
     }
@@ -71,9 +71,9 @@ public class OfficesController : ControllerBase
 	[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Create(CreateOfficeCommand createOfficeCommand)
+	public async Task<IActionResult> Create(CreateOfficeCommand createOfficeCommand, CancellationToken cancellationToken)
     {
-        var office = await _mediator.Send(createOfficeCommand);
+        var office = await _mediator.Send(createOfficeCommand, cancellationToken);
 
 		return CreatedAtRoute("GetOffice", new { id = office.Id }, office);  
     }
@@ -89,11 +89,11 @@ public class OfficesController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Delete(Guid id)
+	public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
         var deleteOfficeCommand = new DeleteOfficeCommand(id);
 
-        await _mediator.Send(deleteOfficeCommand);
+        await _mediator.Send(deleteOfficeCommand, cancellationToken);
 
         return NoContent();
     }
@@ -110,11 +110,11 @@ public class OfficesController : ControllerBase
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-	public async Task<IActionResult> Update(Guid id, OfficeRequestDto officeRequestDto)
+	public async Task<IActionResult> Update(Guid id, OfficeRequestDto officeRequestDto, CancellationToken cancellationToken)
     {
         var updateOfficeCommand = new UpdateOfficeCommand(id, officeRequestDto);
 
-        await _mediator.Send(updateOfficeCommand);
+        await _mediator.Send(updateOfficeCommand, cancellationToken);
 
         return NoContent();
     }

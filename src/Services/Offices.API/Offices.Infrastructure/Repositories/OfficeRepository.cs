@@ -45,9 +45,9 @@ public class OfficeRepository : IOfficeRepository
 		await _context.Offices.ReplaceOneAsync(Builders<Office>.Filter.Eq(x => x.Id, entity.Id), entity);
 	}
 
-	public async Task<IEnumerable<Office>> GetAllAsync(CancellationToken cancellationToken = default)
+	public async Task<ICollection<Office>> GetAllAsync(CancellationToken cancellationToken = default)
 	{
-		var cachedOffices = await _cacheService.GetFromCacheAsync<IEnumerable<Office>>(OfficesCollectionCacheKey, cancellationToken);
+		var cachedOffices = await _cacheService.GetFromCacheAsync<ICollection<Office>>(OfficesCollectionCacheKey, cancellationToken);
 		if (cachedOffices is not null)
 		{
 			return cachedOffices;

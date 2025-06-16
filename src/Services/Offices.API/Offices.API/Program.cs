@@ -12,23 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
-builder.Services.AddControllers();
+builder.Services.ConfigureApiLayer(builder.Configuration);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.ConfigureSwagger();
-builder.Services.ConfigureCors();
-builder.Services.ConfigureRedis(builder.Configuration);
+
 builder.Services.ConfigureMediatr();
 builder.Services.ConfigureAutomapper();
 builder.Services.ConfigureRepositories();
-builder.Services.ConfigureOptions(builder);
-builder.Services.ConfigureAuthentication(builder.Configuration);
+//builder.Services.ConfigureOptions(builder.Configuration);
+
 
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseCors("CorsPolicy");
+
+app.MapHealthChecks("health");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsProduction())

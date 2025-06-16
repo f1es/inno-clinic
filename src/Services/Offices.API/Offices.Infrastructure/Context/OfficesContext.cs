@@ -8,11 +8,12 @@ namespace Offices.Infrastructure.Context;
 public class OfficesContext
 {
 	private readonly IMongoDatabase _database;
+    private readonly IMongoClient _mongoClient;
 
-    public OfficesContext(IOptions<MongoDbSettings> options)
+    public OfficesContext(IMongoClient mongoClient, IOptions<MongoDbSettings> options)
     {
-        var client = new MongoClient(options.Value.ConnectionString);
-        _database = client.GetDatabase(options.Value.DatabaseName);
+		_mongoClient = mongoClient;
+        _database = mongoClient.GetDatabase(options.Value.DatabaseName);
     }
 
     public IMongoCollection<Office> Offices => _database.GetCollection<Office>("Offices");
