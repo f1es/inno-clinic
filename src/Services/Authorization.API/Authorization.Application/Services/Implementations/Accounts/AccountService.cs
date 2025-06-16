@@ -1,3 +1,4 @@
+using Authorization.API.Options;
 using Authorization.Application.Mappers;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Accounts;
@@ -15,14 +16,14 @@ public class AccountService : IAccountService
 {
     private readonly IAccountRepository _accountRepository;
     private readonly IJwtProvider _jwtProvider;
-    private readonly SecretKeys _secretKeys;
+    private readonly JwtOptions _jwtOptions;
 
-    public AccountService(IAccountRepository accountRepository, IJwtProvider jwtProvider, IOptions<SecretKeys> secretKeys)
+    public AccountService(IAccountRepository accountRepository, IJwtProvider jwtProvider, IOptions<JwtOptions> jwtOptions)
     {
         _accountRepository = accountRepository;
         _jwtProvider = jwtProvider;
-        _secretKeys = secretKeys.Value;
-    }
+		_jwtOptions = jwtOptions.Value;
+	}
     public async Task<IEnumerable<AccountResponseDto>> GetAllAsync()
     {
         var accounts = await _accountRepository.GetAllAsync();
@@ -40,7 +41,7 @@ public class AccountService : IAccountService
 
     public async Task<AccountResponseDto> GetByJwtAsync(string accessToken)
     {
-        var accountId = _jwtProvider.GetAccountId(accessToken, _secretKeys.Access);
+        var accountId = _jwtProvider.GetAccountId(accessToken, _jwtOptions.AccessKey);
 
         return await GetByIdAsync(accountId);
     }

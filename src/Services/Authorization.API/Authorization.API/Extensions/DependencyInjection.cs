@@ -32,7 +32,7 @@ public static class DependencyInjection
 
 	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.Configure<JwtTokenOptions>(configuration.GetSection("JwtTokenOptions"));
+		services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 		services.Configure<EmailOptions>(configuration.GetSection("EmailConfiguration"));
 		services.Configure<SecretKeys>(configuration.GetSection("SecretKeys"));
 		services.Configure<EndpointsOptions>(configuration.GetSection("Endpoints"));
@@ -71,7 +71,7 @@ public static class DependencyInjection
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true,
 					ValidateIssuer = false,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.AccessKey))
 				};
 			});
 

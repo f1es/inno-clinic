@@ -1,3 +1,4 @@
+using Authorization.API.Options;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.JWT;
 using Microsoft.Extensions.Options;
@@ -12,13 +13,13 @@ namespace Authorization.Application.Services.Implementations.JWT;
 public class JwtProvider : IJwtProvider
 {
     private readonly JwtSecurityTokenHandler _tokenHandler;
-    private readonly JwtTokenOptions _jwtTokenOptions;
+    private readonly JwtOptions _jwtOptions;
     public JwtProvider(
         JwtSecurityTokenHandler tokenHandler,
-        IOptions<JwtTokenOptions> jwtOptions)
+        IOptions<JwtOptions> jwtOptions)
     {
         _tokenHandler = tokenHandler;
-        _jwtTokenOptions = jwtOptions.Value;
+        _jwtOptions = jwtOptions.Value;
     }
 
     public string GenerateToken(string key, int lifeTime, ClaimsIdentity claims)
@@ -29,7 +30,7 @@ public class JwtProvider : IJwtProvider
             Subject = claims,
             Expires = DateTime.UtcNow.AddMinutes(lifeTime),
             SigningCredentials = new SigningCredentials(symmetricKey, SecurityAlgorithms.HmacSha256Signature),
-            Issuer = _jwtTokenOptions.Issuer,
+            Issuer = _jwtOptions.Issuer,
 		};
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
@@ -95,7 +96,7 @@ public class JwtProvider : IJwtProvider
         var symmetricKey = ReadKey(key);
         var validationParameters = new TokenValidationParameters
         {
-            ValidIssuer = _jwtTokenOptions.Issuer,
+            ValidIssuer = _jwtOptions.Issuer,
             ValidateAudience = false,
             ValidateLifetime = validateLifetime,
             ValidateIssuerSigningKey = true,

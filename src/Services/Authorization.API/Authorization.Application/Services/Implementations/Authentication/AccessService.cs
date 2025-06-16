@@ -1,3 +1,4 @@
+using Authorization.API.Options;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Authentication;
 using Authorization.Application.Services.Interfaces.JWT;
@@ -18,24 +19,21 @@ public class AccessService : IAccessService
     private readonly IAccountRepository _accountRepository;
     private readonly IPasswordService _passwordService;
     private readonly IJwtProvider _jwtProvider;
-    private readonly SecretKeys _keys;
-    private readonly JwtTokenOptions _jwtTokenOptions;
+    private readonly JwtOptions _jwtOptions;
     private readonly IRefreshProvider _refreshProvider;
 
 	public AccessService(
 		IAccountRepository accountRepository,
 		IPasswordService passwordHasher,
 		IJwtProvider jwtProvider,
-		IOptions<SecretKeys> keys,
 		IRefreshProvider refreshProvider,
-		IOptions<JwtTokenOptions> jwtTokenOptions)
+		IOptions<JwtOptions> jwtOptions)
 	{
 		_accountRepository = accountRepository;
 		_passwordService = passwordHasher;
 		_jwtProvider = jwtProvider;
-		_keys = keys.Value;
 		_refreshProvider = refreshProvider;
-		_jwtTokenOptions = jwtTokenOptions.Value;
+		_jwtOptions = jwtOptions.Value;
 	}
 
 	public async Task<Tokens> LoginAsync(LoginAccountRequestDto loginAccountRequestDto)
@@ -58,11 +56,11 @@ public class AccessService : IAccessService
 
         var claimsIdentity = PutClaims(account.Id, account.Role);
 
-        var accessToken = _jwtProvider.GenerateToken(_keys.Access, _jwtTokenOptions.AccessTokenLifetimeMinutes, claimsIdentity);
+        var accessToken = _jwtProvider.GenerateToken(_jwtOptions.AccessKey, _jwtOptions.AccessTokenLifetimeMinutes, claimsIdentity);
         var refreshToken = _refreshProvider.GenerateToken();
 
         account.RefreshToken = refreshToken;
-        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtTokenOptions.RefreshTokenLifetimeDays);
+        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenLifetimeDays);
 
         await _accountRepository.SaveAsync();
 
@@ -79,7 +77,7 @@ public class AccessService : IAccessService
     {
 		TokensNullCheck(tokens);
 
-		var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Access);
+		var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _jwtOptions.AccessKey);
         var accountId = GetAccountIdFromPrincipal(principal);
 
         var account = await _accountRepository.GetByIdAsync(accountId, trackChanges: true);
@@ -98,11 +96,11 @@ public class AccessService : IAccessService
 
 		var claimsIdentity = PutClaims(accountId, account.Role);
 
-        tokens.AccessToken = _jwtProvider.GenerateToken(_keys.Access, _jwtTokenOptions.AccessTokenLifetimeMinutes, claimsIdentity);
+        tokens.AccessToken = _jwtProvider.GenerateToken(_jwtOptions.AccessKey, _jwtOptions.AccessTokenLifetimeMinutes, claimsIdentity);
         tokens.RefreshToken = _refreshProvider.GenerateToken();
 
         account.RefreshToken = tokens.RefreshToken;
-        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtTokenOptions.RefreshTokenLifetimeDays);
+        account.RefreshTokenExpirationDate = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenLifetimeDays);
 
         await _accountRepository.SaveAsync();
 
@@ -113,7 +111,7 @@ public class AccessService : IAccessService
     {
         TokensNullCheck(tokens);
 
-        var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _keys.Access);
+        var principal = _jwtProvider.GetPrincipalFromExpiredToken(tokens.AccessToken, _jwtOptions.AccessKey);
         var accountId = GetAccountIdFromPrincipal(principal);
 
         var account = await _accountRepository.GetByIdAsync(accountId, trackChanges: true);
