@@ -10,32 +10,59 @@ services:
     networks:
         - offices-network
 
-  offices-app:
-      build:
-        context: "."
-        dockerfile: Dockerfile
-      ports:
-        - 5002:8080
-        - 5012:8081
-      container_name: offices_service_app
-      environment:
-        - ASPNETCORE_ENVIRONMENT=Docker
-      depends_on:
-        - offices-service-db
-        - offices-redis
-      networks:
-        - offices-network
+  # offices-app:
+  #     build:
+  #       context: "."
+  #       dockerfile: Dockerfile
+  #     ports:
+  #       - 5002:8080
+  #       - 5012:8081
+  #     container_name: offices_service_app
+  #     environment:
+  #       - ASPNETCORE_ENVIRONMENT=Docker
+  #     depends_on:
+  #       - offices-service-db
+  #       - offices-redis
+  #     networks:
+  #       - offices-network
 
-  offices-redis:
-    image: redis:7.4.2
-    command: redis-server --loglevel verbose
-    restart: always
+  # offices-redis:
+  #   image: redis:7.4.2
+  #   command: redis-server --loglevel verbose
+  #   restart: always
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - cache:/data
+  #   networks:
+  #     - offices-network
+
+  elastic:
+    image: elasticsearch:7.8.1
     ports:
-      - 6379:6379
-    volumes:
-      - cache:/data
+      - 9200:9200
+    environment:
+      discovery.type: 'single-node'
+      xpack.security.enabled: 'true'
+      ELASTIC_PASSWORD: 'my_password'
+      ES_JAVA_OPTS: '-Xmx3g -Xms3g'
     networks:
       - offices-network
+
+  kibana:
+    image: kibana:7.8.1
+    volumes:
+      - ./kibana_config/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: http://elastic:9200
+      ELASTICSEARCH_USERNAME: 'elastic'
+      ELASTICSEARCH_PASSWORD: 'my_password'
+    networks:
+        - offices-network
+    depends_on:
+      - elastic
 
 networks:
   offices-network:

@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Offices.API.Options;
-using Offices.Infrastructure.HealthChecks;
 using Offices.Infrastructure.Options;
 using System.Text;
 
@@ -29,7 +28,6 @@ public static class DependencyInjection
 		services.Configure<RedisSettings>(configuration.GetSection("RedisSettings"));
 	}
 
-	private static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
 	{
 		var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
@@ -68,7 +66,6 @@ public static class DependencyInjection
 		services.AddAuthorization();
 	}
 
-	private static void ConfigureCors(this IServiceCollection services)
 	{
 		services.AddCors(options =>
 		{
@@ -82,7 +79,6 @@ public static class DependencyInjection
 		});
 	}
 
-	private static void ConfigureSwagger(this IServiceCollection services)
 	{
 		services.AddSwaggerGen(options =>
 		{
@@ -112,7 +108,6 @@ public static class DependencyInjection
 		});
 	}
 
-	private static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
 	{
 		var redisSettings = configuration.GetSection("RedisSettings").Get<RedisSettings>();
 

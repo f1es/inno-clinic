@@ -12,7 +12,7 @@ namespace Offices.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureRepositories(this IServiceCollection services)
+	private static void ConfigureRepositories(this IServiceCollection services)
 	{
 		services.AddSingleton<IMongoClient>(sp =>
 		{
@@ -23,5 +23,10 @@ public static class DependencyInjection
 		services.AddSingleton<OfficesContext>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
 		services.AddScoped<ICacheService, CacheService>();
+	}
+
+	public static void ConfigureInfrastructureLayer(this IServiceCollection services)
+	{
+		services.ConfigureRepositories();
 	}
 }

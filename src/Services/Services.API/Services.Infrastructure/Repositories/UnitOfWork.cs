@@ -16,12 +16,20 @@ public class UnitOfWork : IUnitOfWork
 		new ServiceRepository(context));
 
 		_serviceCategoryRepository = new Lazy<IServiceCategoryRepository>(() =>
-		new ServiceCategoryRepository(context));
+		new DapperServiceCategoryRepository(context));
     }
 
     public IServiceRepository ServiceRepository =>_serviceRepository.Value;
 
 	public IServiceCategoryRepository ServiceCategoryRepository => _serviceCategoryRepository.Value;
 
-	public async Task SaveAsync(CancellationToken cancellationToken) => await _context.SaveChangesAsync(cancellationToken);
+	public async Task SaveAsync(CancellationToken cancellationToken) 
+	{
+		await _context.SaveChangesAsync(cancellationToken);
+
+		if (_context.Database.CurrentTransaction is not null)
+		{
+			await _context.Database.CurrentTransaction.CommitAsync(cancellationToken);
+		}
+	}
 }

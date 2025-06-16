@@ -8,8 +8,22 @@ services:
     networks:
       - broker-network
 
+  consul:
+    image: hashicorp/consul:latest
+    ports: 
+      - 8500:8500
+      - 8600:8600/udp
+      - 8600:8600/tcp
+    command: "agent -server -bootstrap-expect=1 -ui -data-dir=/consul/data -client=0.0.0.0"
+    container_name: consul
+    volumes:
+      - ./consul-data:/consul/data
+
 networks:
   broker-network:
     name: clinic
     driver: bridge
     external: true
+
+volumes:
+  consul-data: {}

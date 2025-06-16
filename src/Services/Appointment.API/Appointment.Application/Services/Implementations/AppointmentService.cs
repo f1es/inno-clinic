@@ -2,6 +2,7 @@ using Appointment.Application.Mappers.Interfaces;
 using Appointment.Application.Services.Interfaces;
 using Appointment.Core.Dto.Request;
 using Appointment.Core.Dto.Response;
+using Appointment.Core.Notifiers;
 using Appointment.Core.Repositories;
 using Appointment.Core.RequestClients;
 using Shared.Exceptions;
@@ -15,19 +16,22 @@ public class AppointmentService : IAppointmentService
 	private readonly IServicesRequestClient _servicesRequestClient;
 	private readonly ITimeSlotService _timeSlotService;
 	private readonly IJwtService _jwtService;
+	private readonly IDoctorNotificationSender _doctorNotificationSender;
 
 	public AppointmentService(
 		IUnitOfWork unitOfWork,
 		IAppointmentsMapper appointmentsMapper,
 		IServicesRequestClient servicesRequestClient,
 		ITimeSlotService timeSlotService,
-		IJwtService jwtService)
+		IJwtService jwtService,
+		IDoctorNotificationSender doctorNotificationSender)
 	{
 		_unitOfWork = unitOfWork;
 		_appointmentsMapper = appointmentsMapper;
 		_servicesRequestClient = servicesRequestClient;
 		_timeSlotService = timeSlotService;
 		_jwtService = jwtService;
+		_doctorNotificationSender = doctorNotificationSender;
 	}
 
 	public async Task<AppointmentResponseDto> CreateAsync(AppointmentRequestDto appointmentRequestDto, string jwt, CancellationToken cancellationToken)
@@ -44,6 +48,12 @@ public class AppointmentService : IAppointmentService
 
 		_unitOfWork.AppointmentRepository.Create(appointment);
 		await _unitOfWork.SaveAsync(cancellationToken);
+
+		if (appointment.DoctorId is not null)
+		{
+			// ento ne rabotaet!!! because there i need to get doctor's account id and for that i need implement http client, a mne vpadly 
+			await _doctorNotificationSender.NotifyAsync(appointment.DoctorId.Value, "appointment was born", cancellationToken);
+		}
 
 		var appointmentResponse = _appointmentsMapper.ToResponse(appointment);
 

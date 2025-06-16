@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Offices.Application.CQRS.Offices.Commands.CreateOffice;
 using Offices.Application.CQRS.Offices.Commands.DeleteOffice;
@@ -15,7 +14,7 @@ namespace Offices.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/offices")]
-[Authorize]
+//[Authorize]
 public class OfficesController : ControllerBase
 {
 	private readonly IMediator _mediator;
@@ -68,7 +67,7 @@ public class OfficesController : ControllerBase
     /// <returns></returns>
     [HttpPost]
 	[Produces("application/json")]
-	[Authorize(Roles = "receptionist")]
+	//[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status201Created)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 	public async Task<IActionResult> Create(CreateOfficeCommand createOfficeCommand, CancellationToken cancellationToken)
@@ -85,7 +84,7 @@ public class OfficesController : ControllerBase
 	/// <returns></returns>
 	[HttpDelete("{id:guid}")]
 	[Produces("application/json")]
-	[Authorize(Roles = "receptionist")]
+	//[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -106,7 +105,7 @@ public class OfficesController : ControllerBase
 	/// <returns></returns>
 	[HttpPut("{id:guid}")]
 	[Produces("application/json")]
-	[Authorize(Roles = "receptionist")]
+	//[Authorize(Roles = "receptionist")]
 	[ProducesResponseType(StatusCodes.Status204NoContent)]
 	[ProducesResponseType(StatusCodes.Status404NotFound)]
 	[ProducesResponseType(StatusCodes.Status500InternalServerError)]

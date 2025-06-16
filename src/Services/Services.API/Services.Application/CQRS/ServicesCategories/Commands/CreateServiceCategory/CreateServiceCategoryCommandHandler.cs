@@ -22,6 +22,7 @@ public class CreateServiceCategoryCommandHandler : IRequestHandler<CreateService
 	{
 		var serviceCategory = _serviceCategoriesMapper.ToModel(request.ServiceCategoryRequestDto);
 
+		serviceCategory.Id = Guid.NewGuid();
 		_unitOfWork.ServiceCategoryRepository.Create(serviceCategory);
 
 		await _unitOfWork.SaveAsync(cancellationToken);

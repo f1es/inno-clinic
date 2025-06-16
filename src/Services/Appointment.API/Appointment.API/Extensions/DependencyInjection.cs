@@ -8,6 +8,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using Appointment.API.Options;
 using Appointment.Application.Options;
+using Appointment.Core.RequestClients;
+using Appointment.Infrastructure.RequestClients;
+using System.Security.Claims;
 
 namespace Appointment.API.Extensions;
 
@@ -22,6 +25,7 @@ public static class DependencyInjection
 		services.ConfigureOptions(configuration);
 		services.ConfigureAuthentication(configuration);
 		services.ConfigureCors();
+		services.ConfigureHttpClientForRequestClients();
 	}
 
 	private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -120,7 +124,26 @@ public static class DependencyInjection
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true,
 					ValidateIssuer = false,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
+					NameClaimType = "id"
+				};
+
+
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						var accessToken = context.Request.Query["access_token"];
+
+						var path = context.HttpContext.Request.Path;
+						if (!string.IsNullOrEmpty(accessToken) &&
+							path.StartsWithSegments("/hub"))
+						{
+							context.Token = accessToken;
+						}
+
+						return Task.CompletedTask;
+					}
 				};
 			});
 
@@ -135,5 +158,14 @@ public static class DependencyInjection
 		services.Configure<AccountsEndpoints>(configuration.GetSection("AccountsEndpoints"));
 		services.Configure<EmailCredentials>(configuration.GetSection("EmailCredentials"));
 		services.Configure<CronOptions>(configuration.GetSection("CronOptions"));
+		services.Configure<DocumentsEndpoints>(configuration.GetSection("DocumentsEndpoints"));
+	}
+
+	private static void ConfigureHttpClientForRequestClients(this IServiceCollection services)
+	{
+		services.AddHttpClient<IAccountRequestClient, AccountRequestClient>();
+		services.AddHttpClient<IDocumentRequestClient, DocumentsRequestClient>();
+		services.AddHttpClient<IPatientsRequestClient, PatientsRequestClient>();
+		services.AddHttpClient<IServicesRequestClient, ServicesRequestClient>();
 	}
 }

@@ -20,6 +20,7 @@ public abstract class ResultControllerTestBase : IAsyncLifetime
     protected readonly IResultsMapper _resultsMapper;
     protected readonly IUnitOfWork _unitOfWork;
     protected readonly IResultService _resultService;
+    protected readonly IPdfService _pdfService;
 
     protected readonly ResultController _resultController;
 
@@ -38,7 +39,9 @@ public abstract class ResultControllerTestBase : IAsyncLifetime
 
         _unitOfWork = new UnitOfWork(_context);
         _resultsMapper = new ResultsMapper();
-        _resultService = new ResultService(_unitOfWork, _resultsMapper);
+		_pdfService = new PdfService();
+
+		_resultService = new ResultService(_unitOfWork, _resultsMapper, _pdfService);
         _resultController = new ResultController(_resultService);
     }
 
