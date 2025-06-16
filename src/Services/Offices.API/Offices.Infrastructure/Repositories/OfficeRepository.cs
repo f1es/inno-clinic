@@ -27,6 +27,7 @@ public class OfficeRepository : IOfficeRepository
 		await _context.Offices.InsertOneAsync(entity, options: null, cancellationToken);
 		await _cacheService.RemoveFromCacheAsync(OfficesCollectionCacheKey, cancellationToken);
 	}
+
 	public async Task DeleteAsync(Office entity, CancellationToken cancellationToken = default)
 	{
 		var cacheKey = $"{OfficesCacheKeyPrefix}{entity.Id}";

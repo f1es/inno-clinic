@@ -10,6 +10,7 @@ using Appointment.API.Options;
 using Appointment.Application.Options;
 using Appointment.Core.RequestClients;
 using Appointment.Infrastructure.RequestClients;
+using System.Security.Claims;
 
 namespace Appointment.API.Extensions;
 
@@ -123,7 +124,26 @@ public static class DependencyInjection
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true,
 					ValidateIssuer = false,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key))
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
+					NameClaimType = "id"
+				};
+
+
+				options.Events = new JwtBearerEvents
+				{
+					OnMessageReceived = context =>
+					{
+						var accessToken = context.Request.Query["access_token"];
+
+						var path = context.HttpContext.Request.Path;
+						if (!string.IsNullOrEmpty(accessToken) &&
+							path.StartsWithSegments("/hub"))
+						{
+							context.Token = accessToken;
+						}
+
+						return Task.CompletedTask;
+					}
 				};
 			});
 

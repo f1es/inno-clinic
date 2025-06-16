@@ -1,5 +1,6 @@
 ﻿using Gateway.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -59,6 +60,12 @@ public static class DependencyInjection
 				.AllowCredentials();
 			});
 		});
+	}
+
+	public static void ConfigureHealthChecks(this IServiceCollection services)
+	{
+		services.AddHealthChecks()
+			.AddCheck("self", () => HealthCheckResult.Healthy("Gateway is healthy"));
 	}
 }
 

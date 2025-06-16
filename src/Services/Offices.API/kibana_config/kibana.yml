@@ -1,0 +1,5 @@
+server.name: kibana
+server.host: "0.0.0.0"
+elasticsearch.hosts: ["http://elastic:9200"]
+elasticsearch.username: "elastic" # Если безопасность в ES включена
+elasticsearch.password: "my_password" # Если безопасность в ES включена

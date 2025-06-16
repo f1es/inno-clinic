@@ -16,7 +16,7 @@ public class AccountService : IAccountService
     private readonly IAccountRepository _accountRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly SecretKeys _secretKeys;
-
+    
     public AccountService(IAccountRepository accountRepository, IJwtProvider jwtProvider, IOptions<SecretKeys> secretKeys)
     {
         _accountRepository = accountRepository;

@@ -1,6 +1,7 @@
 using Appointment.API.Extensions;
 using Appointment.Application.Extensions;
 using Appointment.Infrastructure.Extensions;
+using Appointment.Infrastructure.Hubs;
 using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,8 @@ if (!app.Environment.IsProduction())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.MapHub<NotificationHub>("/hub/notifications");
 
 app.MapControllers();
 
