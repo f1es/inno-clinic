@@ -1,3 +1,4 @@
+using Authorization.API.Options;
 using Authorization.Application.Mappers;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Accounts;
@@ -21,6 +22,9 @@ public class AccountService : IAccountService
     {
         _accountRepository = accountRepository;
         _jwtProvider = jwtProvider;
+        _jwtOptions = jwtOptions.Value;
+    }
+
     public async Task<IEnumerable<AccountResponseDto>> GetAllAsync()
     {
         var accounts = await _accountRepository.GetAllAsync();
@@ -38,6 +42,7 @@ public class AccountService : IAccountService
 
     public async Task<AccountResponseDto> GetByJwtAsync(string accessToken)
     {
+        var accountId = _jwtProvider.GetAccountId(accessToken, _jwtOptions.AccessKey);
 
         return await GetByIdAsync(accountId);
     }
@@ -67,3 +72,4 @@ public class AccountService : IAccountService
 
     private Account AccountNullCheck(Account account, Guid id) => account ?? throw new NotFoundException(nameof(account), id);
 }
+
