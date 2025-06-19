@@ -15,7 +15,8 @@ public static class ConsulConfigurationBuilder
 
 		source.ConsulConfigurationOptions = cco => cco.Address = new Uri(consulOptions.Server);
 		source.ReloadOnChange = true;
-		//source.Optional = true;
+		source.Optional = false;
+
 		return source;
 	}
 }
