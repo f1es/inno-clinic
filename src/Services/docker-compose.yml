@@ -18,6 +18,8 @@ services:
     container_name: consul
     volumes:
       - ./consul-data:/consul/data
+    networks:
+      - broker-network
 
 networks:
   broker-network:

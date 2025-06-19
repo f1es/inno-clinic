@@ -2,7 +2,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Offices.API.Options;
-using Offices.Infrastructure.HealthChecks;
 using Offices.Infrastructure.Options;
 using System.Text;
 
@@ -20,7 +19,6 @@ public static class DependencyInjection
 		services.ConfigureCors();
 		services.ConfigureSwagger();
 		services.ConfigureRedis(configuration);
-		services.ConfigureHealthChecks(configuration);
 	}
 
 	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
@@ -123,9 +121,4 @@ public static class DependencyInjection
 		});
 	}
 
-	private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
-	{
-		services.AddHealthChecks()
-			.AddCheck<MongoDbHealthCheck>("mongodb");
-	}
 }

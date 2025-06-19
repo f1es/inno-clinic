@@ -15,7 +15,7 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard
 
 builder.Services.ConfigureApiLayer(builder.Configuration);
 builder.Services.ConfigureApplicationLayer(builder.Configuration);
-builder.Services.ConfigureInfrastructureLayer();
+builder.Services.ConfigureInfrastructureLayer(builder.Configuration);
 
 var app = builder.Build();
 

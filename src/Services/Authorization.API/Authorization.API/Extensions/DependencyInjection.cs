@@ -34,9 +34,9 @@ public static class DependencyInjection
 	{
 		services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 		services.Configure<EmailOptions>(configuration.GetSection("EmailConfiguration"));
-		services.Configure<SecretKeys>(configuration.GetSection("SecretKeys"));
 		services.Configure<EndpointsOptions>(configuration.GetSection("Endpoints"));
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
+		services.Configure<ConsulOptions>(configuration.GetSection("ConsulOptions"));
 	}
 
 	private static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)

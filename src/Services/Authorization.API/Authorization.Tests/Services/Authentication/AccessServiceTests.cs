@@ -1,3 +1,4 @@
+using Authorization.API.Options;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Implementations.Authentication;
 using Authorization.Application.Services.Interfaces.Authentication;
@@ -22,7 +23,7 @@ public class AccessServiceTests
     private readonly Mock<IJwtProvider> _jwtProviderMock;
     private readonly Mock<IRefreshProvider> _refreshProviderMock;
     private readonly SecretKeys _secretKeys;
-    private readonly JwtTokenOptions _jwtTokenOptions;
+    private readonly JwtOptions _jwtOptions;
     private readonly AccessService _accessService;
 
     public AccessServiceTests()
@@ -33,22 +34,20 @@ public class AccessServiceTests
         _refreshProviderMock = new Mock<IRefreshProvider>();
 
         _secretKeys = new SecretKeys { Access = "test-access-key" };
-        _jwtTokenOptions = new JwtTokenOptions
+        _jwtOptions = new JwtOptions
         {
             AccessTokenLifetimeMinutes = 15,
             RefreshTokenLifetimeDays = 7
         };
 
-        var secretKeysOptions = Options.Create(_secretKeys);
-        var jwtTokenOptions = Options.Create(_jwtTokenOptions);
+        var jwtOptions = Options.Create(_jwtOptions);
 
         _accessService = new AccessService(
             _accountRepositoryMock.Object,
             _passwordServiceMock.Object,
             _jwtProviderMock.Object,
-            secretKeysOptions,
             _refreshProviderMock.Object,
-            jwtTokenOptions
+            jwtOptions
         );
     }
 
@@ -85,7 +84,7 @@ public class AccessServiceTests
 
         _jwtProviderMock.Setup(x => x.GenerateToken(
                 _secretKeys.Access,
-                _jwtTokenOptions.AccessTokenLifetimeMinutes,
+                _jwtOptions.AccessTokenLifetimeMinutes,
                 It.IsAny<ClaimsIdentity>()))
             .Returns(accessToken);
 
@@ -199,7 +198,7 @@ public class AccessServiceTests
 
         _jwtProviderMock.Setup(x => x.GenerateToken(
                 _secretKeys.Access,
-                _jwtTokenOptions.AccessTokenLifetimeMinutes,
+                _jwtOptions.AccessTokenLifetimeMinutes,
                 It.IsAny<ClaimsIdentity>()))
             .Returns(newAccessToken);
 

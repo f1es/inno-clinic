@@ -30,23 +30,23 @@ public static class DependencyInjection
 	{
 		services.AddSerilog();
 
-		var elasticSearchSettings = configuration.GetSection("ElasticSearch").Get<ElasticSearchSettings>();
+		// var elasticSearchSettings = configuration.GetSection("ElasticSearch").Get<ElasticSearchSettings>();
 
-		var elasticSearchSinkOptions = new ElasticsearchSinkOptions(new Uri(elasticSearchSettings.Server))
-		{
-			AutoRegisterTemplate = true,
-			AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv8,
-			IndexFormat = "offices-{0:yyyy.MM.dd}",
-			MinimumLogEventLevel = Serilog.Events.LogEventLevel.Information
-		};
+		// var elasticSearchSinkOptions = new ElasticsearchSinkOptions(new Uri(elasticSearchSettings.Server))
+		// {
+		// 	AutoRegisterTemplate = true,
+		// 	AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv8,
+		// 	IndexFormat = "offices-{0:yyyy.MM.dd}",
+		// 	MinimumLogEventLevel = Serilog.Events.LogEventLevel.Information
+		// };
 
 		Log.Logger = new LoggerConfiguration()
 			.Enrich.FromLogContext()
 			.WriteTo.Console()
-			.WriteTo.Elasticsearch(elasticSearchSinkOptions)
+			//.WriteTo.Elasticsearch(elasticSearchSinkOptions)
 			.CreateLogger();
 
-		Log.Logger.Information("Serilog configured with ElasticSearch sink at {ElasticSearchServer}", elasticSearchSettings.Server);
+		//Log.Logger.Information("Serilog configured with ElasticSearch sink at {ElasticSearchServer}", elasticSearchSettings.Server);
 	}
 
 	public static void ConfigureApplicationLayer(this IServiceCollection services, IConfiguration configuration)

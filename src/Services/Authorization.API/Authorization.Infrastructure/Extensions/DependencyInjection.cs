@@ -3,7 +3,9 @@ using Authorization.Infrastructure.Consumers;
 using Authorization.Infrastructure.Options;
 using Authorization.Infrastructure.Repositories;
 using MassTransit;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 using Shared.Queues;
 
@@ -11,10 +13,11 @@ namespace Authorization.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {
-	public static void ConfigureInfrastructureLayer(this IServiceCollection services)
+	public static void ConfigureInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.ConfigureRepository();
 		services.ConfigureMassTransit();
+		services.ConfigureHealthChecks(configuration);
 	}
 
 	private static void ConfigureRepository(this IServiceCollection services)
@@ -44,5 +47,14 @@ public static class DependencyInjection
 				});
 			});
 		});
+	}
+	
+	private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+	{
+		var connectionString = configuration.GetConnectionString("DataBase");
+
+		services.AddHealthChecks()
+			.AddSqlServer(connectionString)
+			.AddCheck("self", () => HealthCheckResult.Healthy("Service is healthy"));
 	}
 }

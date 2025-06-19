@@ -1,4 +1,4 @@
-using Authorization.Application.Options;
+using Authorization.API.Options;
 using Authorization.Application.Services.Interfaces.Email;
 using Authorization.Application.Services.Interfaces.JWT;
 using Authorization.Core.Repositories;
@@ -11,16 +11,16 @@ public class EmailVerificationService : IEmailVerificationService
 {
     private readonly IJwtProvider _jwtProvider;
     private readonly IAccountRepository _accountRepository;
-    private readonly IOptions<SecretKeys> _keys;
+    private readonly JwtOptions _jwtOptions;
 
     public EmailVerificationService(
         IJwtProvider jwtProvider,
         IAccountRepository accountRepository,
-        IOptions<SecretKeys> keys)
+        IOptions<JwtOptions> jwtOptions)
     {
         _jwtProvider = jwtProvider;
         _accountRepository = accountRepository;
-        _keys = keys;
+		_jwtOptions = jwtOptions.Value;
     }
 
     public async Task VerifyEmailAsync(string token)
@@ -41,7 +41,7 @@ public class EmailVerificationService : IEmailVerificationService
             throw new NotFoundException(nameof(account), email);
         }
 
-        var verificationResult = await _jwtProvider.VerifyEmailTokenAsync(token, _keys.Value.Email, email);
+        var verificationResult = await _jwtProvider.VerifyEmailTokenAsync(token, _jwtOptions.EmailKey, email);
 
         if (verificationResult)
         {

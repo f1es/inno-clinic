@@ -13,7 +13,6 @@ using Authorization.Application.Services.Interfaces.TokenProviers;
 using Authorization.Application.Validators;
 using Authorization.Core.Models;
 using FluentValidation;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System.IdentityModel.Tokens.Jwt;

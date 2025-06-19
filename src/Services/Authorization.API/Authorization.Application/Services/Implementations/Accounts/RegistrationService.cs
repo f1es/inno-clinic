@@ -1,3 +1,4 @@
+using Authorization.API.Options;
 using Authorization.Application.Extensions;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Accounts;
@@ -22,28 +23,28 @@ public class RegistrationService : IRegistrationService
     private readonly IAccountRepository _accountRepository;
     private readonly IJwtProvider _jwtProvider;
     private readonly IEmailSender _emailSender;
-    private readonly SecretKeys _keys;
+    private readonly JwtOptions _jwtOptions;
     private readonly EndpointsOptions _endpointOptions;
 
-    public RegistrationService(
-        IValidator<RegisterAccountRequestDto> validator,
-        IPasswordService passwordService,
-        IAccountRepository accountRepository,
-        IJwtProvider jwtProvider,
-        IEmailSender emailSender,
-        IOptions<SecretKeys> keys,
-        IOptions<EndpointsOptions> endpoints)
-    {
-        _validator = validator;
-        _passwordService = passwordService;
-        _accountRepository = accountRepository;
-        _jwtProvider = jwtProvider;
-        _emailSender = emailSender;
-        _keys = keys.Value;
-        _endpointOptions = endpoints.Value;
-    }
+	public RegistrationService(
+		IValidator<RegisterAccountRequestDto> validator,
+		IPasswordService passwordService,
+		IAccountRepository accountRepository,
+		IJwtProvider jwtProvider,
+		IEmailSender emailSender,
+		IOptions<EndpointsOptions> endpoints,
+		IOptions<JwtOptions> jwtOptions)
+	{
+		_validator = validator;
+		_passwordService = passwordService;
+		_accountRepository = accountRepository;
+		_jwtProvider = jwtProvider;
+		_emailSender = emailSender;
+		_endpointOptions = endpoints.Value;
+		_jwtOptions = jwtOptions.Value;
+	}
 
-    public async Task RegisterAsync(RegisterAccountRequestDto registerAccountRequestDto)
+	public async Task RegisterAsync(RegisterAccountRequestDto registerAccountRequestDto)
     {
         var validationResult = await _validator.ValidateAsync(registerAccountRequestDto);
         if (!validationResult.IsValid)
@@ -73,7 +74,7 @@ public class RegistrationService : IRegistrationService
         await _accountRepository.SaveAsync();
 
         var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Email, registerAccountRequestDto.Email)]);
-        var emailToken = _jwtProvider.GenerateToken(_keys.Email, 1, claimsIdentity);
+        var emailToken = _jwtProvider.GenerateToken(_jwtOptions.EmailKey, 1, claimsIdentity);
         var message = BuildMessage(emailToken, [registerAccountRequestDto.Email]);
 
         await _emailSender.SendEmailAsync(message);
