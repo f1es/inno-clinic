@@ -33,7 +33,7 @@ public static class DependencyInjection
 	{
 		services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 		services.Configure<EmailOptions>(configuration.GetSection("EmailConfiguration"));
-		services.Configure<EndpointOptions>(configuration.GetSection("Endpoints"));
+		services.Configure<AccountEndpointsOptions>(configuration.GetSection("Endpoints"));
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
 		services.Configure<ConsulOptions>(configuration.GetSection("ConsulOptions"));
 	}

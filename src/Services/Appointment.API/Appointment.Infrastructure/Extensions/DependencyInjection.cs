@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Quartz;
+using Shared.Options;
 
 namespace Appointment.Infrastructure.Extensions;
 
@@ -68,7 +69,7 @@ public static class DependencyInjection
 
 	public static void ConfigureInfrastructureLayer(this IServiceCollection services, IConfiguration configuration)
 	{
-		services.AddScoped<IUnitOfWork, UnitOfWork>();
+		services.ConfigureRepositories();
 		services.ConfigureMassTransit();
 		services.ConfigureRequestClients();
 		services.ConfigureSmtpClient();

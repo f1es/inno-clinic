@@ -13,7 +13,6 @@ using Microsoft.Extensions.Options;
 using Shared.Exceptions;
 using Shared.Options;
 using System.Security.Claims;
-using static Shared.Options.EndpointOptions;
 
 namespace Authorization.Application.Services.Implementations.Accounts;
 
@@ -25,7 +24,7 @@ public class RegistrationService : IRegistrationService
     private readonly IJwtProvider _jwtProvider;
     private readonly IEmailSender _emailSender;
     private readonly JwtOptions _jwtOptions;
-    private readonly EndpointsOptions _endpointOptions;
+    private readonly AccountEndpointsOptions _endpointOptions;
 
 	public RegistrationService(
 		IValidator<RegisterAccountRequestDto> validator,
@@ -33,7 +32,7 @@ public class RegistrationService : IRegistrationService
 		IAccountRepository accountRepository,
 		IJwtProvider jwtProvider,
 		IEmailSender emailSender,
-		IOptions<EndpointsOptions> endpoints,
+		IOptions<AccountEndpointsOptions> endpoints,
 		IOptions<JwtOptions> jwtOptions)
 	{
 		_validator = validator;

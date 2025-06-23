@@ -30,7 +30,8 @@ public class ResultServiceTests
 		_resultService = new ResultService(
 			_unitOfWorkMock.Object,
 			_resultsMapper,
-			_pdfServiceMock.Object);
+			_pdfServiceMock.Object,
+			null);
 	}
 
 	[Fact]

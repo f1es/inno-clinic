@@ -4,15 +4,16 @@ using Microsoft.Extensions.Options;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using Shared.Options;
 
 namespace Appointment.Infrastructure.RequestClients;
 
 public class DocumentsRequestClient : IDocumentRequestClient
 {
 	private readonly HttpClient _httpClient;
-	private readonly DocumentsEndpoints _documentsEndpoints;
+	private readonly DocumentsEndpointsOptions _documentsEndpoints;
 
-	public DocumentsRequestClient(HttpClient httpClient, IOptions<DocumentsEndpoints> documentsEndpoints)
+	public DocumentsRequestClient(HttpClient httpClient, IOptions<DocumentsEndpointsOptions> documentsEndpoints)
 	{
 		_httpClient = httpClient;
 		_documentsEndpoints = documentsEndpoints.Value;

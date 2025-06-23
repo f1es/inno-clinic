@@ -1,16 +1,15 @@
-﻿using Appointment.Infrastructure.Context;
+﻿using Appointment.Application.Options;
+using Appointment.Core.RequestClients;
+using Appointment.Infrastructure.Context;
 using Appointment.Infrastructure.Options;
+using Appointment.Infrastructure.RequestClients;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Shared.Options;
 using System.Text;
 using System.Text.Json.Serialization;
-using Appointment.API.Options;
-using Appointment.Application.Options;
-using Appointment.Core.RequestClients;
-using Appointment.Infrastructure.RequestClients;
-using System.Security.Claims;
 
 namespace Appointment.API.Extensions;
 
@@ -124,7 +123,7 @@ public static class DependencyInjection
 					ValidateIssuerSigningKey = true,
 					ValidateLifetime = true,
 					ValidateIssuer = false,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.AccessKey)),
 					NameClaimType = "id"
 				};
 
@@ -153,12 +152,12 @@ public static class DependencyInjection
 	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
-		services.Configure<ServicesEndpoints>(configuration.GetSection("ServicesEndpoints"));
-		services.Configure<PatientsEndpoints>(configuration.GetSection("PatientsEndpoints"));
-		services.Configure<AccountsEndpoints>(configuration.GetSection("AccountsEndpoints"));
+		services.Configure<ServicesEndpointsOptions>(configuration.GetSection("ServicesEndpoints"));
+		services.Configure<PatientsEndpointsOptions>(configuration.GetSection("PatientsEndpoints"));
+		services.Configure<AccountEndpointsOptions>(configuration.GetSection("AccountsEndpoints"));
 		services.Configure<EmailCredentials>(configuration.GetSection("EmailCredentials"));
 		services.Configure<CronOptions>(configuration.GetSection("CronOptions"));
-		services.Configure<DocumentsEndpoints>(configuration.GetSection("DocumentsEndpoints"));
+		services.Configure<DocumentsEndpointsOptions>(configuration.GetSection("DocumentsEndpoints"));
 	}
 
 	private static void ConfigureHttpClientForRequestClients(this IServiceCollection services)

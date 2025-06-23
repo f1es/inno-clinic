@@ -1,6 +1,6 @@
 using Appointment.Core.Repositories;
 using MassTransit;
-using Shared.Messages;
+using Shared.Queues.Messages;
 
 namespace Appointment.Infrastructure.Consumers;
 

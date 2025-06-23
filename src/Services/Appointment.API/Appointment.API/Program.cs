@@ -3,8 +3,13 @@ using Appointment.Application.Extensions;
 using Appointment.Infrastructure.Extensions;
 using Appointment.Infrastructure.Hubs;
 using Shared.Middlewares;
+using Winton.Extensions.Configuration.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var environment = builder.Environment.EnvironmentName;
+builder.Configuration.AddConsul($"Appointments/{environment}", options => options.AddConsulConfiguration(builder.Configuration));
+builder.Configuration.AddConsul($"Shared/{environment}", options => options.AddConsulConfiguration(builder.Configuration));
 
 // Add services to the container.
 builder.Services.ConfigureApiLayer(builder.Configuration);

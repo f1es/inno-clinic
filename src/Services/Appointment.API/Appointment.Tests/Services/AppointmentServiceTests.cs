@@ -39,7 +39,8 @@ public class AppointmentServiceTests
 			_appointmentsMapper,
 			_servicesRequestClientMock.Object,
 			_timeSlotServiceMock.Object,
-			_jwtServiceMock.Object);
+			_jwtServiceMock.Object,
+			null);
 	}
 
 	[Fact]

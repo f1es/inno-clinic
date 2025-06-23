@@ -2,6 +2,7 @@ using Appointment.Core.Dto.Response;
 using Appointment.Core.RequestClients;
 using Appointment.Infrastructure.Options;
 using Microsoft.Extensions.Options;
+using Shared.Options;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -9,10 +10,10 @@ namespace Appointment.Infrastructure.RequestClients;
 
 public class AccountRequestClient : IAccountRequestClient
 {
-	private readonly AccountsEndpoints _accountsEndpoints;
+	private readonly AccountEndpointsOptions _accountsEndpoints;
 	private readonly HttpClient _httpClient;
 
-	public AccountRequestClient(IOptions<AccountsEndpoints> accountsEndpoints, HttpClient httpClient)
+	public AccountRequestClient(IOptions<AccountEndpointsOptions> accountsEndpoints, HttpClient httpClient)
 	{
 		_accountsEndpoints = accountsEndpoints.Value;
 		_httpClient = httpClient;

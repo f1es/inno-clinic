@@ -1,15 +1,16 @@
 using Appointment.Core.RequestClients;
 using Appointment.Infrastructure.Options;
 using Microsoft.Extensions.Options;
+using Shared.Options;
 
 namespace Appointment.Infrastructure.RequestClients;
 
 public class ServicesRequestClient : IServicesRequestClient
 {
-	private readonly ServicesEndpoints _servicesEndpoints;
+	private readonly ServicesEndpointsOptions _servicesEndpoints;
 	private readonly HttpClient _httpClient;
 
-	public ServicesRequestClient(IOptions<ServicesEndpoints> servicesEndpoints, HttpClient httpClient)
+	public ServicesRequestClient(IOptions<ServicesEndpointsOptions> servicesEndpoints, HttpClient httpClient)
 	{
 		_servicesEndpoints = servicesEndpoints.Value;
 		_httpClient = httpClient;
