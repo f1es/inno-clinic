@@ -1,4 +1,4 @@
-namespace Authorization.Application.Configuration;
+namespace Authorization.Application.Options;
 
 public class EmailOptions
 {
@@ -7,5 +7,4 @@ public class EmailOptions
 	public int Port { get; set; }
 	public string UserName { get; set; }
 	public string Password { get; set; }
-	public string SecretKey { get; set; }
 }

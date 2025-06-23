@@ -1,12 +1,12 @@
 using Authorization.Core.Repositories;
 using Authorization.Infrastructure.Consumers;
-using Authorization.Infrastructure.Options;
 using Authorization.Infrastructure.Repositories;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
+using Shared.Options;
 using Shared.Queues;
 
 namespace Authorization.Infrastructure.Extensions;

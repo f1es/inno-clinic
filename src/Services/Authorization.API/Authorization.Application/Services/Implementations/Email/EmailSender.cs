@@ -1,4 +1,4 @@
-using Authorization.Application.Configuration;
+using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Email;
 using Authorization.Application.Utility;
 using MailKit.Net.Smtp;

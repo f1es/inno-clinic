@@ -3,6 +3,8 @@ using Gateway.Endpoints;
 using Gateway.Extensions;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
+using Shared.Extensions;
+using Winton.Extensions.Configuration.Consul;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,9 +14,15 @@ var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 builder.Configuration.AddJsonFile($"ocelot.json", optional: false, reloadOnChange: true);
 builder.Configuration.AddJsonFile($"ocelot.{environment}.json", optional: false, reloadOnChange: true);
 
+var consulServer = builder.Configuration
+	.GetSection("ConsulOptions")
+	.GetValue<string>("Server");
+
+builder.Configuration.AddConsul($"Gateway/{environment}", options => options.AddConsulConfiguration(consulServer));
+builder.Configuration.AddConsul($"Shared/{environment}", options => options.AddConsulConfiguration(consulServer));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddOcelot(builder.Configuration).AddDelegatingHandler<RetryHandler>(true); ;
 builder.Services.AddSwaggerForOcelot(builder.Configuration);
 builder.Services.AddSwaggerGen();

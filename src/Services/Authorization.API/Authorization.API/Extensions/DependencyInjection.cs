@@ -1,12 +1,11 @@
 ﻿using Authorization.API.Options;
-using Authorization.Application.Configuration;
 using Authorization.Application.Options;
 using Authorization.Infrastructure.Context;
-using Authorization.Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Shared.Options;
 using System.Text;
 
 namespace Authorization.API.Extensions;
@@ -34,7 +33,7 @@ public static class DependencyInjection
 	{
 		services.Configure<JwtOptions>(configuration.GetSection("JwtOptions"));
 		services.Configure<EmailOptions>(configuration.GetSection("EmailConfiguration"));
-		services.Configure<EndpointsOptions>(configuration.GetSection("Endpoints"));
+		services.Configure<EndpointOptions>(configuration.GetSection("Endpoints"));
 		services.Configure<RabbitmqOptions>(configuration.GetSection("RabbitmqOptions"));
 		services.Configure<ConsulOptions>(configuration.GetSection("ConsulOptions"));
 	}

@@ -1,4 +1,3 @@
-using Authorization.API.Options;
 using Authorization.Application.Extensions;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Accounts;
@@ -12,7 +11,9 @@ using Authorization.Core.Repositories;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Shared.Exceptions;
+using Shared.Options;
 using System.Security.Claims;
+using static Shared.Options.EndpointOptions;
 
 namespace Authorization.Application.Services.Implementations.Accounts;
 

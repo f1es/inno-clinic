@@ -25,6 +25,7 @@ public static class DependencyInjection
 	{
 		services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
 		services.Configure<RedisSettings>(configuration.GetSection("RedisSettings"));
+		services.Configure<ConsulOptions>(configuration.GetSection("ConsulOptions"));
 	}
 
 	private static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)

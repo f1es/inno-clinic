@@ -1,4 +1,3 @@
-using Authorization.API.Options;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Authentication;
 using Authorization.Application.Services.Interfaces.JWT;
@@ -10,6 +9,7 @@ using Authorization.Core.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Shared.Exceptions;
+using Shared.Options;
 using System.Security.Claims;
 
 namespace Authorization.Application.Services.Implementations.Authentication;

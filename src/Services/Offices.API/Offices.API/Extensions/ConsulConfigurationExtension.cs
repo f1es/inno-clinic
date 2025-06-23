@@ -1,9 +1,9 @@
-﻿using Authorization.API.Options;
+﻿using Offices.API.Options;
 using Winton.Extensions.Configuration.Consul;
 
-namespace Authorization.API.Builders;
+namespace Offices.API.Extensions;
 
-public static class ConsulConfigurationBuilder
+public static class ConsulConfigurationExtension
 {
 	public static IConsulConfigurationSource AddConsulConfiguration(this IConsulConfigurationSource source, IConfiguration configuration)
 	{

@@ -1,4 +1,3 @@
-using Authorization.API.Options;
 using Authorization.Application.Mappers;
 using Authorization.Application.Options;
 using Authorization.Application.Services.Interfaces.Accounts;
@@ -9,6 +8,7 @@ using Authorization.Core.Models;
 using Authorization.Core.Repositories;
 using Microsoft.Extensions.Options;
 using Shared.Exceptions;
+using Shared.Options;
 
 namespace Authorization.Application.Services.Implementations.Accounts;
 

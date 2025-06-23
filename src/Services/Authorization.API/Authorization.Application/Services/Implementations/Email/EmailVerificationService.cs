@@ -1,9 +1,9 @@
-using Authorization.API.Options;
 using Authorization.Application.Services.Interfaces.Email;
 using Authorization.Application.Services.Interfaces.JWT;
 using Authorization.Core.Repositories;
 using Microsoft.Extensions.Options;
 using Shared.Exceptions;
+using Shared.Options;
 
 namespace Authorization.Application.Services.Implementations.Email;
 

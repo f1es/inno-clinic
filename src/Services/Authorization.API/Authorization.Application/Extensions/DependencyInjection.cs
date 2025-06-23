@@ -1,5 +1,3 @@
-using Authorization.Application.Configuration;
-using Authorization.Application.Options;
 using Authorization.Application.Services.Implementations.Accounts;
 using Authorization.Application.Services.Implementations.Authentication;
 using Authorization.Application.Services.Implementations.Email;
