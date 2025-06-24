@@ -2,7 +2,6 @@
 
 public interface ICacheService
 {
-	public Task CacheAsync(string cacheKey, object obj, CancellationToken cancellationToken = default);
+	public Task<T> ExecuteOrGetFromCacheAsync<T>(string cacheKey, Func<Task<T>> getDataFunc, CancellationToken cancellationToken = default) where T : class;
 	public Task RemoveFromCacheAsync(string cacheKey, CancellationToken cancellationToken = default);
-	public Task<T> GetFromCacheAsync<T>(string cacheKey, CancellationToken cancellationToken = default) where T : class;
 }

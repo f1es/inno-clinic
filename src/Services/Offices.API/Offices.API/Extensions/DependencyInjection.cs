@@ -18,7 +18,6 @@ public static class DependencyInjection
 		services.ConfigureAuthentication(configuration);
 		services.ConfigureCors();
 		services.ConfigureSwagger();
-		services.ConfigureRedis(configuration);
 	}
 
 	private static void ConfigureOptions(this IServiceCollection services, IConfiguration configuration)
@@ -81,7 +80,7 @@ public static class DependencyInjection
 		});
 	}
 
-	public static void ConfigureSwagger(this IServiceCollection services)
+	private static void ConfigureSwagger(this IServiceCollection services)
 	{
 		services.AddSwaggerGen(options =>
 		{
@@ -110,16 +109,4 @@ public static class DependencyInjection
 			});
 		});
 	}
-
-	public static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
-	{
-		var redisSettings = configuration.GetSection("RedisSettings").Get<RedisSettings>();
-
-		services.AddStackExchangeRedisCache(options =>
-		{
-			options.Configuration = redisSettings.Server;
-			options.InstanceName = redisSettings.InstanceName;
-		});
-	}
-
 }

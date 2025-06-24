@@ -19,6 +19,7 @@ public static class DependencyInjection
 	{
 		services.ConfigureRepositories();
 		services.ConfigureHealthChecks(configuration);
+		services.ConfigureRedis(configuration);
 	}
 
 	private static void ConfigureRepositories(this IServiceCollection services)
@@ -31,7 +32,6 @@ public static class DependencyInjection
 
 		services.AddSingleton<OfficesContext>();
 		services.AddScoped<IUnitOfWork, UnitOfWork>();
-		services.AddScoped<ICacheService, CacheService>();
 	}
 
 	private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
@@ -42,5 +42,19 @@ public static class DependencyInjection
 			.AddRedis(redisSettings.Server, name: "redis", failureStatus: HealthStatus.Unhealthy)
 			.AddCheck<MongoDbHealthCheck>("mongodb")
 			.AddCheck("self", () => HealthCheckResult.Healthy());
+	}
+
+	private static void ConfigureRedis(this IServiceCollection services, IConfiguration configuration)
+	{
+		var redisSettings = configuration.GetSection("RedisSettings").Get<RedisSettings>();
+
+		services.AddStackExchangeRedisCache(options =>
+		{
+			options.Configuration = redisSettings.Server;
+			options.InstanceName = redisSettings.InstanceName;
+		});
+
+		services.AddScoped<ICacheService, RedisCacheService>();
+		services.AddScoped<IOfficesCacheService, OfficesCacheService>();
 	}
 }

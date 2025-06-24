@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using Offices.Core.Cache;
 using Offices.Core.Dto.Response;
 using Offices.Core.Models;
 using Offices.Core.Repositories;
@@ -10,11 +11,16 @@ public class CreateOfficeCommandHandler : IRequestHandler<CreateOfficeCommand, O
 {
 	private readonly IMapper _mapper;
 	private readonly IUnitOfWork _unitOfWork;
+	private readonly IOfficesCacheService _officesCacheService;
 
-	public CreateOfficeCommandHandler(IMapper mapper, IUnitOfWork unitOfWork)
+	public CreateOfficeCommandHandler(
+		IMapper mapper,
+		IUnitOfWork unitOfWork,
+		IOfficesCacheService officesCacheService)
 	{
 		_mapper = mapper;
 		_unitOfWork = unitOfWork;
+		_officesCacheService = officesCacheService;
 	}
 
 	public async Task<OfficeResponseDto> Handle(CreateOfficeCommand request, CancellationToken cancellationToken)
@@ -22,6 +28,8 @@ public class CreateOfficeCommandHandler : IRequestHandler<CreateOfficeCommand, O
 		var office = _mapper.Map<Office>(request.OfficeRequestDto);
 
 		await _unitOfWork.OfficeRepository.CreateAsync(office);
+
+		await _officesCacheService.RemoveAllOfficesFromCacheAsync(cancellationToken);
 
 		return _mapper.Map<OfficeResponseDto>(office);
 	}

@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Offices.Application.MapperProfiles;
-using Offices.Application.Options;
 using Serilog;
-using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
 
 namespace Offices.Application.Extensions;
